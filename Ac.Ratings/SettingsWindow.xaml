@@ -8,21 +8,24 @@
     xmlns:local="clr-namespace:Ac.Ratings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Ac.Ratings.ViewModel"
-    xmlns:test="clr-namespace:Ac.Ratings.Theme.ModernUI.test"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
     Title="SettingsWindow"
     Width="800"
     Height="600"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
-        <test:ModernTab Layout="List" DataContext="{Binding}" ContentLoader="{StaticResource CustomContentLoader}">
-            <test:ModernTab.Links>
-                <test:Link DisplayName="General" Source="/Pages/General.xaml" />
-                <test:Link DisplayName="Power Format" Source="/Pages/PowerFormat.xaml" />
-                <test:Link DisplayName="Root Folder" Source="/Pages/RootFolder.xaml" />
-                <test:Link DisplayName="Restore Ratings" Source="/Pages/RestoreRatings.xaml" />
-                <test:Link DisplayName="Appearance" Source="/Pages/Appearance.xaml" />
-            </test:ModernTab.Links>
-        </test:ModernTab>
+        <controls:ModernTab
+            ContentLoader="{StaticResource CustomContentLoader}"
+            DataContext="{Binding}"
+            Layout="List">
+            <controls:ModernTab.Links>
+                <helpers:Link DisplayName="General" Source="/Theme/Components/General.xaml" />
+                <helpers:Link DisplayName="Power Format" Source="/Theme/Components/PowerFormat.xaml" />
+                <helpers:Link DisplayName="Root Folder" Source="/Theme/Components/RootFolder.xaml" />
+                <helpers:Link DisplayName="Restore Ratings" Source="/Theme/Components/RestoreRatings.xaml" />
+                <helpers:Link DisplayName="Appearance" Source="/Theme/Components/Appearance.xaml" />
+            </controls:ModernTab.Links>
+        </controls:ModernTab>
     </Grid>
 </helpers:ModernWindowBase>

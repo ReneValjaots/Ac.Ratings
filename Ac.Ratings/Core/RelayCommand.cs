@@ -1,37 +1,125 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Ac.Ratings.Core;
 
-public class RelayCommand : ICommand {
+public sealed partial class RelayCommand : IRelayCommand {
     private readonly Action _execute;
-    public RelayCommand(Action execute) => _execute = execute;
+    private readonly Func<bool>? _canExecute;
+
     public event EventHandler? CanExecuteChanged;
-    public bool CanExecute(object? parameter) => true;
-    public void Execute(object? parameter) => _execute();
-}
 
-public class RelayCommand<T> : ICommand {
-    private readonly Action<T> _execute;
+    public RelayCommand(Action execute) {
+        ArgumentNullException.ThrowIfNull(execute);
 
-    public RelayCommand(Action<T> execute) {
-        _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+        _execute = execute;
     }
 
-    public event EventHandler? CanExecuteChanged;
+    public RelayCommand(Action execute, Func<bool> canExecute) {
+        ArgumentNullException.ThrowIfNull(execute);
+        ArgumentNullException.ThrowIfNull(canExecute);
 
+        _execute = execute;
+        _canExecute = canExecute;
+    }
+
+    public void NotifyCanExecuteChanged() {
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool CanExecute(object? parameter) {
-        return true;
+        return _canExecute?.Invoke() != false;
     }
 
     public void Execute(object? parameter) {
-        if (parameter is T typedParameter) {
-            _execute(typedParameter);
+        _execute();
+    }
+}
+
+public sealed partial class RelayCommand<T> : IRelayCommand<T> {
+    private readonly Action<T?> _execute;
+    private readonly Predicate<T?>? _canExecute;
+    public event EventHandler? CanExecuteChanged;
+
+    public RelayCommand(Action<T?> execute) {
+        ArgumentNullException.ThrowIfNull(execute);
+
+        _execute = execute;
+    }
+
+    public RelayCommand(Action<T?> execute, Predicate<T?> canExecute) {
+        ArgumentNullException.ThrowIfNull(execute);
+        ArgumentNullException.ThrowIfNull(canExecute);
+
+        _execute = execute;
+        _canExecute = canExecute;
+    }
+
+    public void NotifyCanExecuteChanged() {
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool CanExecute(T? parameter) {
+        return _canExecute?.Invoke(parameter) != false;
+    }
+
+    public bool CanExecute(object? parameter) {
+        if (parameter is null && default(T) is not null) {
+            return false;
         }
-        else if (parameter == null && typeof(T).IsClass) {
-            _execute(default); // Allow null for reference types
+
+        if (!TryGetCommandArgument(parameter, out T? result)) {
+            ThrowArgumentExceptionForInvalidCommandArgument(parameter);
         }
-        else {
-            throw new ArgumentException($"Expected parameter of type {typeof(T).Name}, but got {parameter?.GetType().Name ?? "null"}");
+
+        return CanExecute(result);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Execute(T? parameter) {
+        _execute(parameter);
+    }
+
+    public void Execute(object? parameter) {
+        if (!TryGetCommandArgument(parameter, out T? result)) {
+            ThrowArgumentExceptionForInvalidCommandArgument(parameter);
         }
+
+        Execute(result);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool TryGetCommandArgument(object? parameter, out T? result) {
+        if (parameter is null && default(T) is null) {
+            result = default;
+
+            return true;
+        }
+
+        if (parameter is T argument) {
+            result = argument;
+
+            return true;
+        }
+
+        result = default;
+
+        return false;
+    }
+
+    [DoesNotReturn]
+    internal static void ThrowArgumentExceptionForInvalidCommandArgument(object? parameter) {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        static Exception GetException(object? parameter) {
+            if (parameter is null) {
+                return new ArgumentException($"Parameter \"{nameof(parameter)}\" (object) must not be null, as the command type requires an argument of type {typeof(T)}.", nameof(parameter));
+            }
+
+            return new ArgumentException($"Parameter \"{nameof(parameter)}\" (object) cannot be of type {parameter.GetType()}, as the command type requires an argument of type {typeof(T)}.", nameof(parameter));
+        }
+
+        throw GetException(parameter);
     }
 }

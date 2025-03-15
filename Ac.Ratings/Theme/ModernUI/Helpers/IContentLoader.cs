@@ -1,7 +1,4 @@
-﻿namespace Ac.Ratings.Theme.ModernUI.test {
-    /// <summary>
-    /// The contract for loading content.
-    /// </summary>
+﻿namespace Ac.Ratings.Theme.ModernUI.Helpers {
     public interface IContentLoader {
         Task<object> LoadContentAsync(Uri uri, CancellationToken cancellationToken);
     }

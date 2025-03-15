@@ -1,11 +1,8 @@
-﻿using System.Windows;
+﻿using Ac.Ratings.Theme.ModernUI.Helpers;
+using System.Windows;
 using System.Windows.Controls;
 
-namespace Ac.Ratings.Theme.ModernUI.test
-{
-    /// <summary>
-    /// A simple content frame implementation with navigation support.
-    /// </summary>
+namespace Ac.Ratings.Theme.ModernUI.Controls {
     public class ModernFrame : ContentControl {
         public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register(nameof(Source), typeof(Uri), typeof(ModernFrame), new PropertyMetadata(OnSourceChanged));

@@ -1,10 +1,8 @@
-﻿using System.Windows;
+﻿using Ac.Ratings.Theme.ModernUI.Helpers;
+using System.Windows;
 using System.Windows.Controls;
 
-namespace Ac.Ratings.Theme.ModernUI.test {
-    /// <summary>
-    /// Represents a control that contains multiple pages that share the same space on screen.
-    /// </summary>
+namespace Ac.Ratings.Theme.ModernUI.Controls {
     public class ModernTab : Control {
         public static readonly DependencyProperty ContentLoaderProperty =
             DependencyProperty.Register(nameof(ContentLoader), typeof(IContentLoader), typeof(ModernTab), new PropertyMetadata(new DefaultContentLoader()));
@@ -17,14 +15,12 @@ namespace Ac.Ratings.Theme.ModernUI.test {
 
         public static readonly DependencyProperty SelectedSourceProperty = DependencyProperty.Register(nameof(SelectedSource), typeof(Uri), typeof(ModernTab), new PropertyMetadata(OnSelectedSourceChanged));
 
-        public event EventHandler<SourceEventArgs> SelectedSourceChanged;
+        public event EventHandler<EventArgs> SelectedSourceChanged;
 
         private ListBox _linkList;
 
         public ModernTab() {
             DefaultStyleKey = typeof(ModernTab);
-
-            // create a default links collection
             SetCurrentValue(LinksProperty, new LinkCollection());
         }
 
@@ -42,7 +38,7 @@ namespace Ac.Ratings.Theme.ModernUI.test {
             // raise SelectedSourceChanged event
             var handler = SelectedSourceChanged;
             if (handler != null) {
-                handler(this, new SourceEventArgs(newValue));
+                handler(this, EventArgs.Empty);
             }
         }
 

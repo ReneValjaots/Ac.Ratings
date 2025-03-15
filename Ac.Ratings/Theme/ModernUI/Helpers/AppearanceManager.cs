@@ -7,7 +7,7 @@ namespace Ac.Ratings.Theme.ModernUI.Helpers {
     /// <summary>
     /// Manages the theme, font size and accent colors for a Modern UI application.
     /// </summary>
-    public class AppearanceManager : NotifyPropertyChanged {
+    public class AppearanceManager : ObservableObject {
         public static readonly Uri DarkThemeSource = new Uri("Theme/ModernUI/Assets/ModernUI.Dark.xaml", UriKind.Relative);
         public static readonly Uri LightThemeSource = new Uri("Theme/ModernUI/Assets/ModernUI.Light.xaml", UriKind.Relative);
         public static readonly Uri BlackThemeSource = new Uri("Theme/ModernUI/Assets/ModernUI.Black.xaml", UriKind.Relative);
@@ -15,31 +15,36 @@ namespace Ac.Ratings.Theme.ModernUI.Helpers {
         public const string KeyAccentColor = "AccentColor";
         public const string KeyAccent = "Accent";
 
-        private static AppearanceManager current = new AppearanceManager();
-
         private AppearanceManager() {
-            DarkThemeCommand = new RelayCommandModern(o => ThemeSource = DarkThemeSource, o => !DarkThemeSource.Equals(ThemeSource));
-            LightThemeCommand = new RelayCommandModern(o => ThemeSource = LightThemeSource, o => !LightThemeSource.Equals(ThemeSource));
-            BlackThemeCommand = new RelayCommandModern(o => ThemeSource = BlackThemeSource, o => !BlackThemeSource.Equals(ThemeSource));
-            //SetThemeCommand = new RelayCommandModern(o => {
-            //    var uri = NavigationHelper.ToUri(o);
-            //    if (uri != null) {
-            //        ThemeSource = uri;
-            //    }
-            //}, o => o is Uri || o is string);
-            AccentColorCommand = new RelayCommandModern(o => {
-                if (o is Color) {
-                    AccentColor = (Color)o;
-                }
-                else {
-                    // parse color from string
-                    var str = o as string;
-                    if (str != null) {
-                        AccentColor = (Color)ColorConverter.ConvertFromString(str);
-                    }
-                }
-            }, o => o is Color || o is string);
+            DarkThemeCommand = new RelayCommand(SetDarkTheme, CanSetDarkTheme);
+            LightThemeCommand = new RelayCommand(SetLightTheme, CanSetLightTheme);
+            BlackThemeCommand = new RelayCommand(SetBlackTheme, CanSetBlackTheme);
+
+            AccentColorCommand = new RelayCommand<object>(SetAccentColorFromObject, CanSetAccentColorFromObject);
         }
+
+        private void SetDarkTheme() => ThemeSource = DarkThemeSource;
+        private bool CanSetDarkTheme() => !DarkThemeSource.Equals(ThemeSource);
+
+        private void SetLightTheme() => ThemeSource = LightThemeSource;
+        private bool CanSetLightTheme() => !LightThemeSource.Equals(ThemeSource);
+
+        private void SetBlackTheme() => ThemeSource = BlackThemeSource;
+        private bool CanSetBlackTheme() => !BlackThemeSource.Equals(ThemeSource);
+
+        private void SetAccentColorFromObject(object obj) {
+            if (obj is Color accentColor) {
+                AccentColor = accentColor;
+            }
+            else if (obj is string str) {
+                AccentColor = (Color)ColorConverter.ConvertFromString(str);
+            }
+        }
+
+        private bool CanSetAccentColorFromObject(object obj) {
+            return obj is Color or string;
+        }
+
 
         private ResourceDictionary GetThemeDictionary() {
             // determine the current theme by looking at the app resources and return the first dictionary having the resource key 'WindowBackground' defined.
@@ -59,22 +64,19 @@ namespace Ac.Ratings.Theme.ModernUI.Helpers {
         }
 
         private void SetThemeSource(Uri source, bool useThemeAccentColor) {
-            if (source == null) {
-                throw new ArgumentNullException("source");
-            }
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             var oldThemeDict = GetThemeDictionary();
             var dictionaries = Application.Current.Resources.MergedDictionaries;
             var themeDict = new ResourceDictionary { Source = source };
 
             // if theme defines an accent color, use it
-            var accentColor = themeDict[KeyAccentColor] as Color?;
-            if (accentColor.HasValue) {
+            if (themeDict[KeyAccentColor] is Color accentColor) {
                 // remove from the theme dictionary and apply globally if useThemeAccentColor is true
                 themeDict.Remove(KeyAccentColor);
 
                 if (useThemeAccentColor) {
-                    ApplyAccentColor(accentColor.Value);
+                    ApplyAccentColor(accentColor);
                 }
             }
 
@@ -86,20 +88,17 @@ namespace Ac.Ratings.Theme.ModernUI.Helpers {
                 dictionaries.Remove(oldThemeDict);
             }
 
-            OnPropertyChanged("ThemeSource");
+            OnPropertyChanged(nameof(ThemeSource));
         }
 
         private void ApplyAccentColor(Color accentColor) {
-            // set accent color and brush resources
             Application.Current.Resources[KeyAccentColor] = accentColor;
             Application.Current.Resources[KeyAccent] = new SolidColorBrush(accentColor);
         }
 
         private Color GetAccentColor() {
-            var accentColor = Application.Current.Resources[KeyAccentColor] as Color?;
-
-            if (accentColor.HasValue) {
-                return accentColor.Value;
+            if (Application.Current.Resources[KeyAccentColor] is Color accentColor) {
+                return accentColor;
             }
 
             // default color: teal
@@ -115,28 +114,24 @@ namespace Ac.Ratings.Theme.ModernUI.Helpers {
                 SetThemeSource(themeSource, false);
             }
 
-            OnPropertyChanged("AccentColor");
+            OnPropertyChanged(nameof(AccentColor));
         }
 
-        public static AppearanceManager Current {
-            get { return current; }
-        }
+        public static AppearanceManager Current { get; } = new AppearanceManager();
 
         public ICommand DarkThemeCommand { get; private set; }
         public ICommand LightThemeCommand { get; private set; }
         public ICommand BlackThemeCommand { get; private set; }
-        public ICommand SetThemeCommand { get; private set; }
-
         public ICommand AccentColorCommand { get; private set; }
 
         public Uri ThemeSource {
-            get { return GetThemeSource(); }
-            set { SetThemeSource(value, true); }
+            get => GetThemeSource();
+            set => SetThemeSource(value, true);
         }
 
         public Color AccentColor {
-            get { return GetAccentColor(); }
-            set { SetAccentColor(value); }
+            get => GetAccentColor();
+            set => SetAccentColor(value);
         }
     }
 }

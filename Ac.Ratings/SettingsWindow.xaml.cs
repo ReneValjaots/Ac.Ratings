@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
+using Ac.Ratings.Theme.ModernUI.Controls;
 using Ac.Ratings.Theme.ModernUI.Helpers;
 using Ac.Ratings.ViewModel;
 
@@ -64,11 +65,10 @@ namespace Ac.Ratings {
         }
 
         public void ResetExtraFeatures_Click(object sender, RoutedEventArgs e) {
-            var result = MessageBox.Show(
+            var result = ModernDialog.ShowMessage(
                 "Are you sure you want to reset all extra features? This action cannot be undone.",
                 "Confirm Reset",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes) {
                 try {

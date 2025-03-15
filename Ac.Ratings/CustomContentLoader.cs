@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using Ac.Ratings.Theme.ModernUI.test;
+using Ac.Ratings.Theme.ModernUI.Helpers;
 
 namespace Ac.Ratings;
 
@@ -9,8 +9,8 @@ public class CustomContentLoader : IContentLoader {
             throw new ArgumentNullException(nameof(uri));
 
         // Extract the page name from the URI (e.g., "/Pages/General.xaml" -> "General")
-        string pageName = uri.OriginalString.TrimStart('/').Replace("Pages/", "").Replace(".xaml", "");
-        string namespacePart = "Ac.Ratings.Theme.ModernUI.test.Pages";
+        string pageName = uri.OriginalString.TrimStart('/').Replace("Theme/Components/", "").Replace(".xaml", "");
+        string namespacePart = "Ac.Ratings.Theme.Components";
         string typeName = $"{namespacePart}.{pageName}";
 
         // Debug logging to verify URI and type resolution

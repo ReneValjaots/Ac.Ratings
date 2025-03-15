@@ -7,10 +7,10 @@ using Ac.Ratings.Theme.ModernUI.Helpers;
 namespace Ac.Ratings.ViewModel;
 
 public class AppearanceViewModel : ObservableObject {
-    private const string FontSmall = "small";
-    private const string FontLarge = "large";
-    private const string PaletteMetro = "metro";
-    private const string PaletteWP = "windows phone";
+    private const string _fontSmall = "small";
+    private const string _fontLarge = "large";
+    private const string _paletteMetro = "metro";
+    private const string _paletteWp = "windows phone";
 
     private readonly Color[] _metroAccentColors = new Color[]
     {
@@ -49,7 +49,7 @@ public class AppearanceViewModel : ObservableObject {
             Color.FromRgb(0x87, 0x79, 0x4e), // taupe
     };
 
-    private string _selectedPalette = PaletteWP;
+    private string _selectedPalette = _paletteWp;
     private Color _selectedAccentColor;
     private ObservableCollection<Link> _themes = new ObservableCollection<Link>();
     private Link _selectedTheme;
@@ -87,15 +87,15 @@ public class AppearanceViewModel : ObservableObject {
     }
 
     public string[] FontSizes {
-        get => new[] { FontSmall, FontLarge };
+        get => new[] { _fontSmall, _fontLarge };
     }
 
     public string[] Palettes {
-        get => new[] { PaletteMetro, PaletteWP };
+        get => new[] { _paletteMetro, _paletteWp };
     }
 
     public Color[] AccentColors {
-        get => _selectedPalette == PaletteMetro ? _metroAccentColors : _wpAccentColors;
+        get => _selectedPalette == _paletteMetro ? _metroAccentColors : _wpAccentColors;
     }
 
     public string SelectedPalette {
@@ -142,21 +142,5 @@ public class AppearanceViewModel : ObservableObject {
                 AppearanceManager.Current.AccentColor = value;
             }
         }
-    }
-}
-
-// Simple Link class (replace if you have your own)
-public class Link : ObservableObject {
-    private string _displayName;
-    private Uri _source;
-
-    public string DisplayName {
-        get => _displayName;
-        set => SetField(ref _displayName, value);
-    }
-
-    public Uri Source {
-        get => _source;
-        set => SetField(ref _source, value);
     }
 }
