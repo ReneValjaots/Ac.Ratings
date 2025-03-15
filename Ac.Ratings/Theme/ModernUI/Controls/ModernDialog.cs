@@ -3,22 +3,20 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Ac.Ratings.Core;
 
-namespace Ac.Ratings.Theme.ModernUI.Controls
-{
+namespace Ac.Ratings.Theme.ModernUI.Controls {
     public class ModernDialog : Window {
         public static readonly DependencyProperty BackgroundContentProperty = DependencyProperty.Register(nameof(BackgroundContent), typeof(object), typeof(ModernDialog));
         public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(nameof(Buttons), typeof(IEnumerable<Button>), typeof(ModernDialog));
 
-        private readonly RelayCommand<MessageBoxResult> _closeCommand; 
-        private Button _okButton;
-        private Button _cancelButton;
-        private Button _yesButton;
-        private Button _noButton;
-        private Button _closeButton;
+        private readonly RelayCommand<MessageBoxResult> _closeCommand;
+        private Button? _okButton;
+        private Button? _cancelButton;
+        private Button? _yesButton;
+        private Button? _noButton;
+        private Button? _closeButton;
         private MessageBoxResult _messageBoxResult = MessageBoxResult.None;
 
-        public ModernDialog()
-        {
+        public ModernDialog() {
             DefaultStyleKey = typeof(ModernDialog);
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
@@ -34,7 +32,7 @@ namespace Ac.Ratings.Theme.ModernUI.Controls
                 Close();
             });
 
-            Buttons = new Button[] { CloseButton };
+            Buttons = [CloseButton];
 
             // set the default owner to the app main window (if possible)
             if (Application.Current != null && Application.Current.MainWindow != this) {
@@ -42,8 +40,7 @@ namespace Ac.Ratings.Theme.ModernUI.Controls
             }
         }
 
-        private Button CreateCloseDialogButton(string content, bool isDefault, bool isCancel, MessageBoxResult result)
-        {
+        private Button CreateCloseDialogButton(string content, bool isDefault, bool isCancel, MessageBoxResult result) {
             return new Button {
                 Content = content,
                 Command = CloseCommand,
@@ -58,78 +55,26 @@ namespace Ac.Ratings.Theme.ModernUI.Controls
 
         public ICommand CloseCommand => _closeCommand;
 
-        public Button OkButton
-        {
-            get
-            {
-                if (_okButton == null) {
-                    _okButton = CreateCloseDialogButton("Ok", true, false, MessageBoxResult.OK);
-                }
-                return _okButton;
-            }
-        }
+        public Button OkButton => _okButton ??= CreateCloseDialogButton("Ok", true, false, MessageBoxResult.OK);
+        public Button CancelButton => _cancelButton ??= CreateCloseDialogButton("Cancel", false, true, MessageBoxResult.Cancel);
+        public Button YesButton => _yesButton ??= CreateCloseDialogButton("Yes", true, false, MessageBoxResult.Yes);
+        public Button NoButton => _noButton ??= CreateCloseDialogButton("No", false, true, MessageBoxResult.No);
+        public Button CloseButton => _closeButton ??= CreateCloseDialogButton("Close", true, false, MessageBoxResult.None);
 
-        public Button CancelButton
-        {
-            get
-            {
-                if (_cancelButton == null) {
-                    _cancelButton = CreateCloseDialogButton("Cancel", false, true, MessageBoxResult.Cancel);
-                }
-                return _cancelButton;
-            }
-        }
-
-        public Button YesButton
-        {
-            get
-            {
-                if (_yesButton == null) {
-                    _yesButton = CreateCloseDialogButton("Yes", true, false, MessageBoxResult.Yes);
-                }
-                return _yesButton;
-            }
-        }
-
-        public Button NoButton
-        {
-            get
-            {
-                if (_noButton == null) {
-                    _noButton = CreateCloseDialogButton("No", false, true, MessageBoxResult.No);
-                }
-                return _noButton;
-            }
-        }
-
-        public Button CloseButton
-        {
-            get
-            {
-                if (_closeButton == null) {
-                    _closeButton = CreateCloseDialogButton("Close", true, false, MessageBoxResult.None);
-                }
-                return _closeButton;
-            }
-        }
-
-        public object BackgroundContent
-        {
+        public object BackgroundContent {
             get => GetValue(BackgroundContentProperty);
             set => SetValue(BackgroundContentProperty, value);
         }
 
-        public IEnumerable<Button> Buttons
-        {
+        public IEnumerable<Button> Buttons {
             get => (IEnumerable<Button>)GetValue(ButtonsProperty);
             set => SetValue(ButtonsProperty, value);
         }
 
         public MessageBoxResult MessageBoxResult => _messageBoxResult;
 
-        public static MessageBoxResult ShowMessage(string text, string title, MessageBoxButton button, Window owner = null)
-        {
-            var dlg = new ModernDialog {
+        public static MessageBoxResult ShowMessage(string text, string title, MessageBoxButton button, Window? owner = null) {
+            var dialog = new ModernDialog {
                 Title = title,
                 Content = new TextBlock {
                     Text = text,
@@ -142,32 +87,22 @@ namespace Ac.Ratings.Theme.ModernUI.Controls
                 MaxWidth = 640,
             };
             if (owner != null) {
-                dlg.Owner = owner;
+                dialog.Owner = owner;
             }
 
-            dlg.Buttons = GetButtons(dlg, button);
-            dlg.ShowDialog();
-            return dlg._messageBoxResult;
+            dialog.Buttons = GetButtons(dialog, button);
+            dialog.ShowDialog();
+            return dialog._messageBoxResult;
         }
 
-        private static IEnumerable<Button> GetButtons(ModernDialog owner, MessageBoxButton button)
-        {
-            if (button == MessageBoxButton.OK) {
-                yield return owner.OkButton;
-            }
-            else if (button == MessageBoxButton.OKCancel) {
-                yield return owner.OkButton;
-                yield return owner.CancelButton;
-            }
-            else if (button == MessageBoxButton.YesNo) {
-                yield return owner.YesButton;
-                yield return owner.NoButton;
-            }
-            else if (button == MessageBoxButton.YesNoCancel) {
-                yield return owner.YesButton;
-                yield return owner.NoButton;
-                yield return owner.CancelButton;
-            }
+        private static IEnumerable<Button> GetButtons(ModernDialog owner, MessageBoxButton button) {
+            return button switch {
+                MessageBoxButton.OK => [owner.OkButton],
+                MessageBoxButton.OKCancel => [owner.OkButton, owner.CancelButton],
+                MessageBoxButton.YesNo => [owner.YesButton, owner.NoButton],
+                MessageBoxButton.YesNoCancel => [owner.YesButton, owner.NoButton, owner.CancelButton],
+                _ => throw new ArgumentException("Unsupported MessageBoxButton value.", nameof(button))
+            };
         }
     }
 }

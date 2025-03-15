@@ -15,7 +15,7 @@ namespace Ac.Ratings.Theme.ModernUI.Controls {
             set => SetValue(SourceProperty, value);
         }
 
-        public IContentLoader ContentLoader {
+        public IContentLoader? ContentLoader {
             get => (IContentLoader)GetValue(ContentLoaderProperty);
             set => SetValue(ContentLoaderProperty, value);
         }
@@ -31,7 +31,7 @@ namespace Ac.Ratings.Theme.ModernUI.Controls {
                 return;
             }
 
-            var loader = ContentLoader ?? new DefaultContentLoader();
+            var loader = ContentLoader ?? new ContentLoader();
             var content = await loader.LoadContentAsync(source, CancellationToken.None);
             if (content == null) {
                 System.Diagnostics.Debug.WriteLine($"ModernFrame: Failed to load content for URI: {source.OriginalString}");

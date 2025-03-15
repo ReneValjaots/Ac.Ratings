@@ -5,7 +5,7 @@ using System.Windows.Controls;
 namespace Ac.Ratings.Theme.ModernUI.Controls {
     public class ModernTab : Control {
         public static readonly DependencyProperty ContentLoaderProperty =
-            DependencyProperty.Register(nameof(ContentLoader), typeof(IContentLoader), typeof(ModernTab), new PropertyMetadata(new DefaultContentLoader()));
+            DependencyProperty.Register(nameof(ContentLoader), typeof(IContentLoader), typeof(ModernTab), new PropertyMetadata(new ContentLoader()));
 
         public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register(nameof(Layout), typeof(TabLayout), typeof(ModernTab), new PropertyMetadata(TabLayout.Tab));
 
