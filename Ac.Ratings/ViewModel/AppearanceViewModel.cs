@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Media;
 using Ac.Ratings.Core;
+using Ac.Ratings.Services;
 using Ac.Ratings.Theme.ModernUI.Helpers;
 
 namespace Ac.Ratings.ViewModel;
@@ -36,15 +37,37 @@ public class AppearanceViewModel : ObservableObject {
     private Link _selectedTheme;
 
     public AppearanceViewModel() {
-        _themes.Add(new Link { DisplayName = "dark", Source = AppearanceManager.DarkThemeSource });
         _themes.Add(new Link { DisplayName = "black", Source = AppearanceManager.BlackThemeSource });
+        _themes.Add(new Link { DisplayName = "dark", Source = AppearanceManager.DarkThemeSource });
         _themes.Add(new Link { DisplayName = "light", Source = AppearanceManager.LightThemeSource });
 
+        LoadAppearanceSettings();
         SyncThemeAndColor();
 
         // Subscribe to AppearanceManager changes
         PropertyChangedEventManager.AddHandler(AppearanceManager.Current, OnAppearanceManagerPropertyChanged, nameof(AppearanceManager.AccentColor));
         PropertyChangedEventManager.AddHandler(AppearanceManager.Current, OnAppearanceManagerPropertyChanged, nameof(AppearanceManager.ThemeSource));
+    }
+
+    private void LoadAppearanceSettings() {
+        var savedTheme = ConfigManager.LoadAppearanceConfigValue("Theme");
+        _selectedTheme = _themes.FirstOrDefault(t => t.DisplayName == savedTheme) ?? _themes.First();
+
+        var savedColor = ConfigManager.LoadAppearanceConfigValue("AccentColor");
+        if (!string.IsNullOrEmpty(savedColor)) {
+            try {
+                _selectedAccentColor = (Color)ColorConverter.ConvertFromString(savedColor);
+            }
+            catch (Exception) {
+                _selectedAccentColor = _wpAccentColors.First();
+            }
+        }
+        else {
+            _selectedAccentColor = _wpAccentColors.First();
+        }
+
+        AppearanceManager.Current.ThemeSource = _selectedTheme.Source;
+        AppearanceManager.Current.AccentColor = _selectedAccentColor;
     }
 
     private void SyncThemeAndColor() {
@@ -69,6 +92,7 @@ public class AppearanceViewModel : ObservableObject {
         set {
             if (SetField(ref _selectedTheme, value)) {
                 AppearanceManager.Current.ThemeSource = value.Source;
+                ConfigManager.SaveAppearanceConfigValue("Theme", value.DisplayName);
             }
         }
     }
@@ -78,6 +102,7 @@ public class AppearanceViewModel : ObservableObject {
         set {
             if (SetField(ref _selectedAccentColor, value)) {
                 AppearanceManager.Current.AccentColor = value;
+                ConfigManager.SaveAppearanceConfigValue("AccentColor", value.ToString());
             }
         }
     }

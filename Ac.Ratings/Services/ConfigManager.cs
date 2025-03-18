@@ -7,6 +7,7 @@ namespace Ac.Ratings.Services {
     public static class ConfigManager {
         public static string ResourceFolder { get; private set; }
         public static string ConfigFilePath { get; private set; }
+        public static string AppearanceConfigFilePath { get; private set; }
         public static string CarsRootFolder { get; private set; }
         public static string ErrorLogFilepath { get; private set; }
         public static string BackupFolder { get; private set; }
@@ -29,6 +30,7 @@ namespace Ac.Ratings.Services {
             EnsureResourceFolderStructure();
 
             ConfigFilePath = Path.Combine(ResourceFolder, "config", "config.json");
+            AppearanceConfigFilePath = Path.Combine(ResourceFolder, "config", "appearance.json");
 
             CarsRootFolder = Path.Combine(ResourceFolder, "cars");
             ErrorLogFilepath = Path.Combine(ResourceFolder, "data", "ErrorLog.txt");
@@ -39,6 +41,8 @@ namespace Ac.Ratings.Services {
 
             OriginalRatingsPath = LoadOriginalRatingsPath();
             EnsureConfigFileExists();
+            EnsureAppearanceConfigFileExists();
+
             if (LoadConfigValue("ResourceFolder") == null) {
                 SaveConfigValue("ResourceFolder", ResourceFolder);
             }
@@ -135,6 +139,29 @@ namespace Ac.Ratings.Services {
             File.WriteAllText(ConfigFilePath, JsonSerializer.Serialize(config, JsonOptions));
         }
 
+        public static string? LoadAppearanceConfigValue(string key) {
+            if (File.Exists(AppearanceConfigFilePath)) {
+                var config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(AppearanceConfigFilePath));
+                return config?.GetValueOrDefault(key);
+            }
+
+            return null;
+        }
+
+        public static void SaveAppearanceConfigValue(string key, string value) {
+            Dictionary<string, string> config;
+
+            if (File.Exists(AppearanceConfigFilePath)) {
+                config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(AppearanceConfigFilePath)) ?? new Dictionary<string, string>();
+            }
+            else {
+                config = new Dictionary<string, string>();
+            }
+
+            config[key] = value;
+            File.WriteAllText(AppearanceConfigFilePath, JsonSerializer.Serialize(config, JsonOptions));
+        }
+
         private static string? LoadOriginalRatingsPath() {
             if (LoadConfigValue("OriginalRatingsDatafilePath") != null) {
                 return LoadConfigValue("OriginalRatingsDatafilePath");
@@ -155,6 +182,18 @@ namespace Ac.Ratings.Services {
             if (!File.Exists(ConfigFilePath)) {
                 var defaultConfig = new Dictionary<string, string>();
                 File.WriteAllText(ConfigFilePath, JsonSerializer.Serialize(defaultConfig, JsonOptions));
+            }
+        }
+
+        private static void EnsureAppearanceConfigFileExists() {
+            var directoryPath = Path.GetDirectoryName(AppearanceConfigFilePath);
+            if (!Directory.Exists(directoryPath)) {
+                Directory.CreateDirectory(directoryPath!);
+            }
+
+            if (!File.Exists(AppearanceConfigFilePath)) {
+                var defaultConfig = new Dictionary<string, string>();
+                File.WriteAllText(AppearanceConfigFilePath, JsonSerializer.Serialize(defaultConfig, JsonOptions));
             }
         }
     }

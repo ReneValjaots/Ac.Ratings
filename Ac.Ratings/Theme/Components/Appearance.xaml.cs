@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Ac.Ratings.ViewModel;
 
 namespace Ac.Ratings.Theme.Components
 {
@@ -10,6 +11,7 @@ namespace Ac.Ratings.Theme.Components
         public Appearance()
         {
             InitializeComponent();
+            DataContext = new AppearanceViewModel();
         }
     }
 }

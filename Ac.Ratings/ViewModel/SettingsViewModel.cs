@@ -4,7 +4,6 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using Ac.Ratings.Core;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
@@ -24,7 +23,6 @@ namespace Ac.Ratings.ViewModel {
         public ICommand RestoreBackupCommand { get; }
         public ICommand SaveSettingsCommand { get; }
         public ICommand ResetRootFolderCommand { get; }
-        public ICommand OpenAppearanceSettingsCommand { get; }
 
 
         public SettingsViewModel() {
@@ -33,7 +31,6 @@ namespace Ac.Ratings.ViewModel {
             RestoreBackupCommand = new RelayCommand(RestoreBackup);
             SaveSettingsCommand = new RelayCommand(SaveSettings);
             ResetRootFolderCommand = new RelayCommand(ResetRootFolder);
-            OpenAppearanceSettingsCommand = new RelayCommand(OpenAppearanceSettings);
             LoadSettings(ConfigManager.ConfigFilePath);
         }
         public string SelectedPrimaryUnit {
@@ -48,11 +45,6 @@ namespace Ac.Ratings.ViewModel {
 
         public void SetCarDb(ObservableCollection<Car> carDb) {
             _carDb = carDb;
-        }
-
-        private void OpenAppearanceSettings() {
-            var window = new AppearanceWindow { Owner = Application.Current.MainWindow };
-            window.ShowDialog();
         }
 
         public void LoadSettings(string configPath) {

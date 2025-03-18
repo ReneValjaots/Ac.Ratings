@@ -7,65 +7,75 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <StackPanel Margin="5">
-        <Grid Margin="0,10,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontSize="16"
-                Text="Reset all ratings" />
-            <Button
-                x:Name="ResetRatingsButton"
-                Grid.Column="1"
-                Width="100"
-                Margin="10,0,0,0"
-                HorizontalAlignment="Right"
-                Click="ResetRatingsButton_Click"
-                Content="Reset" />
-        </Grid>
+    <Grid>
+        <ScrollViewer>
+            <StackPanel x:Name="Panel" MinWidth="150" Margin="16">
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Text="GENERAL" />
 
-        <Grid Margin="0,10,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontSize="16"
-                Text="Reset all extra features" />
-            <Button
-                x:Name="ResetExtraFeatures"
-                Grid.Column="1"
-                Width="100"
-                Margin="10,0,0,0"
-                HorizontalAlignment="Right"
-                Click="ResetExtraFeatures_Click"
-                Content="Reset" />
-        </Grid>
+                <Grid Margin="0,10,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="Reset all ratings" />
+                    <Button
+                        x:Name="ResetRatingsButton"
+                        Grid.Column="1"
+                        Width="100"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        Click="ResetRatingsButton_Click"
+                        Content="Reset" />
+                </Grid>
 
-        <Grid Margin="0,10,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontSize="16"
-                Text="Transfer ratings" />
-            <Button
-                x:Name="TransferRatingsButton"
-                Grid.Column="1"
-                Width="100"
-                Margin="10,0,0,0"
-                HorizontalAlignment="Right"
-                Click="TransferRatingsButton_OnClick"
-                Content="Transfer" />
-        </Grid>
-    </StackPanel>
+                <Grid Margin="0,10,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="Reset all extra features" />
+                    <Button
+                        x:Name="ResetExtraFeatures"
+                        Grid.Column="1"
+                        Width="100"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        Click="ResetExtraFeatures_Click"
+                        Content="Reset" />
+                </Grid>
+
+                <Grid Margin="0,10,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="Transfer ratings" />
+                    <Button
+                        x:Name="TransferRatingsButton"
+                        Grid.Column="1"
+                        Width="100"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        Click="TransferRatingsButton_OnClick"
+                        Content="Transfer" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
