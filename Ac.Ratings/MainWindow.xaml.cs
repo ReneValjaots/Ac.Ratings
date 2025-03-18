@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using Ac.Ratings.Services.MainView;
-using Ac.Ratings.Theme.ModernUI.Helpers;
+using Ac.Ratings.Theme.ModernUI.Controls;
 using Ac.Ratings.ViewModel;
 
 namespace Ac.Ratings {

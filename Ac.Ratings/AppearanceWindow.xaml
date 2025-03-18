@@ -1,4 +1,4 @@
-﻿<helpers:ModernWindowBase
+﻿<controls:ModernWindowBase
     x:Class="Ac.Ratings.AppearanceWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,6 +8,7 @@
     xmlns:theme="clr-namespace:Ac.Ratings.Theme"
     xmlns:converters="clr-namespace:Ac.Ratings.Theme.Converters"
     xmlns:helpers="clr-namespace:Ac.Ratings.Theme.ModernUI.Helpers"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
     Title="Appearance Settings"
     Width="800"
     Height="450"
@@ -71,4 +72,4 @@
             </StackPanel>
         </ScrollViewer>
     </Grid>
-</helpers:ModernWindowBase>
+</controls:ModernWindowBase>

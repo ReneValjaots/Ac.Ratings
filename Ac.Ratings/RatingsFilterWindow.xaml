@@ -1,4 +1,4 @@
-﻿<helpers:ModernWindowBase
+﻿<controls:ModernWindowBase
     x:Class="Ac.Ratings.RatingsFilterWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:theme="clr-namespace:Ac.Ratings.Theme"
     xmlns:helpers="clr-namespace:Ac.Ratings.Theme.ModernUI.Helpers"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
     Title="Ratings Filter"
     Width="800"
     Height="450"
@@ -206,4 +207,4 @@
                 Content="Reset" />
         </StackPanel>
     </StackPanel>
-</helpers:ModernWindowBase>
+</controls:ModernWindowBase>

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace Ac.Ratings.Theme.ModernUI.Helpers
+namespace Ac.Ratings.Theme.ModernUI.Controls
 {
     public class ModernWindowBase : Window {
         public static readonly DependencyProperty BackgroundContentProperty =

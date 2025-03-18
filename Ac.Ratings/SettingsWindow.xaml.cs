@@ -4,7 +4,6 @@ using System.Windows;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
 using Ac.Ratings.Theme.ModernUI.Controls;
-using Ac.Ratings.Theme.ModernUI.Helpers;
 using Ac.Ratings.ViewModel;
 
 namespace Ac.Ratings {

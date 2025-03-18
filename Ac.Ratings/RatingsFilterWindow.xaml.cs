@@ -1,7 +1,7 @@
 ﻿using Ac.Ratings.ViewModel;
 using System.Windows;
 using Ac.Ratings.Theme;
-using Ac.Ratings.Theme.ModernUI.Helpers;
+using Ac.Ratings.Theme.ModernUI.Controls;
 
 namespace Ac.Ratings {
     /// <summary>
