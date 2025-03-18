@@ -1,12 +1,13 @@
 ﻿using System.Windows;
 using Ac.Ratings.Services.MainView;
+using Ac.Ratings.Theme.ModernUI.Helpers;
 using Ac.Ratings.ViewModel;
 
 namespace Ac.Ratings {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class MainWindow : ModernWindowBase {
         private MainViewModel _viewModel;
 
         public MainWindow() {

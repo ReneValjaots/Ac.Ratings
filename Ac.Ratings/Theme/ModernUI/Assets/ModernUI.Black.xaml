@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Color x:Key="WindowBackgroundColor">#000000</Color>
+    <SolidColorBrush x:Key="SliderTrackRemainderBackground">#1E2328</SolidColorBrush>
 
     <SolidColorBrush x:Key="ButtonBackground" Color="#282828" />
     <SolidColorBrush x:Key="ButtonBackgroundHover" Color="#333333" />
@@ -11,6 +12,8 @@
     <SolidColorBrush x:Key="ButtonTextHover" Color="#ffffff" />
     <SolidColorBrush x:Key="ButtonTextPressed" Color="#d1d1d1" />
     <SolidColorBrush x:Key="ButtonTextDisabled" Color="#515151" />
+
+    <SolidColorBrush x:Key="ListViewItemBackground" Color="#282828" />
 
     <SolidColorBrush x:Key="DataGridBackground" Color="Transparent" />
     <SolidColorBrush x:Key="DataGridForeground" Color="#ffffff" />
@@ -109,13 +112,19 @@
     <SolidColorBrush x:Key="SubMenuTextHover" Color="#515151" />
     <SolidColorBrush x:Key="SubMenuTextSelected" Color="#ffffff" />
 
-    <SolidColorBrush x:Key="SystemButtonBackground" Color="{StaticResource WindowBackgroundColor}" Opacity="0" />
+    <SolidColorBrush
+        x:Key="SystemButtonBackground"
+        Opacity="0"
+        Color="{StaticResource WindowBackgroundColor}" />
     <SolidColorBrush x:Key="SystemButtonBackgroundOnMoseOver" Color="#333333" />
     <SolidColorBrush x:Key="SystemButtonForegroundOnMoseOver" Color="#FFFFFF" />
     <SolidColorBrush x:Key="SystemButtonBackgroundIsPressed" Color="{DynamicResource AccentColor}" />
     <SolidColorBrush x:Key="SystemButtonForegroundIsPressed" Color="#FFFFFF" />
 
-    <SolidColorBrush x:Key="CloseButtonBackground" Color="{StaticResource WindowBackgroundColor}" Opacity="0" />
+    <SolidColorBrush
+        x:Key="CloseButtonBackground"
+        Opacity="0"
+        Color="{StaticResource WindowBackgroundColor}" />
     <SolidColorBrush x:Key="CloseButtonBackgroundOnMoseOver" Color="#333333" />
     <SolidColorBrush x:Key="CloseButtonForegroundOnMoseOver" Color="#FFFFFF" />
     <SolidColorBrush x:Key="CloseButtonBackgroundIsPressed" Color="#E51400" />
@@ -129,7 +138,7 @@
         Opacity=".5"
         Color="{DynamicResource AccentColor}" />
     <SolidColorBrush x:Key="WindowHeaderGradient" Color="Transparent" />
-    <SolidColorBrush x:Key="WindowText" Color="#c1c1c1" />
+    <SolidColorBrush x:Key="WindowText" Color="#ffffff" />
     <SolidColorBrush x:Key="WindowTextReadOnly" Color="#717171" />
     <SolidColorBrush x:Key="FocusBorder" Color="{DynamicResource AccentColor}" />
 </ResourceDictionary>

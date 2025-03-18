@@ -14,32 +14,32 @@
 
     <LinearGradientBrush x:Key="ThumbOver" StartPoint="0.5,0" EndPoint="0.5,1">
         <GradientStop Offset="0.0" Color="#0A1F3D" />
-        <!-- Very dark blue -->
+        <!--  Very dark blue  -->
         <GradientStop Offset="0.2" Color="#133A6F" />
-        <!-- Deep blue -->
+        <!--  Deep blue  -->
         <GradientStop Offset="0.4" Color="#1C57A3" />
-        <!-- Rich blue -->
+        <!--  Rich blue  -->
         <GradientStop Offset="0.6" Color="#2673D1" />
-        <!-- Vibrant blue -->
+        <!--  Vibrant blue  -->
         <GradientStop Offset="1.0" Color="#3388FF" />
-        <!-- Bright blue -->
+        <!--  Bright blue  -->
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="ThumbDrag" StartPoint="0.5,0" EndPoint="0.5,1">
         <GradientStop Offset="0.0" Color="#0A1F3D" />
-        <!-- Very dark blue -->
+        <!--  Very dark blue  -->
         <GradientStop Offset="0.2" Color="#133A6F" />
-        <!-- Deep blue -->
+        <!--  Deep blue  -->
         <GradientStop Offset="0.4" Color="#1C57A3" />
-        <!-- Rich blue -->
+        <!--  Rich blue  -->
         <GradientStop Offset="0.6" Color="#2673D1" />
-        <!-- Vibrant blue -->
+        <!--  Vibrant blue  -->
         <GradientStop Offset="1.0" Color="#3388FF" />
-        <!-- Bright blue -->
+        <!--  Bright blue  -->
     </LinearGradientBrush>
 
     <Style x:Key="ThumbStyle" TargetType="{x:Type Thumb}">
-        <Setter Property="Background" Value="#020303" />
+        <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
         <Setter Property="Width" Value="24" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Template">
@@ -64,41 +64,41 @@
         </Setter>
     </Style>
 
-    <SolidColorBrush x:Key="SliderColor" Color="#1E2328" />
+    <!--<SolidColorBrush x:Key="SliderColor" Color="{DynamicResource SliderTrackRemainderBackground}" />-->
 
     <LinearGradientBrush x:Key="RangeColor" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#10284C" />
-        <!-- Dark blue -->
+        <!--  Dark blue  -->
         <GradientStop Offset="0.2" Color="#1B4780" />
-        <!-- Deep blue -->
+        <!--  Deep blue  -->
         <GradientStop Offset="0.4" Color="#2663B3" />
-        <!-- Bright blue -->
+        <!--  Bright blue  -->
         <GradientStop Offset="0.6" Color="#3B82E5" />
-        <!-- Light vibrant blue -->
+        <!--  Light vibrant blue  -->
         <GradientStop Offset="1.0" Color="#4A9CFF" />
-        <!-- Very light blue -->
+        <!--  Very light blue  -->
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="SliderOver" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#0A1F3D" />
-        <!-- Very dark blue -->
+        <!--  Very dark blue  -->
         <GradientStop Offset="0.2" Color="#133A6F" />
-        <!-- Deep blue -->
+        <!--  Deep blue  -->
         <GradientStop Offset="0.4" Color="#1C57A3" />
-        <!-- Rich blue -->
+        <!--  Rich blue  -->
         <GradientStop Offset="0.6" Color="#2673D1" />
-        <!-- Vibrant blue -->
+        <!--  Vibrant blue  -->
         <GradientStop Offset="1.0" Color="#3388FF" />
-        <!-- Bright blue -->
+        <!--  Bright blue  -->
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="SliderDrag" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#2B32B2" />
-        <!-- Deep blue -->
+        <!--  Deep blue  -->
         <GradientStop Offset="0.5" Color="#2074C8" />
-        <!-- Slightly lighter blue -->
+        <!--  Slightly lighter blue  -->
         <GradientStop Offset="1" Color="#1488CC" />
-        <!-- Lighter vibrant blue -->
+        <!--  Lighter vibrant blue  -->
     </LinearGradientBrush>
 
     <Style x:Key="PrimarySlider" TargetType="{x:Type Slider}">
@@ -124,7 +124,7 @@
                                 x:Name="PART_SelectionRange"
                                 Grid.Column="0"
                                 Background="{StaticResource RangeColor}" />
-                            <Border Grid.Column="1" Background="{StaticResource SliderColor}" />
+                            <Border Grid.Column="1" Background="{DynamicResource SliderTrackRemainderBackground}" />
 
                         </Grid>
 

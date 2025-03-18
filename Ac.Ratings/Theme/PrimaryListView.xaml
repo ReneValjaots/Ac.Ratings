@@ -104,27 +104,29 @@
 
     <Style TargetType="ListViewItem">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource ItemText}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
                     <Border
-                        Name="Border"
+                        Name="Selection"
                         Padding="5"
                         Background="Transparent">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="#333333" />
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Selection" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Selection" Property="Background" Value="{DynamicResource ItemBackgroundHover}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ItemTextHover}" />
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background">
-                                <Setter.Value>
-                                    <SolidColorBrush Color="{DynamicResource AccentColor}" />
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Foreground" Value="White" />
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter TargetName="Selection" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Selection" Property="Background" Value="{DynamicResource ItemBackgroundSelected}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ItemTextSelected}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource ItemTextDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

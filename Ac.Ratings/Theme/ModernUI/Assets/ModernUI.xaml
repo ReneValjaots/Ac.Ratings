@@ -13,7 +13,7 @@
         <ResourceDictionary Source="RadioButton.xaml" />
         <ResourceDictionary Source="CheckBox.xaml" />
         <ResourceDictionary Source="ListBox.xaml" />
-        <ResourceDictionary Source="/Theme/PrimaryTextBlock.xaml" />
+        <ResourceDictionary Source="Label.xaml" />
         <ResourceDictionary Source="/Theme/PrimarySlider.xaml" />
         <ResourceDictionary Source="/Theme/PrimaryCheckbox.xaml" />
         <ResourceDictionary Source="/Theme/Buttons/PrimaryButton.xaml" />
@@ -32,5 +32,11 @@
     <SolidColorBrush x:Key="MenuTextSelected" Color="#FF1BA1E2" />
     <SolidColorBrush x:Key="SeparatorBackground" Color="#FF333333" />
     <Thickness x:Key="HeaderMargin">0,10,0,10</Thickness>
-    <sys:Double x:Key="SmallFontSize">12</sys:Double>
+
+    <!--  font settings  -->
+    <FontFamily x:Key="DefaultFontFamily">Segoe UI</FontFamily>
+    <sys:Double x:Key="DefaultFontSize">13</sys:Double>
+
+    <FontFamily x:Key="FixedFontFamily">Consolas</FontFamily>
+    <sys:Double x:Key="FixedFontSize">13.333</sys:Double>
 </ResourceDictionary>
