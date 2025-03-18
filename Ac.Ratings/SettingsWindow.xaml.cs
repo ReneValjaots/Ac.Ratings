@@ -23,9 +23,8 @@ namespace Ac.Ratings {
         }
 
         public void ViewModel_Notification(object sender, string message) {
-            MessageBox.Show(message, message.Contains("error") || message.Contains("failed") ? "Error" : "Information",
-                message.Contains("error") || message.Contains("failed") ? MessageBoxButton.OK : MessageBoxButton.OK,
-                message.Contains("error") || message.Contains("failed") ? MessageBoxImage.Error : MessageBoxImage.Information);
+            ModernDialog.ShowMessage(message, message.Contains("error") || message.Contains("failed") ? "Error" : "Information",
+                message.Contains("error") || message.Contains("failed") ? MessageBoxButton.OK : MessageBoxButton.OK);
         }
 
         public void OnSaveClick(object sender, RoutedEventArgs e) {
@@ -34,33 +33,32 @@ namespace Ac.Ratings {
                 Close();
             }
             catch (FileNotFoundException ex) {
-                MessageBox.Show(ex.Message, "Config File Missing", MessageBoxButton.OK, MessageBoxImage.Error);
+                ModernDialog.ShowMessage(ex.Message, "Config File Missing", MessageBoxButton.OK);
             }
             catch (InvalidOperationException ex) {
-                MessageBox.Show(ex.Message, "Invalid Config Format", MessageBoxButton.OK, MessageBoxImage.Error);
+                ModernDialog.ShowMessage(ex.Message, "Invalid Config Format", MessageBoxButton.OK);
             }
             catch (Exception ex) {
-                MessageBox.Show($"An unexpected error occurred while saving power formats: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ModernDialog.ShowMessage($"An unexpected error occurred while saving power formats: {ex.Message}", "Error", MessageBoxButton.OK);
             }
         }
 
         public void ResetRatingsButton_Click(object sender, RoutedEventArgs e) {
-            var result = MessageBox.Show(
+            var result = ModernDialog.ShowMessage(
                 "Are you sure you want to reset all ratings? This action cannot be undone.",
                 "Confirm Reset",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes) {
                 try {
                     ViewModel.ResetRatingsCommand.Execute(null);
                 }
                 catch (Exception ex) {
-                    MessageBox.Show($"Failed to reset ratings: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ModernDialog.ShowMessage($"Failed to reset ratings: {ex.Message}", "Error", MessageBoxButton.OK);
                 }
             }
             else {
-                MessageBox.Show("Reset operation canceled.", "Cancel", MessageBoxButton.OK, MessageBoxImage.Information);
+                ModernDialog.ShowMessage("Reset operation canceled.", "Cancel", MessageBoxButton.OK);
             }
         }
 
@@ -75,11 +73,11 @@ namespace Ac.Ratings {
                     ViewModel.ResetExtraFeaturesCommand.Execute(null);
                 }
                 catch (Exception ex) {
-                    MessageBox.Show($"Failed to reset extra features: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ModernDialog.ShowMessage($"Failed to reset extra features: {ex.Message}", "Error", MessageBoxButton.OK);
                 }
             }
             else {
-                MessageBox.Show("Reset operation canceled.", "Cancel", MessageBoxButton.OK, MessageBoxImage.Information);
+                ModernDialog.ShowMessage("Reset operation canceled.", "Cancel", MessageBoxButton.OK);
             }
         }
 
@@ -89,10 +87,10 @@ namespace Ac.Ratings {
                 decoder.InitializeRatingsDataFile();
                 decoder.InitializeUserRatings();
                 decoder.ExportDataFile();
-                MessageBox.Show("Ratings exported successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                ModernDialog.ShowMessage("Ratings exported successfully!", "Success", MessageBoxButton.OK);
             }
             catch (Exception ex) {
-                MessageBox.Show($"An error occurred during export: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ModernDialog.ShowMessage($"An error occurred during export: {ex.Message}", "Error", MessageBoxButton.OK);
             }
         }
 
@@ -101,7 +99,7 @@ namespace Ac.Ratings {
                 ViewModel.RestoreBackupCommand.Execute(null);
             }
             catch (Exception ex) {
-                MessageBox.Show($"Failed to restore backup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ModernDialog.ShowMessage($"Failed to restore backup: {ex.Message}", "Error", MessageBoxButton.OK);
             }
         }
 
@@ -110,7 +108,7 @@ namespace Ac.Ratings {
                 ViewModel.ResetRootFolderCommand.Execute(null);
             }
             catch (Exception ex) {
-                MessageBox.Show($"Failed to reset root folder: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ModernDialog.ShowMessage($"Failed to reset root folder: {ex.Message}", "Error", MessageBoxButton.OK);
             }
         }
     }

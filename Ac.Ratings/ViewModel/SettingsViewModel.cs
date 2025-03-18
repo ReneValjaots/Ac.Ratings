@@ -9,6 +9,7 @@ using Ac.Ratings.Core;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
 using Ac.Ratings.Services.MainView;
+using Ac.Ratings.Theme.ModernUI.Controls;
 
 namespace Ac.Ratings.ViewModel {
     public class SettingsViewModel : ObservableObject {
@@ -154,11 +155,10 @@ namespace Ac.Ratings.ViewModel {
         }
 
         private void ResetRootFolder() {
-            var result = MessageBox.Show(
+            var result = ModernDialog.ShowMessage(
                 "This will reset the root folder and close the application. You then need to reopen the application to change the root folder. Are you sure?",
                 "Confirm Reset",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes) {
                 try {

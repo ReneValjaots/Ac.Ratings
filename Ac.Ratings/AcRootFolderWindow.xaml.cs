@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using Ac.Ratings.Theme.ModernUI.Controls;
 
 namespace Ac.Ratings {
     /// <summary>
@@ -19,10 +20,10 @@ namespace Ac.Ratings {
                 var carsPath = Path.Combine(rootPath, "content", "cars");
 
                 if (!Directory.Exists(carsPath)) {
-                    MessageBox.Show(
+                    ModernDialog.ShowMessage(
                         "The selected Assetto Corsa root folder does not meet the required folder structure.\n" +
                         "Ensure that the root folder contains a 'content' subfolder with a 'cars' directory inside it.\n",
-                        "Invalid Folder Structure", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        "Invalid Folder Structure", MessageBoxButton.OK);
                     return;
                 }
 
@@ -30,7 +31,7 @@ namespace Ac.Ratings {
                 DialogResult = true;
             }
             else {
-                MessageBox.Show("The provided path does not exist. Please enter a valid path.", "Invalid path", MessageBoxButton.OK, MessageBoxImage.Error);
+                ModernDialog.ShowMessage("The provided path does not exist. Please enter a valid path.", "Invalid path", MessageBoxButton.OK);
             }
         }
 
@@ -40,9 +41,9 @@ namespace Ac.Ratings {
         }
 
         private bool ConfirmExit() {
-            var result = MessageBox.Show(
+            var result = ModernDialog.ShowMessage(
                 "Exiting this window without selecting a valid root folder will close the application. Are you sure?",
-                "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                "Confirm Exit", MessageBoxButton.YesNo);
             return result == MessageBoxResult.Yes;
         }
 
