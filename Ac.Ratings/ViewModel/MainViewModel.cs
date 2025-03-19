@@ -80,7 +80,6 @@ namespace Ac.Ratings.ViewModel {
         public ICommand SelectSkinCommand { get; }
         public ICommand OpenFilterCommand { get; }
         public ICommand ResetFiltersCommand { get; }
-        public event EventHandler RatingsFilterApplied; // Event to notify MainWindow
 
         public MainViewModel() {
             try {

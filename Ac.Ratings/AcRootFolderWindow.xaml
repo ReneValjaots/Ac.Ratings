@@ -1,35 +1,67 @@
-﻿<Window x:Class="Ac.Ratings.AcRootFolderWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Ac.Ratings"
-        mc:Ignorable="d"
-        Title="Select Assetto Corsa Root Folder" Height="400" Width="800" FontFamily="Segoe UI" FontSize="14"
-        Closing="Window_Closing"
-        WindowStartupLocation="CenterScreen">
-    <Border Background="Black" CornerRadius="8" Padding="20">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+﻿<controls:ModernWindowBase
+    x:Class="Ac.Ratings.AcRootFolderWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Ac.Ratings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Select Assetto Corsa Root Folder"
+    Width="800"
+    Height="400"
+    Closing="Window_Closing"
+    FontFamily="Segoe UI"
+    FontSize="14"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Grid>
+        <ScrollViewer>
+            <StackPanel
+                x:Name="Panel"
+                MinWidth="150"
+                Margin="16">
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Text="SELECT ROOT FOLDER" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-            <!-- Input Section -->
-            <StackPanel Grid.Row="0" Orientation="Vertical">
-                <TextBlock Text="Enter the path to the Assetto Corsa root folder:" Foreground="White" />
-                <TextBox x:Name="RootFolderPath" Background="White" Foreground="Black" BorderBrush="#444444"
-                         Height="35" Padding="5" Margin="0,5,0,0" />
-            </StackPanel>
+                    <StackPanel Grid.Row="0" Orientation="Vertical">
+                        <TextBlock Text="Enter the path to the Assetto Corsa root folder:" />
+                        <TextBox
+                            x:Name="RootFolderPath"
+                            Height="35"
+                            Margin="0,5,0,0"
+                            Padding="5" />
+                    </StackPanel>
 
-            <!-- Buttons Section -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                <Button x:Name="OkButton" Content="Ok" Width="100" Height="40" Background="Black" Foreground="White"
-                        BorderBrush="White" FontWeight="Bold" Margin="5,5,5,5" Click="OkButton_Click" />
-                <Button x:Name="CancelButton" Content="Cancel" Width="100" Height="40" Background="Gray"
-                        Foreground="White" BorderBrush="White" FontWeight="Bold" Click="CancelButton_Click" />
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="0,20,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="OkButton"
+                            Width="100"
+                            Height="40"
+                            Margin="5,5,5,5"
+                            Click="OkButton_Click"
+                            Content="Ok" />
+                        <Button
+                            x:Name="CancelButton"
+                            Width="100"
+                            Height="40"
+                            Click="CancelButton_Click"
+                            Content="Cancel" />
+                    </StackPanel>
+                </Grid>
             </StackPanel>
-        </Grid>
-    </Border>
-</Window>
+        </ScrollViewer>
+    </Grid>
+</controls:ModernWindowBase>

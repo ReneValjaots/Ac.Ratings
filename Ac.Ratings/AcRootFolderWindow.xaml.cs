@@ -6,7 +6,7 @@ namespace Ac.Ratings {
     /// <summary>
     /// Interaction logic for AcRootFolderWindow.xaml
     /// </summary>
-    public partial class AcRootFolderWindow : Window {
+    public partial class AcRootFolderWindow : ModernWindowBase {
         public string SelectedPath { get; private set; } = string.Empty;
         private bool _isCanceling = false;
 
