@@ -37,7 +37,7 @@ namespace Ac.Ratings {
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             CarDataManager.SaveModifiedCars();
-            CreateBackupOfCarDb();
+            //CreateBackupOfCarDb(); -- Comment out only while testing other features
         }
     }
 }

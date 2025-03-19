@@ -14,20 +14,14 @@ namespace Ac.Ratings {
         }
 
         private void ApplyAppearanceSettings() {
-            // Load theme
             var savedTheme = ConfigManager.LoadAppearanceConfigValue("Theme");
             if (!string.IsNullOrEmpty(savedTheme)) {
-                switch (savedTheme.ToLower()) {
-                    case "dark":
-                        AppearanceManager.Current.ThemeSource = AppearanceManager.DarkThemeSource;
-                        break;
-                    case "black":
-                        AppearanceManager.Current.ThemeSource = AppearanceManager.BlackThemeSource;
-                        break;
-                    case "light":
-                        AppearanceManager.Current.ThemeSource = AppearanceManager.LightThemeSource;
-                        break;
-                }
+                AppearanceManager.Current.ThemeSource = savedTheme.ToLower() switch {
+                    "dark" => AppearanceManager.DarkThemeSource,
+                    "black" => AppearanceManager.BlackThemeSource,
+                    "light" => AppearanceManager.LightThemeSource,
+                    _ => AppearanceManager.BlackThemeSource
+                };
             }
             else {
                 // Default to black if no saved theme
@@ -47,7 +41,6 @@ namespace Ac.Ratings {
                 }
             }
             else {
-                // Default accent color from ModernUI.xaml
                 AppearanceManager.Current.AccentColor = Color.FromRgb(0x1b, 0xa1, 0xe2);
             }
         }

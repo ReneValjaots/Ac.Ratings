@@ -23,13 +23,12 @@ namespace Ac.Ratings {
 
         public void ViewModel_Notification(object sender, string message) {
             ModernDialog.ShowMessage(message, message.Contains("error") || message.Contains("failed") ? "Error" : "Information",
-                message.Contains("error") || message.Contains("failed") ? MessageBoxButton.OK : MessageBoxButton.OK);
+                MessageBoxButton.OK, this);
         }
 
         public void OnSaveClick(object sender, RoutedEventArgs e) {
             try {
                 ViewModel.SaveSettingsCommand.Execute(null);
-                Close();
             }
             catch (FileNotFoundException ex) {
                 ModernDialog.ShowMessage(ex.Message, "Config File Missing", MessageBoxButton.OK);
