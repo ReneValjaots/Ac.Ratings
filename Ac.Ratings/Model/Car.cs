@@ -55,16 +55,23 @@ public class Car : ObservableObject {
             var root = doc.RootElement;
 
             Name = GetJsonString(root, "name");
-            Brand = GetJsonString(root, "brand");
+            Brand = NormalizeName(GetJsonString(root, "brand"));
             Tags = GetJsonArray(root, "tags");
-            Class = GetJsonString(root, "class");
+            Class = NormalizeName(GetJsonString(root, "class"));
             Country = GetJsonString(root, "country");
             Year = GetJsonInt(root, "year");
-            Author = GetJsonString(root, "author");
+            Author = NormalizeName(GetJsonString(root, "author"));
         }
         catch (Exception ex) {
             Console.WriteLine($"Failed to read display properties for {FolderPath}: {ex.Message}");
         }
+    }
+
+    private static string? NormalizeName(string? name) {
+        if (string.IsNullOrEmpty(name)) return name;
+        if (name.All(char.IsUpper)) return name; // Leave all-uppercase names (e.g., "BMW") as-is
+        name = name.Trim();
+        return char.ToUpper(name[0]) + name[1..];
     }
 
     private static string? GetJsonString(JsonElement root, string key) {

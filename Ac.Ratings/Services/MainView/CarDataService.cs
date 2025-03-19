@@ -11,19 +11,16 @@ namespace Ac.Ratings.Services.MainView {
             return factory.InitializeCars();
         }
 
-        public static List<string> GetDistinctClasses(ObservableCollection<Car> carDb) {
+        public static List<string?> GetDistinctClasses(ObservableCollection<Car> carDb) {
             var classes = carDb
                 .Select(x => x.Class?.Trim())
                 .Where(x => !string.IsNullOrEmpty(x))
-                .GroupBy(x => x?.ToLower())
-                .Select(CarDisplayService.NormalizeClassName)
+                .Distinct()
                 .OrderBy(x => x)
                 .ToList();
 
-            classes.Insert(0, "-- Reset --");
             return classes;
         }
-
 
         public static List<string?> GetDistinctAuthors(ObservableCollection<Car> carDb) {
             var authors = carDb
@@ -32,8 +29,6 @@ namespace Ac.Ratings.Services.MainView {
                 .Distinct()
                 .OrderBy(author => author)
                 .ToList();
-
-            authors.Insert(0, "-- Reset --");
             return authors;
         }
     }

@@ -55,17 +55,6 @@ namespace Ac.Ratings.Services.MainView {
             };
         }
 
-        public static string NormalizeClassName(IGrouping<string?, string?> group) {
-            var uppercaseName = group.FirstOrDefault(name => name != null && name.All(c => !char.IsLetter(c) || char.IsUpper(c)));
-
-            if (uppercaseName != null)
-                return uppercaseName;
-
-            var name = group.FirstOrDefault();
-
-            return name == null ? string.Empty : char.ToUpper(name[0]) + name[1..].ToLower();
-        }
-
         private static string? GetCarEngineData(Car selectedCar) {
             var tags = selectedCar.Tags;
             var engineTag = tags?.FirstOrDefault(x => x.Contains("#!"))?.Replace(" ", "").Remove(0, 2);

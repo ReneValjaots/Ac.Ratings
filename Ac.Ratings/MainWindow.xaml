@@ -2,13 +2,13 @@
     x:Class="Ac.Ratings.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
     xmlns:converters="clr-namespace:Ac.Ratings.Theme.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="clr-namespace:Ac.Ratings.Theme.ModernUI.Helpers"
     xmlns:local="clr-namespace:Ac.Ratings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Ac.Ratings.Model"
-    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
     Title="Ratings App"
     Width="1900"
     Height="1000"
@@ -33,14 +33,22 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBox
-            Name="SearchBox"
+        <StackPanel
             Grid.Row="0"
             Grid.Column="0"
-            Width="{Binding ElementName=CarList, Path=ActualWidth, Converter={StaticResource SubtractConverter}, ConverterParameter=20}"
-            MinWidth="150"
-            Style="{StaticResource PrimaryTextBox}"
-            Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            Margin="5"
+            Orientation="Horizontal">
+            <TextBox
+                Name="SearchBox"
+                Width="{Binding ElementName=CarList, Path=ActualWidth, Converter={StaticResource SubtractConverter}, ConverterParameter=20}"
+                MinWidth="150"
+                Style="{StaticResource PrimaryTextBox}"
+                Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button
+                Margin="5,0,0,0"
+                Command="{Binding OpenFilterCommand}"
+                Content="Filter" />
+        </StackPanel>
 
         <ListView
             x:Name="CarList"
@@ -71,77 +79,8 @@
             <Button
                 x:Name="SettingsButton"
                 Click="SettingsButton_OnClick"
-                Content="Settings"/>
+                Content="Settings" />
         </StackPanel>
-
-        <Grid Grid.Row="0" Grid.Column="1">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Margin="0,2,0,0"
-                    HorizontalAlignment="Center"
-                    FontSize="14"
-                    Text="Filter by author" />
-                <ComboBox
-                    x:Name="AuthorFilter"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Width="200"
-                    Margin="0,2,0,5"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    ItemsSource="{Binding Authors}"
-                    SelectedItem="{Binding SelectedAuthor, Mode=TwoWay}" />
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="0,2,0,0"
-                    HorizontalAlignment="Center"
-                    FontSize="14"
-                    Text="Filter by class" />
-                <ComboBox
-                    x:Name="ClassFilter"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Width="200"
-                    Margin="10,2,0,5"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    ItemsSource="{Binding Classes}"
-                    SelectedItem="{Binding SelectedClass, Mode=TwoWay}" />
-
-                <StackPanel
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <Button
-                        Width="250"
-                        Margin="10,0,10,0"
-                        Command="{Binding OpenRatingsFilterCommand}"
-                        Content="Filter by ratings"/>
-                    <Button
-                        x:Name="ResetFilters"
-                        Width="Auto"
-                        Margin="0,0,0,0"
-                        Command="{Binding ResetFiltersCommand}"
-                        Content="Reset all"/>
-                </StackPanel>
-            </Grid>
-        </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="1">
             <Grid>
@@ -340,7 +279,7 @@
                     VerticalAlignment="Bottom">
                     <TextBlock Text="{Binding Brand, Mode=TwoWay}" />
                     <TextBlock Text="{Binding Year, Mode=TwoWay}" />
-                    <TextBlock Text="{Binding DataContext.ClassNameFormatted, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    <TextBlock Text="{Binding Class, Mode=TwoWay}" />
                     <TextBlock Text="{Binding Author, Mode=TwoWay}" />
                     <TextBlock Text="{Binding Specs.Weight}" />
                     <TextBlock Text="{Binding Specs.PowerToWeightRatio}" />
@@ -797,16 +736,14 @@
                     Grid.Column="0"
                     Margin="0,15,0,0"
                     Command="{Binding DataContext.ClearRatingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    Content="Clear Ratings"
-                    />
+                    Content="Clear Ratings" />
 
                 <Button
                     x:Name="ClearFeaturesButton"
                     Grid.Column="1"
                     Margin="0,15,0,0"
                     Command="{Binding DataContext.ClearExtraFeaturesCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    Content="Clear Extra Features"
-           />
+                    Content="Clear Extra Features" />
             </Grid>
         </StackPanel>
     </Grid>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -15,13 +16,10 @@ namespace Ac.Ratings.ViewModel {
         private string _engineStats;
         private string _drivetrainStats;
         private string _gearboxStats;
-        private string _classNameFormatted;
-        private string _selectedAuthor;
-        private string _selectedClass;
         private string _searchText = string.Empty;
         private BitmapImage _carImageSource;
         private ObservableCollection<SkinPreview> _skinPreviews;
-        public RatingsFilterViewModel RatingsFilterViewModel { get; } = new();
+        private FilterViewModel _filterViewModel;
 
         public ObservableCollection<Car> CarDb {
             get => _carDb;
@@ -52,11 +50,6 @@ namespace Ac.Ratings.ViewModel {
             set => SetField(ref _gearboxStats, value);
         }
 
-        public string ClassNameFormatted {
-            get => _classNameFormatted;
-            set => SetField(ref _classNameFormatted, value);
-        }
-
         public BitmapImage CarImageSource {
             get => _carImageSource;
             set => SetField(ref _carImageSource, value);
@@ -69,26 +62,6 @@ namespace Ac.Ratings.ViewModel {
 
         public List<string> Authors { get; }
         public List<string> Classes { get; }
-
-        public string SelectedAuthor {
-            get => _selectedAuthor;
-            set {
-                if (SetField(ref _selectedAuthor, value)) {
-                    CarView?.Refresh();
-                    SelectFirstFilteredCar();
-                }
-            }
-        }
-
-        public string SelectedClass {
-            get => _selectedClass;
-            set {
-                if (SetField(ref _selectedClass, value)) {
-                    CarView?.Refresh();
-                    SelectFirstFilteredCar();
-                }
-            }
-        }
 
         public string SearchText {
             get => _searchText;
@@ -105,7 +78,7 @@ namespace Ac.Ratings.ViewModel {
         public ICommand ClearRatingsCommand { get; }
         public ICommand ClearExtraFeaturesCommand { get; }
         public ICommand SelectSkinCommand { get; }
-        public ICommand OpenRatingsFilterCommand { get; }
+        public ICommand OpenFilterCommand { get; }
         public ICommand ResetFiltersCommand { get; }
         public event EventHandler RatingsFilterApplied; // Event to notify MainWindow
 
@@ -114,25 +87,12 @@ namespace Ac.Ratings.ViewModel {
                 CarDb = new ObservableCollection<Car>(CarDataService.LoadCarDatabase());
                 Authors = CarDataService.GetDistinctAuthors(CarDb);
                 Classes = CarDataService.GetDistinctClasses(CarDb);
+                _filterViewModel = new FilterViewModel(CarDb);
 
                 CarView = CollectionViewSource.GetDefaultView(CarDb);
                 CarView.Filter = obj => {
                     if (obj is Car car) {
-                        return CarDataManager.CombinedFilter(
-                            car,
-                            SelectedAuthor,
-                            SelectedClass,
-                            SearchText,
-                            RatingsFilterViewModel.MinCornerHandling,
-                            RatingsFilterViewModel.MinBraking,
-                            RatingsFilterViewModel.MinRealism,
-                            RatingsFilterViewModel.MinSound,
-                            RatingsFilterViewModel.MinExteriorQuality,
-                            RatingsFilterViewModel.MinInteriorQuality,
-                            RatingsFilterViewModel.MinForceFeedbackQuality,
-                            RatingsFilterViewModel.MinFunFactor,
-                            RatingsFilterViewModel.MinAverageRating
-                        );
+                        return FilterCar(car);
                     }
 
                     return false;
@@ -141,7 +101,7 @@ namespace Ac.Ratings.ViewModel {
                 ClearRatingsCommand = new RelayCommand(ClearRatings);
                 ClearExtraFeaturesCommand = new RelayCommand(ClearExtraFeatures);
                 SelectSkinCommand = new RelayCommand<string>(SelectSkin);
-                OpenRatingsFilterCommand = new RelayCommand(OpenRatingsFilter);
+                OpenFilterCommand = new RelayCommand(OpenFilterDialog);
                 ResetFiltersCommand = new RelayCommand(ResetFilters);
 
                 _skinPreviews = new ObservableCollection<SkinPreview>();
@@ -153,6 +113,42 @@ namespace Ac.Ratings.ViewModel {
             catch (Exception ex) {
                 throw; // Re-throw to let the View handle UI notification
             }
+        }
+
+        private bool FilterCar(Car car) {
+            // Search filter
+            if (!string.IsNullOrWhiteSpace(SearchText) && !car.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Author filter
+            if (_filterViewModel.SelectedAuthors.Any() && !_filterViewModel.SelectedAuthors.Contains(car.Author))
+                return false;
+
+            // Class filter
+            if (_filterViewModel.SelectedClasses.Any() && !_filterViewModel.SelectedClasses.Contains(car.Class))
+                return false;
+
+            // Ratings filter
+            if (_filterViewModel.MinCornerHandling > 0 && (car.Ratings?.CornerHandling ?? 0) < _filterViewModel.MinCornerHandling)
+                return false;
+            if (_filterViewModel.MinBraking > 0 && (car.Ratings?.Brakes ?? 0) < _filterViewModel.MinBraking)
+                return false;
+            if (_filterViewModel.MinRealism > 0 && (car.Ratings?.Realism ?? 0) < _filterViewModel.MinRealism)
+                return false;
+            if (_filterViewModel.MinSound > 0 && (car.Ratings?.Sound ?? 0) < _filterViewModel.MinSound)
+                return false;
+            if (_filterViewModel.MinExteriorQuality > 0 && (car.Ratings?.ExteriorQuality ?? 0) < _filterViewModel.MinExteriorQuality)
+                return false;
+            if (_filterViewModel.MinInteriorQuality > 0 && (car.Ratings?.InteriorQuality ?? 0) < _filterViewModel.MinInteriorQuality)
+                return false;
+            if (_filterViewModel.MinForceFeedbackQuality > 0 && (car.Ratings?.ForceFeedbackQuality ?? 0) < _filterViewModel.MinForceFeedbackQuality)
+                return false;
+            if (_filterViewModel.MinFunFactor > 0 && (car.Ratings?.FunFactor ?? 0) < _filterViewModel.MinFunFactor)
+                return false;
+            if (_filterViewModel.MinAverageRating > 0 && (car.Ratings?.AverageRating ?? 0) < _filterViewModel.MinAverageRating)
+                return false;
+
+            return true;
         }
 
         private void ClearRatings() {
@@ -167,20 +163,16 @@ namespace Ac.Ratings.ViewModel {
             }
         }
 
-        private void OpenRatingsFilter() {
-            var window = new RatingsFilterWindow(RatingsFilterViewModel);
-            if (window.ShowDialog() == true) {
-                RatingsFilterApplied?.Invoke(this, EventArgs.Empty);
-                CarView?.Refresh();
-                SelectFirstFilteredCar();
-            }
+        private void OpenFilterDialog() {
+            var dialog = new FilterWindow { DataContext = _filterViewModel, Owner = Application.Current.MainWindow };
+            dialog.ShowDialog();
+            CarView?.Refresh();
+            SelectFirstFilteredCar();
         }
 
         private void ResetFilters() {
-            SelectedAuthor = null;
-            SelectedClass = null;
             SearchText = string.Empty;
-            RatingsFilterViewModel.Reset();
+            _filterViewModel.ResetFilters();
             CarView?.Refresh();
             SelectFirstFilteredCar();
         }
@@ -194,29 +186,12 @@ namespace Ac.Ratings.ViewModel {
                 EngineStats = CarDisplayService.ShowCarEngineStats(SelectedCar);
                 DrivetrainStats = CarDisplayService.ShowCarDriveTrain(SelectedCar);
                 GearboxStats = CarDisplayService.ShowCarGearbox(SelectedCar);
-
-                // Format ClassName
-                var className = SelectedCar.Class;
-                if (!string.IsNullOrEmpty(className)) {
-                    if (!className.All(char.IsUpper)) {
-                        className = className.ToLower();
-                        ClassNameFormatted = char.ToUpper(className[0]) + className[1..];
-                    }
-                    else {
-                        ClassNameFormatted = className;
-                    }
-                }
-                else {
-                    ClassNameFormatted = string.Empty;
-                }
-
                 LoadSkinPreviews();
             }
             else {
                 EngineStats = string.Empty;
                 DrivetrainStats = string.Empty;
                 GearboxStats = string.Empty;
-                ClassNameFormatted = string.Empty;
                 CarImageSource = null;
                 SkinPreviews?.Clear();
             }
