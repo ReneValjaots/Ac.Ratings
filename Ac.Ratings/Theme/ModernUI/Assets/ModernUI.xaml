@@ -16,7 +16,6 @@
         <ResourceDictionary Source="ListBox.xaml" />
         <ResourceDictionary Source="Label.xaml" />
         <ResourceDictionary Source="/Theme/PrimarySlider.xaml" />
-        <ResourceDictionary Source="/Theme/PrimaryCheckbox.xaml" />
         <ResourceDictionary Source="/Theme/PrimaryListView.xaml" />
         <ResourceDictionary Source="/Theme/PrimaryTextBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
