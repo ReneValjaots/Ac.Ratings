@@ -16,7 +16,8 @@
     <FontFamily x:Key="DefaultFontFamily">pack://application:,,,/Fonts/SF-Pro.ttf#SF Pro</FontFamily>
     <Style x:Key="ModernWindowTitle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource WindowText}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
     </Style>
     <Style x:Key="SystemButton" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource SystemButtonBackground}" />
