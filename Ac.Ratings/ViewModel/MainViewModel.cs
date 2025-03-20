@@ -146,7 +146,15 @@ namespace Ac.Ratings.ViewModel {
                 return false;
             if (_filterViewModel.MinAverageRating > 0 && (car.Ratings?.AverageRating ?? 0) < _filterViewModel.MinAverageRating)
                 return false;
+            bool isManual = car.Data.SupportsShifter;
+            if (_filterViewModel.IsAutomatic && isManual) return false;
+            if (_filterViewModel.IsManual && !isManual) return false;
 
+            string drivetrain = car.Data.TractionType?.ToLower() ?? "";
+            if (_filterViewModel.IsRwd && !drivetrain.Contains("rwd")) return false;
+            if (_filterViewModel.IsFwd && !drivetrain.Contains("fwd")) return false;
+            if (_filterViewModel.IsAwd && !drivetrain.Contains("awd")) return false;
+            
             return true;
         }
 

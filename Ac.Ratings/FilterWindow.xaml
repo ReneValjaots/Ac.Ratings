@@ -22,9 +22,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Authors (Left) -->
+        <!--  Authors (Left)  -->
         <TextBlock
             Grid.Row="0"
             Grid.Column="0"
@@ -41,18 +42,18 @@
             ItemsSource="{Binding AvailableAuthors}">
             <DataGrid.Columns>
                 <controls:DataGridTextColumn
+                    Width="*"
                     Binding="{Binding Name}"
                     Header="Author"
-                    IsReadOnly="True"
-                    Width="*" />
+                    IsReadOnly="True" />
                 <controls:DataGridCheckBoxColumn
+                    Width="100"
                     Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                    Header="Selected"
-                    Width="100" />
+                    Header="Selected" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Classes (Right) -->
+        <!--  Classes (Right)  -->
         <TextBlock
             Grid.Row="0"
             Grid.Column="1"
@@ -69,18 +70,106 @@
             ItemsSource="{Binding AvailableClasses}">
             <DataGrid.Columns>
                 <controls:DataGridTextColumn
+                    Width="*"
                     Binding="{Binding Name}"
                     Header="Class"
-                    IsReadOnly="True"
-                    Width="*" />
+                    IsReadOnly="True" />
                 <controls:DataGridCheckBoxColumn
+                    Width="100"
                     Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                    Header="Selected"
-                    Width="100" />
+                    Header="Selected" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Ratings -->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="5,5,0,0"
+            VerticalAlignment="Top">
+            <TextBlock
+                Margin="0,0,0,5"
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Text="Gearbox" />
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Text="Automatic" />
+                <CheckBox
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding IsAutomatic}" />
+            </Grid>
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Text="Manual" />
+                <CheckBox
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding IsManual}" />
+            </Grid>
+
+            <TextBlock
+                Margin="0,0,0,5"
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Text="Drivetrain" />
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Text="RWD" />
+                <CheckBox
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding IsRwd}" />
+            </Grid>
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Text="FWD" />
+                <CheckBox
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding IsFwd}" />
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Text="AWD" />
+                <CheckBox
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding IsAwd}" />
+            </Grid>
+        </StackPanel>
+
+        <!--  Ratings  -->
         <TextBlock
             Grid.Row="2"
             Grid.Column="0"
@@ -253,11 +342,11 @@
                 Value="{Binding MinAverageRating}" />
         </Grid>
 
-        <!-- Buttons -->
+        <!--  Buttons  -->
         <StackPanel
             Grid.Row="4"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
             Margin="0,10,0,0"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
@@ -265,9 +354,7 @@
                 Margin="0,0,10,0"
                 Command="{Binding ResetFiltersCommand}"
                 Content="Reset" />
-            <Button
-                Command="{Binding ApplyFiltersCommand}"
-                Content="Apply" />
+            <Button Command="{Binding ApplyFiltersCommand}" Content="Apply" />
         </StackPanel>
     </Grid>
 </controls:ModernWindowBase>

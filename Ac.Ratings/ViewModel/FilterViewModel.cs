@@ -20,6 +20,11 @@ namespace Ac.Ratings.ViewModel {
         private double _minForceFeedbackQuality;
         private double _minFunFactor;
         private double _minAverageRating;
+        private bool _isAutomatic;
+        private bool _isManual;
+        private bool _isRwd;
+        private bool _isFwd;
+        private bool _isAwd;
 
         public FilterViewModel(ObservableCollection<Car> cars) {
             _cars = cars;
@@ -97,6 +102,32 @@ namespace Ac.Ratings.ViewModel {
             set => SetField(ref _minAverageRating, value);
         }
 
+        public bool IsAutomatic {
+            get => _isAutomatic;
+            set => SetField(ref _isAutomatic, value);
+        }
+
+
+        public bool IsManual {
+            get => _isManual;
+            set => SetField(ref _isManual, value);
+        }
+
+        public bool IsRwd {
+            get => _isRwd;
+            set => SetField(ref _isRwd, value);
+        }
+
+        public bool IsFwd {
+            get => _isFwd;
+            set => SetField(ref _isFwd, value);
+        }
+
+        public bool IsAwd {
+            get => _isAwd;
+            set => SetField(ref _isAwd, value);
+        }
+
         public ICommand ApplyFiltersCommand { get; }
         public ICommand ResetFiltersCommand { get; }
 
@@ -151,6 +182,11 @@ namespace Ac.Ratings.ViewModel {
             MinForceFeedbackQuality = 0;
             MinFunFactor = 0;
             MinAverageRating = 0;
+            IsAutomatic = false;
+            IsManual = false;
+            IsRwd = false;
+            IsFwd = false;
+            IsAwd = false;
         }
     }
 
