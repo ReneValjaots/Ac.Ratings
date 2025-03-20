@@ -33,21 +33,28 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+
+        <TextBox
+            Name="SearchBox"
+            Width="{Binding ElementName=CarList, Path=ActualWidth, Converter={StaticResource SubtractConverter}, ConverterParameter=20}"
+            MinWidth="150"
+            Style="{StaticResource PrimaryTextBox}"
+            Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
         <StackPanel
             Grid.Row="0"
-            Grid.Column="0"
+            Grid.Column="1"
             Margin="5"
+            HorizontalAlignment="Left"
             Orientation="Horizontal">
-            <TextBox
-                Name="SearchBox"
-                Width="{Binding ElementName=CarList, Path=ActualWidth, Converter={StaticResource SubtractConverter}, ConverterParameter=20}"
-                MinWidth="150"
-                Style="{StaticResource PrimaryTextBox}"
-                Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Button
-                Margin="5,0,0,0"
+                Margin="0,0,5,0"
                 Command="{Binding OpenFilterCommand}"
                 Content="Filter" />
+            <Button
+                Margin="0,0,5,0"
+                Command="{Binding ResetFiltersCommand}"
+                Content="Reset Filters" />
         </StackPanel>
 
         <ListView
@@ -498,6 +505,7 @@
                     <CheckBox
                         Grid.Row="0"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.TurnSignalsDashboard, Mode=TwoWay}" />
                     <Label
                         Grid.Row="0"
@@ -508,6 +516,7 @@
                     <CheckBox
                         Grid.Row="0"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.AbsOnFlashing, Mode=TwoWay}" />
 
                     <!--  Row 2  -->
@@ -520,6 +529,7 @@
                     <CheckBox
                         Grid.Row="1"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.TcOnFlashing, Mode=TwoWay}" />
                     <Label
                         Grid.Row="1"
@@ -530,6 +540,7 @@
                     <CheckBox
                         Grid.Row="1"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.AbsOff, Mode=TwoWay}" />
 
                     <!--  Row 3  -->
@@ -542,6 +553,7 @@
                     <CheckBox
                         Grid.Row="2"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.TcOff, Mode=TwoWay}" />
                     <Label
                         Grid.Row="2"
@@ -552,6 +564,7 @@
                     <CheckBox
                         Grid.Row="2"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.Handbrake, Mode=TwoWay}" />
 
                     <!--  Row 4  -->
@@ -564,6 +577,7 @@
                     <CheckBox
                         Grid.Row="3"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.LightsDashboard, Mode=TwoWay}" />
                     <Label
                         Grid.Row="3"
@@ -574,6 +588,7 @@
                     <CheckBox
                         Grid.Row="3"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.OtherDashboard, Mode=TwoWay}" />
                 </Grid>
 
@@ -606,6 +621,7 @@
                     <CheckBox
                         Grid.Row="0"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.TurnSignalsExterior, Mode=TwoWay}" />
                     <Label
                         Grid.Row="0"
@@ -616,6 +632,7 @@
                     <CheckBox
                         Grid.Row="0"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.GoodQualityLights, Mode=TwoWay}" />
 
                     <!--  Row 2  -->
@@ -628,6 +645,7 @@
                     <CheckBox
                         Grid.Row="1"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.EmergencyBrakeLights, Mode=TwoWay}" />
                     <Label
                         Grid.Row="1"
@@ -638,6 +656,7 @@
                     <CheckBox
                         Grid.Row="1"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.FogLights, Mode=TwoWay}" />
 
                     <!--  Row 3  -->
@@ -650,6 +669,7 @@
                     <CheckBox
                         Grid.Row="2"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.SequentialTurnSignals, Mode=TwoWay}" />
                     <Label
                         Grid.Row="2"
@@ -660,6 +680,7 @@
                     <CheckBox
                         Grid.Row="2"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.Animations, Mode=TwoWay}" />
                 </Grid>
 
@@ -690,6 +711,7 @@
                     <CheckBox
                         Grid.Row="0"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.ExtendedPhysics, Mode=TwoWay}" />
                     <Label
                         Grid.Row="0"
@@ -700,6 +722,7 @@
                     <CheckBox
                         Grid.Row="0"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.StartupSound, Mode=TwoWay}" />
 
                     <Label
@@ -711,6 +734,7 @@
                     <CheckBox
                         Grid.Row="1"
                         Grid.Column="1"
+                        Margin="5"
                         IsChecked="{Binding Ratings.DifferentDisplays, Mode=TwoWay}" />
                     <Label
                         Grid.Row="1"
@@ -721,6 +745,7 @@
                     <CheckBox
                         Grid.Row="1"
                         Grid.Column="3"
+                        Margin="5"
                         IsChecked="{Binding Ratings.DifferentDrivingModes, Mode=TwoWay}" />
                 </Grid>
             </StackPanel>
@@ -734,14 +759,14 @@
                 <Button
                     x:Name="ClearRatingsButton"
                     Grid.Column="0"
-                    Margin="0,15,0,0"
+                    Margin="10"
                     Command="{Binding DataContext.ClearRatingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                     Content="Clear Ratings" />
 
                 <Button
                     x:Name="ClearFeaturesButton"
                     Grid.Column="1"
-                    Margin="0,15,0,0"
+                    Margin="10"
                     Command="{Binding DataContext.ClearExtraFeaturesCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                     Content="Clear Extra Features" />
             </Grid>

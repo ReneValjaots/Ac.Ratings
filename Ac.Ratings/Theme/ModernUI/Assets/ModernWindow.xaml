@@ -13,7 +13,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <!--  Define missing resources  -->
-    <FontFamily x:Key="DefaultFontFamily">Segoe UI</FontFamily>
+    <FontFamily x:Key="DefaultFontFamily">pack://application:,,,/Fonts/SF-Pro.ttf#SF Pro</FontFamily>
     <Style x:Key="ModernWindowTitle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource WindowText}" />
         <Setter Property="FontSize" Value="12" />

@@ -32,7 +32,8 @@
     <Thickness x:Key="HeaderMargin">0,10,0,10</Thickness>
 
     <!--  font settings  -->
-    <FontFamily x:Key="DefaultFontFamily">Segoe UI</FontFamily>
+    <!-- Define missing resources -->
+    <FontFamily x:Key="DefaultFontFamily">pack://application:,,,/Fonts/SF-Pro.ttf#SF Pro</FontFamily>
     <sys:Double x:Key="DefaultFontSize">13</sys:Double>
 
     <FontFamily x:Key="FixedFontFamily">Consolas</FontFamily>
