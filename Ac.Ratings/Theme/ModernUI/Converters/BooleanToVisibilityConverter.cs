@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace Ac.Ratings.Theme.Converters {
+namespace Ac.Ratings.Theme.ModernUI.Converters {
     /// <summary>
     /// Converts boolean to visibility values.
     /// </summary>
@@ -18,13 +18,13 @@ namespace Ac.Ratings.Theme.Converters {
                 flag = nullable.HasValue ? nullable.Value : false;
             }
 
-            bool inverse = (parameter as string) == "inverse";
+            bool inverse = parameter as string == "inverse";
 
             if (inverse) {
-                return (flag ? Visibility.Collapsed : Visibility.Visible);
+                return flag ? Visibility.Collapsed : Visibility.Visible;
             }
             else {
-                return (flag ? Visibility.Visible : Visibility.Collapsed);
+                return flag ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace Ac.Ratings.Theme.Converters {
+namespace Ac.Ratings.Theme.ModernUI.Converters {
     /// <summary>
     /// Converts a null or empty string value to Visibility.Visible and any other value to Visibility.Collapsed
     /// </summary>
@@ -14,13 +14,13 @@ namespace Ac.Ratings.Theme.Converters {
                 flag = string.IsNullOrEmpty((string)value);
             }
 
-            var inverse = (parameter as string) == "inverse";
+            var inverse = parameter as string == "inverse";
 
             if (inverse) {
-                return (flag ? Visibility.Collapsed : Visibility.Visible);
+                return flag ? Visibility.Collapsed : Visibility.Visible;
             }
             else {
-                return (flag ? Visibility.Visible : Visibility.Collapsed);
+                return flag ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 

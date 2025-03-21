@@ -1,19 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows.Data;
+﻿using System.Windows.Data;
 
-namespace Ac.Ratings.Theme.Converters {
+namespace Ac.Ratings.Theme.ModernUI.Converters {
     /// <summary>
-    /// Converts string values to lower case.
+    /// Converts string values to upper case.
     /// </summary>
-    public class ToLowerConverter : IValueConverter {
-
-        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+    public class ToUpperConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
             if (value != null) {
                 var strValue = value.ToString();
 
-
-                return strValue.ToLowerInvariant();
+                return strValue.ToUpperInvariant();
             }
 
             return null;
