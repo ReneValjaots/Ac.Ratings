@@ -11,20 +11,9 @@ namespace Ac.Ratings.ViewModel {
         private ObservableCollection<ClassItem> _availableClasses;
         private ObservableCollection<string> _selectedAuthors;
         private ObservableCollection<string> _selectedClasses;
-        private double _minCornerHandling;
-        private double _minBraking;
-        private double _minRealism;
-        private double _minSound;
-        private double _minExteriorQuality;
-        private double _minInteriorQuality;
-        private double _minForceFeedbackQuality;
-        private double _minFunFactor;
-        private double _minAverageRating;
-        private bool _isAutomatic;
-        private bool _isManual;
-        private bool _isRwd;
-        private bool _isFwd;
-        private bool _isAwd;
+        private ObservableCollection<FilterCriteria> _ratingFilters;
+        private string _gearboxFilter;
+        private string _drivetrainFilter;
 
         public FilterViewModel(ObservableCollection<Car> cars) {
             _cars = cars;
@@ -32,6 +21,17 @@ namespace Ac.Ratings.ViewModel {
             _availableClasses = GetClasses();
             _selectedAuthors = new ObservableCollection<string>();
             _selectedClasses = new ObservableCollection<string>();
+            _ratingFilters = new ObservableCollection<FilterCriteria> {
+                new() { PropertyName = nameof(CarRatings.CornerHandling), DisplayName = "Corner Handling" },
+                new() { PropertyName = nameof(CarRatings.Brakes), DisplayName = "Braking" },
+                new() { PropertyName = nameof(CarRatings.Realism), DisplayName = "Realism" },
+                new() { PropertyName = nameof(CarRatings.Sound), DisplayName = "Sound" },
+                new() { PropertyName = nameof(CarRatings.ExteriorQuality), DisplayName = "Exterior Quality" },
+                new() { PropertyName = nameof(CarRatings.InteriorQuality), DisplayName = "Interior Quality" },
+                new() { PropertyName = nameof(CarRatings.ForceFeedbackQuality), DisplayName = "FFB Quality" },
+                new() { PropertyName = nameof(CarRatings.FunFactor), DisplayName = "Fun Factor" },
+                new() { PropertyName = nameof(CarRatings.AverageRating), DisplayName = "Average Rating" }
+            };
 
             ApplyFiltersCommand = new RelayCommand(ApplyFilters);
             ResetFiltersCommand = new RelayCommand(ResetFilters);
@@ -57,76 +57,23 @@ namespace Ac.Ratings.ViewModel {
             set => SetField(ref _selectedClasses, value);
         }
 
-        public double MinCornerHandling {
-            get => _minCornerHandling;
-            set => SetField(ref _minCornerHandling, value);
+        public ObservableCollection<FilterCriteria> RatingFilters {
+            get => _ratingFilters;
+            set => SetField(ref _ratingFilters, value);
         }
 
-        public double MinBraking {
-            get => _minBraking;
-            set => SetField(ref _minBraking, value);
+        public string GearboxFilter {
+            get => _gearboxFilter;
+            set => SetField(ref _gearboxFilter, value);
         }
 
-        public double MinRealism {
-            get => _minRealism;
-            set => SetField(ref _minRealism, value);
+        public string DrivetrainFilter {
+            get => _drivetrainFilter;
+            set => SetField(ref _drivetrainFilter, value);
         }
 
-        public double MinSound {
-            get => _minSound;
-            set => SetField(ref _minSound, value);
-        }
-
-        public double MinExteriorQuality {
-            get => _minExteriorQuality;
-            set => SetField(ref _minExteriorQuality, value);
-        }
-
-        public double MinInteriorQuality {
-            get => _minInteriorQuality;
-            set => SetField(ref _minInteriorQuality, value);
-        }
-
-        public double MinForceFeedbackQuality {
-            get => _minForceFeedbackQuality;
-            set => SetField(ref _minForceFeedbackQuality, value);
-        }
-
-        public double MinFunFactor {
-            get => _minFunFactor;
-            set => SetField(ref _minFunFactor, value);
-        }
-
-        public double MinAverageRating {
-            get => _minAverageRating;
-            set => SetField(ref _minAverageRating, value);
-        }
-
-        public bool IsAutomatic {
-            get => _isAutomatic;
-            set => SetField(ref _isAutomatic, value);
-        }
-
-
-        public bool IsManual {
-            get => _isManual;
-            set => SetField(ref _isManual, value);
-        }
-
-        public bool IsRwd {
-            get => _isRwd;
-            set => SetField(ref _isRwd, value);
-        }
-
-        public bool IsFwd {
-            get => _isFwd;
-            set => SetField(ref _isFwd, value);
-        }
-
-        public bool IsAwd {
-            get => _isAwd;
-            set => SetField(ref _isAwd, value);
-        }
+        public IEnumerable<string> GearboxOptions => new[] { "Any", "Manual", "Automatic" };
+        public IEnumerable<string> DrivetrainOptions => new[] { "Any", "RWD", "FWD", "AWD" };
 
         public ICommand ApplyFiltersCommand { get; }
         public ICommand ResetFiltersCommand { get; }
@@ -163,30 +110,13 @@ namespace Ac.Ratings.ViewModel {
         }
 
         public void ResetFilters() {
-            foreach (var author in AvailableAuthors) {
-                author.IsSelected = false;
-            }
-
-            foreach (var classItem in AvailableClasses) {
-                classItem.IsSelected = false;
-            }
-
+            foreach (var author in AvailableAuthors) author.IsSelected = false;
+            foreach (var classItem in AvailableClasses) classItem.IsSelected = false;
             SelectedAuthors.Clear();
             SelectedClasses.Clear();
-            MinCornerHandling = 0;
-            MinBraking = 0;
-            MinRealism = 0;
-            MinSound = 0;
-            MinExteriorQuality = 0;
-            MinInteriorQuality = 0;
-            MinForceFeedbackQuality = 0;
-            MinFunFactor = 0;
-            MinAverageRating = 0;
-            IsAutomatic = false;
-            IsManual = false;
-            IsRwd = false;
-            IsFwd = false;
-            IsAwd = false;
+            foreach (var filter in RatingFilters) filter.MinValue = 0;
+            GearboxFilter = "Any";
+            DrivetrainFilter = "Any";
         }
     }
 
@@ -217,6 +147,27 @@ namespace Ac.Ratings.ViewModel {
         public string Name {
             get => _name;
             set => SetField(ref _name, value);
+        }
+    }
+
+    public class FilterCriteria : ObservableObject {
+        private string _propertyName;
+        private string _displayName;
+        private int _minValue;
+
+        public string PropertyName {
+            get => _propertyName;
+            set => SetField(ref _propertyName, value);
+        }
+
+        public string DisplayName {
+            get => _displayName;
+            set => SetField(ref _displayName, value);
+        }
+
+        public int MinValue {
+            get => _minValue;
+            set => SetField(ref _minValue, value);
         }
     }
 }

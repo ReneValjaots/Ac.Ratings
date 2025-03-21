@@ -14,6 +14,7 @@
         <ResourceDictionary Source="RadioButton.xaml" />
         <ResourceDictionary Source="CheckBox.xaml" />
         <ResourceDictionary Source="ListBox.xaml" />
+        <ResourceDictionary Source="ListView.xaml" />
         <ResourceDictionary Source="Label.xaml" />
         <ResourceDictionary Source="/Theme/PrimarySlider.xaml" />
         <ResourceDictionary Source="/Theme/PrimaryListView.xaml" />

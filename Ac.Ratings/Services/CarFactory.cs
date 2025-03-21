@@ -53,23 +53,17 @@ namespace Ac.Ratings.Services {
                 var uiJsonPath = Path.Combine(ratingsPath, "ui.json");
                 var uiCarJsonPath = Path.Combine(originalPath, "ui", "ui_car.json");
 
-                // Backup if needed
                 if (shouldUpdate && File.Exists(uiCarJsonPath)) {
                     BackupUiCar(carFolder, uiCarJsonPath);
                 }
 
-                // Load or create car
                 var car = LoadOrCreateCar(uiJsonPath, uiCarJsonPath);
                 car.FolderPath = originalPath;
                 car.FolderName = carFolder;
 
-                // Update car data
                 UpdateCarData(car, originalPath);
-
-                // Save updated car
                 SaveCar(uiJsonPath, car);
 
-                // Load display properties and specs
                 car.LoadDisplayProperties();
                 car.Specs = new CarSpecs(car.FolderPath);
 

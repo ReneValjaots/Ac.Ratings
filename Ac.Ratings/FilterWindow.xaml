@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
+    xmlns:converters="clr-namespace:Ac.Ratings.Theme.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Ac.Ratings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,9 +12,11 @@
     Height="720"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+    <controls:ModernWindowBase.Resources>
+        <converters:DoubleToStringConverter x:Key="DoubleToStringConverter" />
+    </controls:ModernWindowBase.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -26,327 +29,140 @@
         </Grid.ColumnDefinitions>
 
         <!--  Authors (Left)  -->
-        <TextBlock
+        <StackPanel
             Grid.Row="0"
             Grid.Column="0"
-            FontWeight="Bold"
-            Text="Authors" />
-        <DataGrid
-            Name="FilterDatagrid"
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="0,5,5,0"
-            Height="300"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            ItemsSource="{Binding AvailableAuthors}">
-            <DataGrid.Columns>
-                <controls:DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Name}"
-                    Header="Author"
-                    IsReadOnly="True" />
-                <controls:DataGridCheckBoxColumn
-                    Width="100"
-                    Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                    Header="Selected" />
-            </DataGrid.Columns>
-        </DataGrid>
+            Margin="0,0,5,0">
+            <TextBlock
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Text="Authors" />
+            <DataGrid
+                Name="FilterDatagrid"
+                Height="300"
+                Margin="0,5,0,0"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                ItemsSource="{Binding AvailableAuthors}">
+                <DataGrid.Columns>
+                    <controls:DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Name}"
+                        Header="Author"
+                        IsReadOnly="True" />
+                    <controls:DataGridCheckBoxColumn
+                        Width="100"
+                        Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Selected" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
 
         <!--  Classes (Right)  -->
-        <TextBlock
+        <StackPanel
             Grid.Row="0"
             Grid.Column="1"
-            FontWeight="Bold"
-            Text="Classes" />
-        <DataGrid
-            Name="ClassesDatagrid"
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="5,5,0,0"
-            Height="300"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            ItemsSource="{Binding AvailableClasses}">
-            <DataGrid.Columns>
-                <controls:DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Name}"
-                    Header="Class"
-                    IsReadOnly="True" />
-                <controls:DataGridCheckBoxColumn
-                    Width="100"
-                    Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                    Header="Selected" />
-            </DataGrid.Columns>
-        </DataGrid>
+            Margin="5,0,5,0">
+            <TextBlock
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Text="Classes" />
+            <DataGrid
+                Name="ClassesDatagrid"
+                Height="300"
+                Margin="0,5,0,0"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                ItemsSource="{Binding AvailableClasses}">
+                <DataGrid.Columns>
+                    <controls:DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Name}"
+                        Header="Class"
+                        IsReadOnly="True" />
+                    <controls:DataGridCheckBoxColumn
+                        Width="100"
+                        Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Selected" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
 
         <StackPanel
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="2"
-            Margin="5,5,0,0"
-            VerticalAlignment="Top">
+            Margin="5,0,0,0">
             <TextBlock
-                Margin="0,0,0,5"
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Text="Minimum Ratings" />
+            <ListView Margin="0,5,0,0" ItemsSource="{Binding RatingFilters}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                TextTrimming="CharacterEllipsis">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}: {1}">
+                                        <Binding Path="DisplayName" />
+                                        <Binding Path="MinValue" Converter="{StaticResource DoubleToStringConverter}" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <Slider
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                IsSnapToTickEnabled="True"
+                                Maximum="10"
+                                Minimum="0"
+                                TickFrequency="1"
+                                Value="{Binding MinValue, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+
+        <!--  Gearbox and Drivetrain (Below, Side by Side)  -->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,10,5,0">
+            <TextBlock
                 HorizontalAlignment="Center"
                 FontWeight="Bold"
                 Text="Gearbox" />
-            <Grid Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    Text="Automatic" />
-                <CheckBox
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    IsChecked="{Binding IsAutomatic}" />
-            </Grid>
-            <Grid Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    Text="Manual" />
-                <CheckBox
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    IsChecked="{Binding IsManual}" />
-            </Grid>
-
+            <ComboBox
+                Margin="0,5,0,0"
+                ItemsSource="{Binding GearboxOptions}"
+                SelectedItem="{Binding GearboxFilter, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="5,10,0,0">
             <TextBlock
-                Margin="0,0,0,5"
                 HorizontalAlignment="Center"
                 FontWeight="Bold"
                 Text="Drivetrain" />
-            <Grid Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    Text="RWD" />
-                <CheckBox
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    IsChecked="{Binding IsRwd}" />
-            </Grid>
-            <Grid Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    Text="FWD" />
-                <CheckBox
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    IsChecked="{Binding IsFwd}" />
-            </Grid>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    Text="AWD" />
-                <CheckBox
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    IsChecked="{Binding IsAwd}" />
-            </Grid>
+            <ComboBox
+                Margin="0,5,0,0"
+                ItemsSource="{Binding DrivetrainOptions}"
+                SelectedItem="{Binding DrivetrainFilter, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
 
-        <!--  Ratings  -->
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,10,0,0"
-            FontWeight="Bold"
-            Text="Minimum Ratings" />
-        <Grid
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinCornerHandling, StringFormat='Corner Handling: {0}'}" />
-            <Slider
-                Grid.Row="0"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinCornerHandling}" />
-
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinBraking, StringFormat='Braking: {0}'}" />
-            <Slider
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinBraking}" />
-
-            <TextBlock
-                Grid.Row="2"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinRealism, StringFormat='Realism: {0}'}" />
-            <Slider
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinRealism}" />
-
-            <TextBlock
-                Grid.Row="3"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinSound, StringFormat='Sound: {0}'}" />
-            <Slider
-                Grid.Row="3"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinSound}" />
-
-            <TextBlock
-                Grid.Row="4"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinExteriorQuality, StringFormat='Exterior Quality: {0}'}" />
-            <Slider
-                Grid.Row="4"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinExteriorQuality}" />
-
-            <TextBlock
-                Grid.Row="5"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinInteriorQuality, StringFormat='Interior Quality: {0}'}" />
-            <Slider
-                Grid.Row="5"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinInteriorQuality}" />
-
-            <TextBlock
-                Grid.Row="6"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinForceFeedbackQuality, StringFormat='FFB Quality: {0}'}" />
-            <Slider
-                Grid.Row="6"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinForceFeedbackQuality}" />
-
-            <TextBlock
-                Grid.Row="7"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinFunFactor, StringFormat='Fun Factor: {0}'}" />
-            <Slider
-                Grid.Row="7"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinFunFactor}" />
-
-            <TextBlock
-                Grid.Row="8"
-                Grid.Column="0"
-                Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Text="{Binding MinAverageRating, StringFormat='Average Rating: {0}'}" />
-            <Slider
-                Grid.Row="8"
-                Grid.Column="1"
-                Margin="0,5,0,0"
-                IsSnapToTickEnabled="True"
-                Maximum="10"
-                Minimum="0"
-                TickFrequency="1"
-                Value="{Binding MinAverageRating}" />
-        </Grid>
-
-        <!--  Buttons  -->
+        <!--  Buttons (Centered Below)  -->
         <StackPanel
-            Grid.Row="4"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             Margin="0,10,0,0"

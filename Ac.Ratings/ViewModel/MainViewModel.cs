@@ -115,46 +115,23 @@ namespace Ac.Ratings.ViewModel {
         }
 
         private bool FilterCar(Car car) {
-            // Search filter
-            if (!string.IsNullOrWhiteSpace(SearchText) && !car.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
-                return false;
+            if (!string.IsNullOrWhiteSpace(SearchText) && !car.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return false;
+            if (_filterViewModel.SelectedAuthors.Any() && !_filterViewModel.SelectedAuthors.Contains(car.Author)) return false;
+            if (_filterViewModel.SelectedClasses.Any() && !_filterViewModel.SelectedClasses.Contains(car.Class)) return false;
 
-            // Author filter
-            if (_filterViewModel.SelectedAuthors.Any() && !_filterViewModel.SelectedAuthors.Contains(car.Author))
-                return false;
+            foreach (var filter in _filterViewModel.RatingFilters.Where(f => f.MinValue > 0)) {
+                if (typeof(CarRatings).GetProperty(filter.PropertyName)?.GetValue(car.Ratings) is double ratingValue && ratingValue < filter.MinValue) return false;
+            }
 
-            // Class filter
-            if (_filterViewModel.SelectedClasses.Any() && !_filterViewModel.SelectedClasses.Contains(car.Class))
-                return false;
-
-            // Ratings filter
-            if (_filterViewModel.MinCornerHandling > 0 && (car.Ratings?.CornerHandling ?? 0) < _filterViewModel.MinCornerHandling)
-                return false;
-            if (_filterViewModel.MinBraking > 0 && (car.Ratings?.Brakes ?? 0) < _filterViewModel.MinBraking)
-                return false;
-            if (_filterViewModel.MinRealism > 0 && (car.Ratings?.Realism ?? 0) < _filterViewModel.MinRealism)
-                return false;
-            if (_filterViewModel.MinSound > 0 && (car.Ratings?.Sound ?? 0) < _filterViewModel.MinSound)
-                return false;
-            if (_filterViewModel.MinExteriorQuality > 0 && (car.Ratings?.ExteriorQuality ?? 0) < _filterViewModel.MinExteriorQuality)
-                return false;
-            if (_filterViewModel.MinInteriorQuality > 0 && (car.Ratings?.InteriorQuality ?? 0) < _filterViewModel.MinInteriorQuality)
-                return false;
-            if (_filterViewModel.MinForceFeedbackQuality > 0 && (car.Ratings?.ForceFeedbackQuality ?? 0) < _filterViewModel.MinForceFeedbackQuality)
-                return false;
-            if (_filterViewModel.MinFunFactor > 0 && (car.Ratings?.FunFactor ?? 0) < _filterViewModel.MinFunFactor)
-                return false;
-            if (_filterViewModel.MinAverageRating > 0 && (car.Ratings?.AverageRating ?? 0) < _filterViewModel.MinAverageRating)
-                return false;
             bool isManual = car.Data.SupportsShifter;
-            if (_filterViewModel.IsAutomatic && isManual) return false;
-            if (_filterViewModel.IsManual && !isManual) return false;
+            if (_filterViewModel.GearboxFilter == "Manual" && !isManual) return false;
+            if (_filterViewModel.GearboxFilter == "Automatic" && isManual) return false;
 
             string drivetrain = car.Data.TractionType?.ToLower() ?? "";
-            if (_filterViewModel.IsRwd && !drivetrain.Contains("rwd")) return false;
-            if (_filterViewModel.IsFwd && !drivetrain.Contains("fwd")) return false;
-            if (_filterViewModel.IsAwd && !drivetrain.Contains("awd")) return false;
-            
+            if (_filterViewModel.DrivetrainFilter == "RWD" && !drivetrain.Contains("rwd")) return false;
+            if (_filterViewModel.DrivetrainFilter == "FWD" && !drivetrain.Contains("fwd")) return false;
+            if (_filterViewModel.DrivetrainFilter == "AWD" && !drivetrain.Contains("awd")) return false;
+
             return true;
         }
 

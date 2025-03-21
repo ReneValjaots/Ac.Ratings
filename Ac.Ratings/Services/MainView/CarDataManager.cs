@@ -100,30 +100,5 @@ namespace Ac.Ratings.Services.MainView {
 
             throw new InvalidOperationException("Failed to deserialize the backup file.");
         }
-
-        public static bool CombinedFilter(Car car, string? selectedAuthor, string? selectedClass, string searchText, double cornerHandlingFilter, double brakingFilter, double realismFilter,
-            double soundFilter, double exteriorQualityFilter, double interiorQualityFilter, double forceFeedbackQualityFilter, double funFactorFilter, double averageRatingFilter) {
-            var conditions = new List<Func<bool>> {
-                () => IsMatch(car.Author, selectedAuthor),
-                () => IsMatch(car.Class, selectedClass),
-                () => car.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false,
-                () => car.Ratings.CornerHandling >= cornerHandlingFilter,
-                () => car.Ratings.Brakes >= brakingFilter,
-                () => car.Ratings.Realism >= realismFilter,
-                () => car.Ratings.Sound >= soundFilter,
-                () => car.Ratings.ExteriorQuality >= exteriorQualityFilter,
-                () => car.Ratings.InteriorQuality >= interiorQualityFilter,
-                () => car.Ratings.ForceFeedbackQuality >= forceFeedbackQualityFilter,
-                () => car.Ratings.FunFactor >= funFactorFilter,
-                () => car.Ratings.AverageRating >= averageRatingFilter
-            };
-
-            return conditions.All(condition => condition());
-        }
-
-        private static bool IsMatch(string? value, string? filter) {
-            return string.IsNullOrEmpty(filter) ||
-                   string.Equals(value, filter, StringComparison.OrdinalIgnoreCase);
-        }
     }
 }
