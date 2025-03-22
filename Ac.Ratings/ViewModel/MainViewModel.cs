@@ -10,7 +10,7 @@ using Ac.Ratings.Model;
 using Ac.Ratings.Services.MainView;
 
 namespace Ac.Ratings.ViewModel {
-    public class MainViewModel : ObservableObject {
+    public class MainViewModel : Core.ViewModel {
         private ObservableCollection<Car> _carDb;
         private Car _selectedCar;
         private string _engineStats;

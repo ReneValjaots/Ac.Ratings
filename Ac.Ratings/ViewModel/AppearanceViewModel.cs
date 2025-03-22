@@ -7,7 +7,7 @@ using Ac.Ratings.Theme.ModernUI.Helpers;
 
 namespace Ac.Ratings.ViewModel;
 
-public class AppearanceViewModel : ObservableObject {
+public class AppearanceViewModel : Core.ViewModel {
 
     private readonly Color[] _wpAccentColors = new Color[] {
         Color.FromRgb(0xa4, 0xc4, 0x00), // lime

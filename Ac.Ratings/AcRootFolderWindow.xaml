@@ -10,7 +10,6 @@
     Width="800"
     Height="400"
     Closing="Window_Closing"
-    FontFamily="Segoe UI"
     FontSize="14"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -38,7 +37,8 @@
                             x:Name="RootFolderPath"
                             Height="35"
                             Margin="0,5,0,0"
-                            Padding="5" />
+                            Padding="5"
+                            Text="{Binding RootFolderPath, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
 
                     <StackPanel
@@ -50,15 +50,9 @@
                             x:Name="OkButton"
                             Width="100"
                             Height="40"
-                            Margin="5,5,5,5"
-                            Click="OkButton_Click"
+                            Margin="5"
+                            Command="{Binding OkCommand}"
                             Content="Ok" />
-                        <Button
-                            x:Name="CancelButton"
-                            Width="100"
-                            Height="40"
-                            Click="CancelButton_Click"
-                            Content="Cancel" />
                     </StackPanel>
                 </Grid>
             </StackPanel>

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 
 namespace Ac.Ratings.ViewModel {
-    public class FilterViewModel : ObservableObject {
+    public class FilterViewModel : Core.ViewModel {
         private readonly ObservableCollection<Car> _cars;
         private ObservableCollection<AuthorItem> _availableAuthors;
         private ObservableCollection<ClassItem> _availableClasses;

@@ -9,7 +9,7 @@ using Ac.Ratings.Services;
 using Ac.Ratings.Services.MainView;
 
 namespace Ac.Ratings.ViewModel {
-    public class SettingsViewModel : ObservableObject {
+    public class SettingsViewModel : Core.ViewModel {
         private readonly IDialogService _dialogService;
         private string _selectedPrimaryUnit;
         private string _selectedSecondaryUnit;
