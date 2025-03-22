@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -8,29 +7,32 @@ using Ac.Ratings.Core;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
 using Ac.Ratings.Services.MainView;
-using Ac.Ratings.Theme.ModernUI.Controls;
 
 namespace Ac.Ratings.ViewModel {
     public class SettingsViewModel : ObservableObject {
+        private readonly IDialogService _dialogService;
         private string _selectedPrimaryUnit;
         private string _selectedSecondaryUnit;
         private ObservableCollection<Car> _carDb;
-
-        public event EventHandler<string> Notification;
 
         public ICommand ResetRatingsCommand { get; }
         public ICommand ResetExtraFeaturesCommand { get; }
         public ICommand RestoreBackupCommand { get; }
         public ICommand SaveSettingsCommand { get; }
         public ICommand ResetRootFolderCommand { get; }
+        public ICommand TransferRatingsCommand { get; }
 
 
-        public SettingsViewModel() {
+        public SettingsViewModel(IDialogService dialogService) {
+            _dialogService = dialogService;
+
             ResetRatingsCommand = new RelayCommand(ResetAllRatings);
             ResetExtraFeaturesCommand = new RelayCommand(ResetAllExtraFeatures);
             RestoreBackupCommand = new RelayCommand(RestoreBackup);
             SaveSettingsCommand = new RelayCommand(SaveSettings);
             ResetRootFolderCommand = new RelayCommand(ResetRootFolder);
+            TransferRatingsCommand = new RelayCommand(TransferRatings);
+
             LoadSettings(ConfigManager.ConfigFilePath);
         }
         public string SelectedPrimaryUnit {
@@ -81,93 +83,111 @@ namespace Ac.Ratings.ViewModel {
             File.WriteAllText(configPath, JsonSerializer.Serialize(config, ConfigManager.JsonOptions));
         }
 
+        private void TransferRatings() {
+            try {
+                var decoder = new RatingsDecoder();
+                decoder.InitializeRatingsDataFile();
+                decoder.InitializeUserRatings();
+                decoder.ExportDataFile();
+                _dialogService.ShowMessage("Ratings exported successfully!", "Success", MessageBoxButton.OK);
+            }
+            catch (Exception ex) {
+                _dialogService.ShowMessage($"An error occurred during export: {ex.Message}", "Error", MessageBoxButton.OK);
+            }
+        }
+
         private void SaveSettings() {
             try {
                 SaveSettings(ConfigManager.ConfigFilePath);
-                Notification?.Invoke(this, "Settings saved successfully.");
+                _dialogService.ShowMessage("Settings saved successfully.", "Success", MessageBoxButton.OK);
             }
             catch (FileNotFoundException ex) {
-                throw new FileNotFoundException("Config file not found. Cannot save settings without a valid config file.", ex);
+                _dialogService.ShowMessage($"Config file not found: {ex.Message}", "Error", MessageBoxButton.OK);
             }
             catch (InvalidOperationException ex) {
-                throw new InvalidOperationException(
-                    "The configuration file could not be parsed. It must be in a valid dictionary format, where each setting consists of a name and a value. For example: \"PrimaryPowerUnit\": \"ps\". Both the name and the value must be enclosed in double quotes and separated by a colon (:).",
-                    ex);
+                _dialogService.ShowMessage($"Invalid config format: {ex.Message}", "Error", MessageBoxButton.OK);
             }
             catch (Exception ex) {
-                throw new Exception($"An unexpected error occurred while saving power formats: {ex.Message}", ex);
+                _dialogService.ShowMessage($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButton.OK);
             }
         }
 
         private void ResetAllRatings() {
             if (_carDb == null) {
-                throw new InvalidOperationException("Car database is not initialized.");
+                _dialogService.ShowMessage("Car database is not initialized.", "Error", MessageBoxButton.OK);
+                return;
             }
 
-            CarDataManager.ResetAllRatingsInDatabase(_carDb);
-            Notification?.Invoke(this, "All ratings have been reset successfully.");
+            if (_dialogService.ShowConfirmation("Are you sure you want to reset all ratings? This action cannot be undone.", "Confirm Reset")) {
+                CarDataManager.ResetAllRatingsInDatabase(_carDb);
+                _dialogService.ShowMessage("All ratings have been reset successfully.", "Success", MessageBoxButton.OK);
+            }
+            else {
+                _dialogService.ShowMessage("Reset operation canceled.", "Cancel", MessageBoxButton.OK);
+            }
         }
 
         private void ResetAllExtraFeatures() {
             if (_carDb == null) {
-                throw new InvalidOperationException("Car database is not initialized.");
+                _dialogService.ShowMessage("Car database is not initialized.", "Error", MessageBoxButton.OK);
+                return;
             }
 
-            CarDataManager.ResetAllExtraFeaturesInDatabase(_carDb);
-            Notification?.Invoke(this, "All extra features have been reset successfully.");
+            if (_dialogService.ShowConfirmation("Are you sure you want to reset all extra features? This action cannot be undone.", "Confirm Reset")) {
+                CarDataManager.ResetAllExtraFeaturesInDatabase(_carDb);
+                _dialogService.ShowMessage("All extra features have been reset successfully.", "Success", MessageBoxButton.OK);
+            }
+            else {
+                _dialogService.ShowMessage("Reset operation canceled.", "Cancel", MessageBoxButton.OK);
+            }
         }
 
         private void RestoreBackup() {
-            var openFileDialog = new Microsoft.Win32.OpenFileDialog {
-                Title = "Select Backup File",
-                Filter = "JSON Files (*.json)|*.json",
-                InitialDirectory = ConfigManager.BackupFolder
-            };
+            string backupFilePath = _dialogService.ShowOpenFileDialog("Select Backup File", "JSON Files (*.json)|*.json", ConfigManager.BackupFolder);
+            if (string.IsNullOrEmpty(backupFilePath)) {
+                _dialogService.ShowMessage("No backup file selected.", "Error", MessageBoxButton.OK);
+                return;
+            }
 
-            if (openFileDialog.ShowDialog() == true && _carDb != null) {
-                var backupFilePath = openFileDialog.FileName;
-                try {
-                    var restoredCarDb = CarDataManager.RestoreCarDbFromBackup(backupFilePath);
-                    if (restoredCarDb != null) {
-                        _carDb.Clear();
-                        foreach (var car in restoredCarDb) {
-                            _carDb.Add(car);
-                            CarDataManager.SaveCarToFile(car);
-                        }
-                        Notification?.Invoke(this, "Car database restored successfully.");
+            if (_carDb == null) {
+                _dialogService.ShowMessage("Car database is not initialized.", "Error", MessageBoxButton.OK);
+                return;
+            }
+
+            try {
+                var restoredCarDb = CarDataManager.RestoreCarDbFromBackup(backupFilePath);
+                if (restoredCarDb != null) {
+                    _carDb.Clear();
+                    foreach (var car in restoredCarDb) {
+                        _carDb.Add(car);
+                        CarDataManager.SaveCarToFile(car);
                     }
-                }
-                catch (Exception ex) {
-                    throw new Exception($"Failed to restore CarDb from backup: {ex.Message}", ex);
+
+                    _dialogService.ShowMessage("Car database restored successfully.", "Success", MessageBoxButton.OK);
                 }
             }
-            else {
-                throw new InvalidOperationException("No backup file selected or car database is not initialized.");
+            catch (Exception ex) {
+                _dialogService.ShowMessage($"Failed to restore CarDb from backup: {ex.Message}", "Error", MessageBoxButton.OK);
             }
         }
 
         private void ResetRootFolder() {
-            var result = ModernDialog.ShowMessage(
-                "This will reset the root folder and close the application. You then need to reopen the application to change the root folder. Are you sure?",
-                "Confirm Reset",
-                MessageBoxButton.YesNo);
-
-            if (result == MessageBoxResult.Yes) {
+            if (_dialogService.ShowConfirmation("This will reset the root folder and close the application. Are you sure?", "Confirm Reset")) {
                 try {
                     if (File.Exists(ConfigManager.ConfigFilePath)) {
                         File.Delete(ConfigManager.ConfigFilePath);
                         Environment.Exit(0);
                     }
                     else {
-                        throw new FileNotFoundException("No configuration file was found to reset.");
+                        _dialogService.ShowMessage("No configuration file was found to reset.", "Error", MessageBoxButton.OK);
                     }
                 }
                 catch (Exception ex) {
-                    throw new Exception($"An error occurred while resetting: {ex.Message}", ex);
+                    _dialogService.ShowMessage($"An error occurred while resetting: {ex.Message}", "Error", MessageBoxButton.OK);
                 }
             }
             else {
-                Notification?.Invoke(this, "Reset operation canceled.");
+                _dialogService.ShowMessage("Reset operation canceled.", "Cancel", MessageBoxButton.OK);
             }
         }
     }

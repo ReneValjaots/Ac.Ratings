@@ -34,7 +34,7 @@
                         Width="100"
                         Margin="10,0,0,0"
                         HorizontalAlignment="Right"
-                        Click="RestoreBackupButton_Click"
+                        Command="{Binding RestoreBackupCommand}"
                         Content="Restore" />
                 </Grid>
             </StackPanel>

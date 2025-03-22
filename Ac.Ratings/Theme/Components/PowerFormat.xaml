@@ -102,9 +102,8 @@
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="0,10,0,0"
-                        Click="OnSaveClick">
-                        Save
-                    </Button>
+                        Command="{Binding SaveSettingsCommand}"
+                        Content="Save"/>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

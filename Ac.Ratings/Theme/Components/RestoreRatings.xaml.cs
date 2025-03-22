@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Ac.Ratings.Theme.Components
 {
@@ -11,13 +10,6 @@ namespace Ac.Ratings.Theme.Components
         public RestoreRatings()
         {
             InitializeComponent();
-        }
-
-        private void RestoreBackupButton_Click(object sender, System.Windows.RoutedEventArgs e) {
-            var window = Window.GetWindow(this) as SettingsWindow;
-            if (window != null) {
-                window.RestoreBackupButton_Click(sender, e);
-            }
         }
     }
 }

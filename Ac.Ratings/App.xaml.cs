@@ -2,15 +2,29 @@
 using Ac.Ratings.Theme.ModernUI.Helpers;
 using System.Windows;
 using System.Windows.Media;
+using Ac.Ratings.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Ac.Ratings {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
+        private readonly ServiceProvider _serviceProvider;
+
+        public App() {
+            IServiceCollection services = new ServiceCollection();
+            services.AddSingleton<MainWindow>();
+
+            _serviceProvider = services.BuildServiceProvider();
+        }
+
+
         protected override void OnStartup(StartupEventArgs e) {
-            base.OnStartup(e);
             ApplyAppearanceSettings();
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
+            base.OnStartup(e);
         }
 
         private void ApplyAppearanceSettings() {
@@ -24,11 +38,9 @@ namespace Ac.Ratings {
                 };
             }
             else {
-                // Default to black if no saved theme
                 AppearanceManager.Current.ThemeSource = AppearanceManager.BlackThemeSource;
             }
 
-            // Load accent color
             var savedColor = ConfigManager.LoadAppearanceConfigValue("AccentColor");
             if (!string.IsNullOrEmpty(savedColor)) {
                 try {
@@ -36,7 +48,6 @@ namespace Ac.Ratings {
                     AppearanceManager.Current.AccentColor = color;
                 }
                 catch (Exception) {
-                    // Fallback to default accent color if parsing fails
                     AppearanceManager.Current.AccentColor = Color.FromRgb(0x1b, 0xa1, 0xe2);
                 }
             }
