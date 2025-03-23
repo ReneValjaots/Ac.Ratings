@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using System.Text.Json;
+using Ac.Ratings.Data;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services.Acd;
 
@@ -8,10 +9,12 @@ namespace Ac.Ratings.Services {
     public class CarFactory {
         private readonly string _acRootFolder;
         private readonly string _carsRootFolder;
+        private readonly EngineDatabaseService _engineDbService;
 
         public CarFactory(string acRootFolder, string carsRootFolder) {
             _acRootFolder = acRootFolder ?? throw new ArgumentNullException(nameof(acRootFolder));
             _carsRootFolder = carsRootFolder ?? throw new ArgumentNullException(nameof(carsRootFolder));
+            _engineDbService = new EngineDatabaseService();
         }
 
         public List<Car> InitializeCars(bool forceUpdate = false) {
@@ -23,9 +26,14 @@ namespace Ac.Ratings.Services {
             DateTime lastUpdate = GetLastUpdateTime();
             bool shouldUpdate = forceUpdate || (DateTime.UtcNow - lastUpdate).TotalDays > 7;
 
+            var engineDataDictionary = _engineDbService.GetAllEngineData();
+
             foreach (var folder in carFolders) {
                 var car = ProcessCarFolder(folder, shouldUpdate);
                 if (car != null) {
+                    if (engineDataDictionary.TryGetValue(car.FolderName, out var engineData)) {
+                        car.Engine = engineData;
+                    }
                     cars.Add(car);
                 }
             }

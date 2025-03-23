@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 namespace Ac.Ratings.Services {
     public static class ConfigManager {
         public static string ResourceFolder { get; private set; }
+        public static string DataFolder { get; private set; }
         public static string ConfigFilePath { get; private set; }
         public static string AppearanceConfigFilePath { get; private set; }
         public static string CarsRootFolder { get; private set; }
@@ -27,7 +28,11 @@ namespace Ac.Ratings.Services {
             ResourceFolder = LoadConfigValue("ResourceFolder")
                              ?? Path.Combine(AppContext.BaseDirectory, "Resources");
 
+            DataFolder = LoadConfigValue("DataFolder")
+                             ?? Path.Combine(AppContext.BaseDirectory, "Data");
+
             EnsureResourceFolderStructure();
+            EnsureDataFolderExists();
 
             ConfigFilePath = Path.Combine(ResourceFolder, "config", "config.json");
             AppearanceConfigFilePath = Path.Combine(ResourceFolder, "config", "appearance.json");
@@ -47,6 +52,10 @@ namespace Ac.Ratings.Services {
                 SaveConfigValue("ResourceFolder", ResourceFolder);
             }
 
+            if (LoadConfigValue("DataFolder") == null) {
+                SaveConfigValue("DataFolder", DataFolder);
+            }
+
             if (LoadConfigValue("OriginalRatingsDatafilePath") == null && OriginalRatingsPath != null) {
                 SaveConfigValue("OriginalRatingsDatafilePath", OriginalRatingsPath);
             }
@@ -64,6 +73,12 @@ namespace Ac.Ratings.Services {
 
             if (LoadConfigValue("AcRootFolder") == null && string.IsNullOrEmpty(AcRootFolder)) {
                 SaveConfigValue("AcRootFolder", AcRootFolder);
+            }
+        }
+
+        private static void EnsureDataFolderExists() {
+            if (!Directory.Exists(DataFolder)) {
+                Directory.CreateDirectory(DataFolder);
             }
         }
 

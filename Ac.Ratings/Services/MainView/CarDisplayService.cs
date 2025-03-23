@@ -7,18 +7,45 @@ namespace Ac.Ratings.Services.MainView {
         private static readonly List<string> _drivetrainTags = ["rwd", "awd", "fwd"];
 
         public static string ShowCarEngineStats(Car selectedCar) {
-            var data = GetCarEngineData(selectedCar);
-            if (string.IsNullOrEmpty(data))
-                return string.Empty;
+            return FormatEngineStats(selectedCar.Engine, selectedCar);
+        }
 
-            var result = string.Empty;
-            var parts = data.Split('&');
+        private static string FormatEngineStats(CarEngine? engine, Car car) {
+            if (engine == null || string.IsNullOrEmpty(engine.Layout)) {
+                var tagData = GetCarEngineDataFromTags(car);
+                if (string.IsNullOrEmpty(tagData)) return string.Empty;
 
-            if (parts.Length > 0) result = GetDisplacement(result, parts[0]);
-            result = AppendInductionSystemToEngineStats(result, selectedCar);
-            if (parts.Length > 1) result = GetLayout(result, parts[1]);
+                var result = string.Empty;
+                var parts = tagData.Split('&');
 
-            return result.Trim();
+                if (parts.Length > 0) result = GetDisplacementFromTags(result, parts[0]);
+                result = AppendInductionSystemToEngineStats(result, car);
+                if (parts.Length > 1) result = GetLayoutFromTags(result, parts[1]);
+
+                return result.Trim();
+            }
+
+            var displacementLiters = engine.Displacement > 0 ? (engine.Displacement / 1000.0).ToString("F1") : null;
+            var layout = engine.Layout;
+            var cylinderCount = engine.CylinderCount > 0 ? engine.CylinderCount.ToString() : null;
+
+            var output = string.Empty;
+
+            if (!string.IsNullOrEmpty(displacementLiters)) output += $"{displacementLiters}l ";
+            output = AppendInductionSystemToEngineStats(output, car);
+
+            if (!string.IsNullOrEmpty(layout) && !string.IsNullOrEmpty(cylinderCount)) {
+                output += layout switch {
+                    "I" => $"inline-{cylinderCount} engine",
+                    "V" => $"V{cylinderCount} engine",
+                    "B" => $"boxer-{cylinderCount} engine",
+                    "R" => "rotary engine",
+                    "F" => $"flat-{cylinderCount} engine",
+                    _ => string.Empty
+                };
+            }
+
+            return output.Trim();
         }
 
         public static string ShowCarDriveTrain(Car selectedCar) {
@@ -55,13 +82,13 @@ namespace Ac.Ratings.Services.MainView {
             };
         }
 
-        private static string? GetCarEngineData(Car selectedCar) {
+        private static string? GetCarEngineDataFromTags(Car selectedCar) {
             var tags = selectedCar.Tags;
             var engineTag = tags?.FirstOrDefault(x => x.Contains("#!"))?.Replace(" ", "").Remove(0, 2);
             return engineTag;
         }
 
-        private static string GetLayout(string result, string data) {
+        private static string GetLayoutFromTags(string result, string data) {
             if (data.StartsWith("I", StringComparison.OrdinalIgnoreCase))
                 result += "inline-" + Regex.Match(data, @"\d+").Value + " engine";
 
@@ -80,7 +107,7 @@ namespace Ac.Ratings.Services.MainView {
             return result;
         }
 
-        private static string GetDisplacement(string result, string data) {
+        private static string GetDisplacementFromTags(string result, string data) {
             if (char.IsDigit(data[0])) {
                 var displacementValue = data.Replace("L", "", StringComparison.OrdinalIgnoreCase);
                 result += $"{displacementValue}l ";

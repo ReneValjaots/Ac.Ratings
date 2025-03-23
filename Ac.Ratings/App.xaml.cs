@@ -5,6 +5,7 @@ using System.Windows.Media;
 using Ac.Ratings.Core;
 using Ac.Ratings.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
+using Ac.Ratings.Data;
 
 namespace Ac.Ratings {
     /// <summary>

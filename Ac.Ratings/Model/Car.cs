@@ -23,6 +23,8 @@ public class Car : ObservableObject {
     [JsonIgnore] public int? Year { get; set; }
     [JsonIgnore] public string? Author { get; set; }
 
+    [JsonIgnore] public CarEngine Engine { get; set; }
+
     [JsonPropertyName("ratings")] public CarRatings Ratings {
         get => _ratings;
         set {
