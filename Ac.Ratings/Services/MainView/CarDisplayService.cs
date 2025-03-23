@@ -11,7 +11,7 @@ namespace Ac.Ratings.Services.MainView {
         }
 
         private static string FormatEngineStats(CarEngine? engine, Car car) {
-            if (engine == null || string.IsNullOrEmpty(engine.Layout)) {
+            if (engine == null || string.IsNullOrEmpty(engine.Layout) || engine.Displacement == 0) {
                 var tagData = GetCarEngineDataFromTags(car);
                 if (string.IsNullOrEmpty(tagData)) return string.Empty;
 

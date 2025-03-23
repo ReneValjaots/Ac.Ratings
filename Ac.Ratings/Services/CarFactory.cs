@@ -29,6 +29,24 @@ namespace Ac.Ratings.Services {
             var engineDataDictionary = _engineDbService.GetAllEngineData();
 
             foreach (var folder in carFolders) {
+                if (!engineDataDictionary.ContainsKey(folder)) {
+                    _engineDbService.InsertEngineData(new CarEngine {
+                        FolderName = folder,
+                        Displacement = 0,
+                        Layout = null,
+                        CylinderCount = 0
+                    });
+                    // Add the default entry to the dictionary so it’s available immediately
+                    engineDataDictionary[folder] = new CarEngine {
+                        FolderName = folder,
+                        Displacement = 0,
+                        Layout = null,
+                        CylinderCount = 0
+                    };
+                }
+            }
+
+            foreach (var folder in carFolders) {
                 var car = ProcessCarFolder(folder, shouldUpdate);
                 if (car != null) {
                     if (engineDataDictionary.TryGetValue(car.FolderName, out var engineData)) {

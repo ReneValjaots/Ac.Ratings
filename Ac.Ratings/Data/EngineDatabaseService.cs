@@ -28,6 +28,18 @@ namespace Ac.Ratings.Data {
             command.ExecuteNonQuery();
         }
 
+        public void InsertEngineData(CarEngine engine) {
+            using var connection = new SqliteConnection($"Data source={_dbPath}");
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @"INSERT OR IGNORE INTO CarEngines (FolderName, Displacement, Layout, CylinderCount) VALUES (@FolderName, @Displacement, @Layout, @CylinderCount)";
+            command.Parameters.AddWithValue("@FolderName", engine.FolderName);
+            command.Parameters.AddWithValue("@Displacement", engine.Displacement);
+            command.Parameters.AddWithValue("@Layout", (object?)engine.Layout ?? DBNull.Value);
+            command.Parameters.AddWithValue("@CylinderCount", engine.CylinderCount);
+            command.ExecuteNonQuery();
+        }
+
         public Dictionary<string, CarEngine> GetAllEngineData() {
             var engineData = new Dictionary<string, CarEngine>();
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
@@ -47,28 +59,6 @@ namespace Ac.Ratings.Data {
                 engineData[engine.FolderName] = engine;
             }
             return engineData;
-        }
-
-        public CarEngine GetEngineData(string folderName) {
-            using var connection = new SqliteConnection($"Data Source={_dbPath}");
-            connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM CarEngines WHERE FolderName = @FolderName";
-            command.Parameters.AddWithValue("@FolderName", folderName);
-
-            using var reader = command.ExecuteReader();
-            if (reader.Read()) {
-                return new CarEngine {
-                    Id = reader.GetInt32(0),
-                    FolderName = reader.GetString(1),
-                    Displacement = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
-                    Layout = reader.IsDBNull(3) ? null : reader.GetString(3),
-                    CylinderCount = reader.IsDBNull(4) ? 0 : reader.GetInt32(4)
-                };
-            }
-
-            return null;
         }
     }
 }
