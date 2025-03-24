@@ -119,9 +119,15 @@ namespace Ac.Ratings.ViewModel {
             if (_filterViewModel.SelectedAuthors.Any() && !_filterViewModel.SelectedAuthors.Contains(car.Author)) return false;
             if (_filterViewModel.SelectedClasses.Any() && !_filterViewModel.SelectedClasses.Contains(car.Class)) return false;
 
-            foreach (var filter in _filterViewModel.RatingFilters.Where(f => f.MinValue > 0)) {
-                if (typeof(CarRatings).GetProperty(filter.PropertyName)?.GetValue(car.Ratings) is double ratingValue && ratingValue < filter.MinValue) return false;
-            }
+            if(_filterViewModel.MinCornerHandling > car.Ratings.CornerHandling) return false;
+            if(_filterViewModel.MinBrakes > car.Ratings.Brakes) return false;
+            if(_filterViewModel.MinRealism > car.Ratings.Realism) return false;
+            if(_filterViewModel.MinSound > car.Ratings.Sound) return false;
+            if(_filterViewModel.MinExteriorQuality > car.Ratings.ExteriorQuality) return false;
+            if(_filterViewModel.MinInteriorQuality > car.Ratings.InteriorQuality) return false;
+            if(_filterViewModel.MinForceFeedbackQuality > car.Ratings.ForceFeedbackQuality) return false;
+            if(_filterViewModel.MinFunFactor > car.Ratings.FunFactor) return false;
+            if(_filterViewModel.MinAverageRating > car.Ratings.AverageRating) return false;
 
             bool isManual = car.Data.SupportsShifter;
             if (_filterViewModel.GearboxFilter == "Manual" && !isManual) return false;

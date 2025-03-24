@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
+    xmlns:controls1="clr-namespace:Ac.Ratings.Theme.Controls"
     xmlns:converters="clr-namespace:Ac.Ratings.Theme.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Ac.Ratings"
@@ -98,38 +99,51 @@
                 HorizontalAlignment="Center"
                 FontWeight="Bold"
                 Text="Minimum Ratings" />
-            <ListView Margin="0,5,0,0" ItemsSource="{Binding RatingFilters}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="0,5,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="2*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                TextTrimming="CharacterEllipsis">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0}: {1}">
-                                        <Binding Path="DisplayName" />
-                                        <Binding Path="MinValue" Converter="{StaticResource DoubleToStringConverter}" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                            <Slider
-                                Grid.Column="1"
-                                VerticalAlignment="Center"
-                                IsSnapToTickEnabled="True"
-                                Maximum="10"
-                                Minimum="0"
-                                TickFrequency="1"
-                                Value="{Binding MinValue, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <controls1:RatingSliderControl
+                LabelText="Corner Handling"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinCornerHandling, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="Braking"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinBrakes, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="Realism"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinRealism, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="Sound"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinSound, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="Exterior Quality"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinExteriorQuality, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="Interior Quality"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinInteriorQuality, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="FFB Quality"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinForceFeedbackQuality, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="Fun Factor"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinFunFactor, Mode=TwoWay}"
+                SliderWidth="125" />
+            <controls1:RatingSliderControl
+                LabelText="Average Rating"
+                SliderStyle="{StaticResource {x:Type Slider}}"
+                SliderValue="{Binding MinAverageRating, Mode=TwoWay}"
+                SliderWidth="125" />
         </StackPanel>
 
         <!--  Gearbox and Drivetrain (Below, Side by Side)  -->

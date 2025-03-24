@@ -26,8 +26,9 @@
         </TextBlock>
         <Slider
             Grid.Column="1"
-            Width="150"
+            Width="{Binding SliderWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
             IsSnapToTickEnabled="True"
+            IsMoveToPointEnabled="True"
             Maximum="10"
             Minimum="0"
             Style="{Binding SliderStyle, RelativeSource={RelativeSource AncestorType=UserControl}}"

@@ -18,6 +18,10 @@ namespace Ac.Ratings.Theme.Controls {
             DependencyProperty.Register(nameof(SliderStyle), typeof(Style), typeof(RatingSliderControl),
                 new PropertyMetadata(null));
 
+        public static readonly DependencyProperty SliderWidthProperty =
+            DependencyProperty.Register(nameof(SliderWidth), typeof(double), typeof(RatingSliderControl),
+                new PropertyMetadata(150.0)); // Default value of 150
+
         public string LabelText {
             get => (string)GetValue(LabelTextProperty);
             set => SetValue(LabelTextProperty, value);
@@ -32,6 +36,12 @@ namespace Ac.Ratings.Theme.Controls {
             get => (Style)GetValue(SliderStyleProperty);
             set => SetValue(SliderStyleProperty, value);
         }
+
+        public double SliderWidth {
+            get => (double)GetValue(SliderWidthProperty);
+            set => SetValue(SliderWidthProperty, value);
+        }
+
         public RatingSliderControl() {
             InitializeComponent();
         }
