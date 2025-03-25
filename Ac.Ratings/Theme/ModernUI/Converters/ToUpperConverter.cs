@@ -5,17 +5,13 @@ namespace Ac.Ratings.Theme.ModernUI.Converters {
     /// Converts string values to upper case.
     /// </summary>
     public class ToUpperConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            if (value != null) {
-                var strValue = value.ToString();
+        public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture) {
+            var strValue = value?.ToString();
 
-                return strValue.ToUpperInvariant();
-            }
-
-            return null;
+            return strValue?.ToUpperInvariant();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+        public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture) {
             throw new NotSupportedException();
         }
     }

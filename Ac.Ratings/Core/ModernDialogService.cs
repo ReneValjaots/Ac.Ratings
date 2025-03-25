@@ -18,7 +18,7 @@ public class ModernDialogService : IDialogService {
         return ModernDialog.ShowMessage(message, title, MessageBoxButton.YesNo, _owner) == MessageBoxResult.Yes;
     }
 
-    public string ShowOpenFileDialog(string title, string filter, string initialDirectory) {
+    public string? ShowOpenFileDialog(string title, string filter, string initialDirectory) {
         var openFileDialog = new Microsoft.Win32.OpenFileDialog {
             Title = title,
             Filter = filter,

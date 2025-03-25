@@ -8,18 +8,13 @@ namespace Ac.Ratings.Theme.ModernUI.Converters {
     public class ToLowerConverter : IValueConverter {
 
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            if (value != null) {
-                var strValue = value.ToString();
+        public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture) {
+            var strValue = value?.ToString();
 
-
-                return strValue.ToLowerInvariant();
-            }
-
-            return null;
+            return strValue?.ToLowerInvariant();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+        public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture) {
             throw new NotSupportedException();
         }
     }
