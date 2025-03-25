@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -19,7 +18,7 @@ namespace Ac.Ratings.ViewModel {
         private string _searchText = string.Empty;
         private BitmapImage _carImageSource;
         private ObservableCollection<SkinPreview> _skinPreviews;
-        private FilterViewModel _filterViewModel;
+        public FilterViewModel _filterViewModel;
 
         public ObservableCollection<Car> CarDb {
             get => _carDb;
@@ -78,7 +77,6 @@ namespace Ac.Ratings.ViewModel {
         public ICommand ClearRatingsCommand { get; }
         public ICommand ClearExtraFeaturesCommand { get; }
         public ICommand SelectSkinCommand { get; }
-        public ICommand OpenFilterCommand { get; }
         public ICommand ResetFiltersCommand { get; }
 
         public MainViewModel() {
@@ -100,7 +98,6 @@ namespace Ac.Ratings.ViewModel {
                 ClearRatingsCommand = new RelayCommand(ClearRatings);
                 ClearExtraFeaturesCommand = new RelayCommand(ClearExtraFeatures);
                 SelectSkinCommand = new RelayCommand<string>(SelectSkin);
-                OpenFilterCommand = new RelayCommand(OpenFilterDialog);
                 ResetFiltersCommand = new RelayCommand(ResetFilters);
 
                 _skinPreviews = new ObservableCollection<SkinPreview>();
@@ -153,13 +150,6 @@ namespace Ac.Ratings.ViewModel {
             }
         }
 
-        private void OpenFilterDialog() {
-            var dialog = new FilterWindow { DataContext = _filterViewModel, Owner = Application.Current.MainWindow };
-            dialog.ShowDialog();
-            CarView?.Refresh();
-            SelectFirstFilteredCar();
-        }
-
         private void ResetFilters() {
             SearchText = string.Empty;
             _filterViewModel.ResetFilters();
@@ -167,7 +157,7 @@ namespace Ac.Ratings.ViewModel {
             SelectFirstFilteredCar();
         }
 
-        private void SelectFirstFilteredCar() {
+        public void SelectFirstFilteredCar() {
             SelectedCar = CarView.Cast<Car>().FirstOrDefault();
         }
 

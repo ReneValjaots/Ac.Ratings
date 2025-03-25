@@ -70,9 +70,6 @@ namespace Ac.Ratings {
 
             services.AddSingleton<Func<Type, Core.ViewModel>>(serviceProvider => viewModelType =>
                 (Core.ViewModel)serviceProvider.GetRequiredService(viewModelType));
-
-            services.AddTransient<IDialogService>(provider =>
-                new ModernDialogService(provider.GetRequiredService<SettingsWindow>()));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Ac.Ratings.Theme.ModernUI.Helpers;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Ac.Ratings.Theme.ModernUI.Controls
@@ -10,8 +11,18 @@ namespace Ac.Ratings.Theme.ModernUI.Controls
         public static readonly DependencyProperty IsTitleVisibleProperty =
             DependencyProperty.Register(nameof(IsTitleVisible), typeof(bool), typeof(ModernWindowBase), new PropertyMetadata(false));
 
+        public static readonly DependencyProperty MenuLinkGroupsProperty =
+            DependencyProperty.Register(nameof(MenuLinkGroups), typeof(LinkGroupCollection), typeof(ModernWindowBase));
+
+        public static readonly DependencyProperty ContentSourceProperty =
+            DependencyProperty.Register(nameof(ContentSource), typeof(Uri), typeof(ModernWindowBase));
+
+        public static readonly DependencyProperty ContentLoaderProperty =
+            DependencyProperty.Register(nameof(ContentLoader), typeof(IContentLoader), typeof(ModernWindowBase), new PropertyMetadata(new ContentLoader()));
+
         public ModernWindowBase() {
             Style = (Style)FindResource("ModernWindow");
+            SetCurrentValue(MenuLinkGroupsProperty, new LinkGroupCollection());
             CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
@@ -50,6 +61,21 @@ namespace Ac.Ratings.Theme.ModernUI.Controls
         public bool IsTitleVisible {
             get => (bool)GetValue(IsTitleVisibleProperty);
             set => SetValue(IsTitleVisibleProperty, value);
+        }
+
+        public LinkGroupCollection MenuLinkGroups {
+            get => (LinkGroupCollection)GetValue(MenuLinkGroupsProperty);
+            set => SetValue(MenuLinkGroupsProperty, value);
+        }
+
+        public Uri ContentSource {
+            get => (Uri)GetValue(ContentSourceProperty);
+            set => SetValue(ContentSourceProperty, value);
+        }
+
+        public IContentLoader ContentLoader {
+            get => (IContentLoader)GetValue(ContentLoaderProperty);
+            set => SetValue(ContentLoaderProperty, value);
         }
     }
 }

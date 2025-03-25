@@ -8,7 +8,7 @@ namespace Ac.Ratings {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : ModernWindowBase {
-        private MainViewModel _viewModel;
+        public MainViewModel _viewModel;
 
         public MainWindow() {
             InitializeComponent();
@@ -19,11 +19,6 @@ namespace Ac.Ratings {
             catch (Exception ex) {
                 MessageBox.Show($"Failed to load cars: {ex.Message}");
             }
-        }
-
-        private void SettingsButton_OnClick(object sender, RoutedEventArgs e) {
-            var settingsWindow = new SettingsWindow(_viewModel.CarDb);
-            settingsWindow.ShowDialog();
         }
 
         private void CreateBackupOfCarDb() {

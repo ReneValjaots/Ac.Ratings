@@ -1,5 +1,6 @@
 ﻿using Ac.Ratings.Core;
 using Ac.Ratings.Model;
+using Ac.Ratings.Theme.ModernUI.Controls;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -143,8 +144,15 @@ namespace Ac.Ratings.ViewModel {
                 SelectedClasses.Add(classItem.Name);
             }
 
-            var window = Application.Current.Windows.OfType<FilterWindow>().FirstOrDefault();
-            window?.Close();
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            mainWindow?._viewModel.CarView?.Refresh();
+            mainWindow?._viewModel.SelectFirstFilteredCar();
+
+            if (mainWindow != null) {
+                if (mainWindow.Template?.FindName("ContentFrame", mainWindow) is ModernFrame frame) {
+                    frame.Source = new Uri("/Theme/Components/Home.xaml", UriKind.Relative);
+                }
+            }
         }
 
         public void ResetFilters() {
@@ -165,6 +173,10 @@ namespace Ac.Ratings.ViewModel {
 
             GearboxFilter = "Any";
             DrivetrainFilter = "Any";
+
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            mainWindow?._viewModel.CarView?.Refresh();
+            mainWindow?._viewModel.SelectFirstFilteredCar();
         }
     }
 

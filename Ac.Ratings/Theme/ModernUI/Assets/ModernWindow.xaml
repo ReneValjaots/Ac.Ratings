@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
     xmlns:helpers="clr-namespace:Ac.Ratings.Theme.ModernUI.Helpers"
-    xmlns:local="clr-namespace:Ac.Ratings.Theme"
-    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls">
+    xmlns:local="clr-namespace:Ac.Ratings.Theme">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Button.xaml" />
@@ -12,7 +12,7 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
-    <!--  Define missing resources  -->
+    <!--  Define Resources  -->
     <FontFamily x:Key="DefaultFontFamily">pack://application:,,,/Fonts/SF-Pro.ttf#SF Pro</FontFamily>
     <Style x:Key="ModernWindowTitle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource WindowText}" />
@@ -59,8 +59,24 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="ModernButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource WindowText}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-    <!--  Change TargetType to ModernWindowBase  -->
     <Style x:Key="ModernWindow" TargetType="{x:Type controls:ModernWindowBase}">
         <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource WindowText}" />
@@ -106,11 +122,9 @@
                                     <ContentControl Grid.RowSpan="3" Content="{TemplateBinding BackgroundContent}" />
 
                                     <!--  Title bar  -->
-                                    <Grid>
+                                    <Grid Grid.Row="0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
@@ -124,7 +138,7 @@
 
                                         <!--  Window system buttons  -->
                                         <StackPanel
-                                            Grid.Column="3"
+                                            Grid.Column="1"
                                             VerticalAlignment="Top"
                                             Orientation="Horizontal"
                                             WindowChrome.IsHitTestVisibleInChrome="True">
@@ -215,6 +229,29 @@
                                         </StackPanel>
                                     </Grid>
 
+                                    <!--  Menu and back button area  -->
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="21" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+
+                                        <!--  Main menu  -->
+                                        <controls:ModernMenu
+                                            Grid.Column="1"
+                                            LinkGroups="{TemplateBinding MenuLinkGroups}"
+                                            SelectedSource="{Binding Source, ElementName=ContentFrame, Mode=TwoWay}" />
+                                    </Grid>
+
+                                    <!--  Content frame  -->
+                                    <controls:ModernFrame
+                                        x:Name="ContentFrame"
+                                        Grid.Row="2"
+                                        Margin="21,8,16,16"
+                                        ContentLoader="{TemplateBinding ContentLoader}"
+                                        Source="{Binding ContentSource, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+
                                     <!--  Resize grip  -->
                                     <Grid
                                         x:Name="ResizeGrip"
@@ -233,9 +270,6 @@
                                             Stroke="{DynamicResource WindowText}"
                                             StrokeThickness="1" />
                                     </Grid>
-
-                                    <!--  Content  -->
-                                    <ContentPresenter Grid.Row="2" Content="{TemplateBinding Content}" />
                                 </Grid>
                             </AdornerDecorator>
                         </Border>

@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernUI.Black.xaml" />
                 <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernWindow.xaml" />
                 <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernDialog.xaml" />
+                <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernMenu.xaml" />
                 <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernTab.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <helpers:ContentLoader x:Key="CustomContentLoader" />
