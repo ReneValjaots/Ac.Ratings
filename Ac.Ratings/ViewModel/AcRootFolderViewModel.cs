@@ -1,7 +1,6 @@
 ﻿using Ac.Ratings.Core;
 using System.IO;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Ac.Ratings.ViewModel {
     public class AcRootFolderViewModel : Core.ViewModel {
@@ -16,7 +15,7 @@ namespace Ac.Ratings.ViewModel {
         public string SelectedPath { get; private set; } = string.Empty;
         public bool IsPathValid { get; private set; }
 
-        public ICommand OkCommand { get; }
+        public RelayCommand OkCommand { get; }
 
         public AcRootFolderViewModel(IDialogService dialogService) {
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));

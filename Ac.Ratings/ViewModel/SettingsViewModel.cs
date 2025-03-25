@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text.Json;
 using System.Windows;
-using System.Windows.Input;
 using Ac.Ratings.Core;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
@@ -15,12 +14,12 @@ namespace Ac.Ratings.ViewModel {
         private string _selectedSecondaryUnit;
         private ObservableCollection<Car> _carDb;
 
-        public ICommand ResetRatingsCommand { get; }
-        public ICommand ResetExtraFeaturesCommand { get; }
-        public ICommand RestoreBackupCommand { get; }
-        public ICommand SaveSettingsCommand { get; }
-        public ICommand ResetRootFolderCommand { get; }
-        public ICommand TransferRatingsCommand { get; }
+        public RelayCommand ResetRatingsCommand { get; }
+        public RelayCommand ResetExtraFeaturesCommand { get; }
+        public RelayCommand RestoreBackupCommand { get; }
+        public RelayCommand SaveSettingsCommand { get; }
+        public RelayCommand ResetRootFolderCommand { get; }
+        public RelayCommand TransferRatingsCommand { get; }
 
 
         public SettingsViewModel(IDialogService dialogService) {

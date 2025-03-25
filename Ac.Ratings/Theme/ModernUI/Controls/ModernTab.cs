@@ -43,12 +43,11 @@ namespace Ac.Ratings.Theme.ModernUI.Controls {
         }
 
         private void UpdateSelection() {
-            if (_linkList == null || Links == null) {
-                return;
-            }
+            if (_linkList == null || Links == null) return;
 
-            // sync list selection with current source
-            _linkList.SelectedItem = Links.FirstOrDefault(l => l.Source == SelectedSource);
+            var selectedSource = SelectedSource?.ToString();
+            var selectedLink = Links.FirstOrDefault(l => l.Source?.ToString().EndsWith(selectedSource, StringComparison.OrdinalIgnoreCase) == true);
+            _linkList.SelectedItem = selectedLink ?? Links.FirstOrDefault();
         }
 
         public override void OnApplyTemplate() {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Media;
-using Ac.Ratings.Core;
 using Ac.Ratings.Services;
 using Ac.Ratings.Theme.ModernUI.Helpers;
 

@@ -25,10 +25,19 @@
 
         <TextBox
             Name="SearchBox"
-            Width="{Binding ElementName=CarList, Path=ActualWidth, Converter={StaticResource SubtractConverter}, ConverterParameter=20}"
+            Width="{Binding ElementName=CarList, Path=ActualWidth, Converter={StaticResource SubtractConverter}, ConverterParameter=15}"
             MinWidth="150"
             Style="{StaticResource PrimaryTextBox}"
             Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Button
+            x:Name="ResetFiltersButton"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="10"
+            Width="150"
+            HorizontalAlignment="Left"
+            Command="{Binding DataContext.ResetFiltersCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            Content="Reset Filters" />
 
         <ListView
             x:Name="CarList"
@@ -240,13 +249,6 @@
                     Margin="10"
                     Command="{Binding DataContext.ClearExtraFeaturesCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                     Content="Clear Extra Features" />
-
-                <Button
-                    x:Name="ResetFiltersButton"
-                    Grid.Column="2"
-                    Margin="10"
-                    Command="{Binding DataContext.ResetFiltersCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    Content="Reset Filters" />
             </Grid>
         </StackPanel>
     </Grid>

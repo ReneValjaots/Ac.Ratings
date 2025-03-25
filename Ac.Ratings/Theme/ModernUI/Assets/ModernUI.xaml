@@ -9,7 +9,6 @@
         <ResourceDictionary Source="Button.xaml" />
         <ResourceDictionary Source="TextBlock.xaml" />
         <ResourceDictionary Source="TextBox.xaml" />
-        <ResourceDictionary Source="DataGrid.xaml" />
         <ResourceDictionary Source="ComboBox.xaml" />
         <ResourceDictionary Source="RadioButton.xaml" />
         <ResourceDictionary Source="CheckBox.xaml" />

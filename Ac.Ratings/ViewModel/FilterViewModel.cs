@@ -3,7 +3,6 @@ using Ac.Ratings.Model;
 using Ac.Ratings.Theme.ModernUI.Controls;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Ac.Ratings.ViewModel {
     public class FilterViewModel : Core.ViewModel {
@@ -114,8 +113,8 @@ namespace Ac.Ratings.ViewModel {
         public IEnumerable<string> GearboxOptions => new[] { "Any", "Manual", "Automatic" };
         public IEnumerable<string> DrivetrainOptions => new[] { "Any", "RWD", "FWD", "AWD" };
 
-        public ICommand ApplyFiltersCommand { get; }
-        public ICommand ResetFiltersCommand { get; }
+        public RelayCommand ApplyFiltersCommand { get; }
+        public RelayCommand ResetFiltersCommand { get; }
 
         private ObservableCollection<AuthorItem> GetAuthors() {
             return new ObservableCollection<AuthorItem>(

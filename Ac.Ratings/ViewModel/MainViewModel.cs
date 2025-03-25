@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Ac.Ratings.Core;
 using Ac.Ratings.Model;
@@ -74,10 +73,10 @@ namespace Ac.Ratings.ViewModel {
 
         public ICollectionView CarView { get; private set; }
 
-        public ICommand ClearRatingsCommand { get; }
-        public ICommand ClearExtraFeaturesCommand { get; }
-        public ICommand SelectSkinCommand { get; }
-        public ICommand ResetFiltersCommand { get; }
+        public RelayCommand ClearRatingsCommand { get; }
+        public RelayCommand ClearExtraFeaturesCommand { get; }
+        public RelayCommand<string> SelectSkinCommand { get; }
+        public RelayCommand ResetFiltersCommand { get; }
 
         public MainViewModel() {
             try {
