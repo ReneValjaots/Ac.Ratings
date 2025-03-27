@@ -54,11 +54,11 @@
                             GroupName="PrimaryUnit"
                             IsChecked="{Binding SelectedPrimaryUnit, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=hp}" />
                         <RadioButton
-                            Content="ps"
+                            Content="PS"
                             GroupName="PrimaryUnit"
                             IsChecked="{Binding SelectedPrimaryUnit, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ps}" />
                         <RadioButton
-                            Content="cv"
+                            Content="CV"
                             GroupName="PrimaryUnit"
                             IsChecked="{Binding SelectedPrimaryUnit, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=cv}" />
                     </StackPanel>
@@ -88,11 +88,11 @@
                             GroupName="SecondaryUnit"
                             IsChecked="{Binding SelectedSecondaryUnit, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=hp}" />
                         <RadioButton
-                            Content="ps"
+                            Content="PS"
                             GroupName="SecondaryUnit"
                             IsChecked="{Binding SelectedSecondaryUnit, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ps}" />
                         <RadioButton
-                            Content="cv"
+                            Content="CV"
                             GroupName="SecondaryUnit"
                             IsChecked="{Binding SelectedSecondaryUnit, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=cv}" />
                     </StackPanel>

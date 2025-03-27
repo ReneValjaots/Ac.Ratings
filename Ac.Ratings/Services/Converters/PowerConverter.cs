@@ -44,7 +44,7 @@ public class PowerConverter : JsonConverter<string?> {
             var cv = ps;
 
             result.Add("hp", hp);
-            result.Add("kW", kw);
+            result.Add("kw", kw);
             result.Add("ps", ps);
             result.Add("cv", cv);
         }
@@ -56,7 +56,7 @@ public class PowerConverter : JsonConverter<string?> {
             var cv = ps;
 
             result.Add("hp", hp);
-            result.Add("kW", kw);
+            result.Add("kw", kw);
             result.Add("ps", ps);
             result.Add("cv", cv);
         }
@@ -69,7 +69,7 @@ public class PowerConverter : JsonConverter<string?> {
 
 
             result.Add("hp", hp);
-            result.Add("kW", kw);
+            result.Add("kw", kw);
             result.Add("ps", ps);
             result.Add("cv", cv);
         }
@@ -81,7 +81,7 @@ public class PowerConverter : JsonConverter<string?> {
             var cv = ps;
 
             result.Add("hp", hp);
-            result.Add("kW", kw);
+            result.Add("kw", kw);
             result.Add("ps", ps);
             result.Add("cv", cv);
         }
@@ -91,19 +91,24 @@ public class PowerConverter : JsonConverter<string?> {
 
     private string ConvertPowerString(string powerValue) {
         var powerValues = CalculatePower(powerValue);
-        if (powerValues.Count == 0)
-            return "-";
+        if (powerValues.Count == 0) return "-";
 
-        string primaryUnit = LoadPowerFormat("PrimaryPowerUnit");
-        string secondaryUnit = LoadPowerFormat("SecondaryPowerUnit");
+        string primaryUnit = LoadPowerFormat("PrimaryPowerUnit").ToLower();
+        string secondaryUnit = LoadPowerFormat("SecondaryPowerUnit").ToLower();
 
-        if (!powerValues.ContainsKey(primaryUnit))
-            return "-";
+        if (string.IsNullOrEmpty(primaryUnit) || !powerValues.ContainsKey(primaryUnit)) return "-";
 
-        string formattedPower = $"{powerValues[primaryUnit]}{primaryUnit}";
+        var unitDisplayMap = new Dictionary<string, string> {
+            { "kw", "kW" },
+            { "hp", "hp" },
+            { "ps", "PS" },
+            { "cv", "CV" }
+        };
 
-        if (secondaryUnit != "None" && powerValues.ContainsKey(secondaryUnit)) {
-            formattedPower += $"/{powerValues[secondaryUnit]}{secondaryUnit}";
+        string formattedPower = $"{powerValues[primaryUnit]} {unitDisplayMap[primaryUnit]}";
+
+        if (secondaryUnit != "none" && powerValues.ContainsKey(secondaryUnit)) {
+            formattedPower += $" / {powerValues[secondaryUnit]} {unitDisplayMap[secondaryUnit]}";
         }
 
         return formattedPower;
@@ -121,6 +126,6 @@ public class PowerConverter : JsonConverter<string?> {
             }
         }
 
-        return key == "PrimaryPowerUnit" ? "kW" : "hp"; // Defaults
+        return key == "PrimaryPowerUnit" ? "kw" : "hp"; // Defaults
     }
 }

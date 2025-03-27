@@ -53,12 +53,12 @@ namespace Ac.Ratings.ViewModel {
                 var json = File.ReadAllText(configPath);
                 var config = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
                 if (config != null) {
-                    SelectedPrimaryUnit = config.GetValueOrDefault("PrimaryPowerUnit", "kW");
-                    SelectedSecondaryUnit = config.GetValueOrDefault("SecondaryPowerUnit", "hp");
+                    SelectedPrimaryUnit = config.GetValueOrDefault("PrimaryPowerUnit", "kw").ToLower();
+                    SelectedSecondaryUnit = config.GetValueOrDefault("SecondaryPowerUnit", "hp").ToLower();
                 }
             }
             else {
-                SelectedPrimaryUnit = "kW";
+                SelectedPrimaryUnit = "kw";
                 SelectedSecondaryUnit = "hp";
             }
         }
@@ -73,11 +73,13 @@ namespace Ac.Ratings.ViewModel {
 
             if (config == null) {
                 throw new InvalidOperationException(
-                    "The configuration file could not be parsed. It must be in a valid dictionary format, where each setting consists of a name and a value. For example: \"PrimaryPowerUnit\": \"ps\". Both the name and the value must be enclosed in double quotes and separated by a colon (:).");
+                    "The configuration file could not be parsed. " +
+                    "It must be in a valid dictionary format, where each setting consists of a name and a value. " +
+                    "For example: \"PrimaryPowerUnit\": \"ps\". Both the name and the value must be enclosed in double quotes and separated by a colon (:).");
             }
 
-            config["PrimaryPowerUnit"] = SelectedPrimaryUnit;
-            config["SecondaryPowerUnit"] = SelectedSecondaryUnit;
+            config["PrimaryPowerUnit"] = SelectedPrimaryUnit.ToLower();
+            config["SecondaryPowerUnit"] = SelectedSecondaryUnit.ToLower();
 
             File.WriteAllText(configPath, JsonSerializer.Serialize(config, ConfigManager.JsonOptions));
         }
