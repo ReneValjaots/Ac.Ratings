@@ -28,7 +28,7 @@ namespace Ac.Ratings.ViewModel {
             get => _selectedCar;
             set {
                 if (SetField(ref _selectedCar, value)) {
-                    UpdateCarData();
+                    UpdateCarDisplayData();
                 }
             }
         }
@@ -110,6 +110,7 @@ namespace Ac.Ratings.ViewModel {
             }
         }
 
+
         private bool FilterCar(Car car) {
             if (!string.IsNullOrWhiteSpace(SearchText) && !car.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return false;
             if (_filterViewModel.SelectedAuthors.Any() && !_filterViewModel.SelectedAuthors.Contains(car.Author)) return false;
@@ -160,7 +161,7 @@ namespace Ac.Ratings.ViewModel {
             SelectedCar = CarView.Cast<Car>().FirstOrDefault();
         }
 
-        private void UpdateCarData() {
+        private void UpdateCarDisplayData() {
             if (SelectedCar != null) {
                 EngineStats = CarDisplayService.ShowCarEngineStats(SelectedCar);
                 DrivetrainStats = CarDisplayService.ShowCarDriveTrain(SelectedCar);

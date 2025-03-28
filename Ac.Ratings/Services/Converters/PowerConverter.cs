@@ -23,12 +23,7 @@ public class PowerConverter : JsonConverter<string?> {
         return ConvertPowerString(powerValue);
     }
 
-    public string? Convert(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) return "-";
-        var powerValue = value.Replace(" ", "").ToLower();
-        return ConvertPowerString(powerValue);
-    }
-
+    // cv and ps 1:1 conversion
     private Dictionary<string, int> CalculatePower(string powerValue) {
         var matchHp = Regex.Match(powerValue, @"^(\d+)\+?(bhp|hp|whp)$");
         var matchKw = Regex.Match(powerValue, @"^(\d+)\+?kw");
@@ -41,36 +36,33 @@ public class PowerConverter : JsonConverter<string?> {
             var hp = int.Parse(matchHp.Groups[1].Value);
             var kw = (int)Math.Round(hp / 1.359375);
             var ps = (int)Math.Round(hp * 1.013);
-            var cv = ps;
 
             result.Add("hp", hp);
             result.Add("kw", kw);
             result.Add("ps", ps);
-            result.Add("cv", cv);
+            result.Add("cv", ps);
         }
 
         if (matchKw.Success) {
             var kw = int.Parse(matchKw.Groups[1].Value);
             var hp = (int)Math.Round(kw * 1.359375);
             var ps = (int)Math.Round(kw * 1.36);
-            var cv = ps;
 
             result.Add("hp", hp);
             result.Add("kw", kw);
             result.Add("ps", ps);
-            result.Add("cv", cv);
+            result.Add("cv", ps);
         }
 
         if (matchCv.Success) {
             var cv = int.Parse(matchCv.Groups[1].Value);
             var hp = (int)Math.Round(cv / 1.013);
             var kw = (int)Math.Round(hp / 1.36);
-            var ps = cv;
 
 
             result.Add("hp", hp);
             result.Add("kw", kw);
-            result.Add("ps", ps);
+            result.Add("ps", cv);
             result.Add("cv", cv);
         }
 
@@ -78,12 +70,11 @@ public class PowerConverter : JsonConverter<string?> {
             var ps = int.Parse(matchPs.Groups[1].Value);
             var hp = (int)Math.Round(ps / 1.013);
             var kw = (int)Math.Round(hp / 1.36);
-            var cv = ps;
 
             result.Add("hp", hp);
             result.Add("kw", kw);
             result.Add("ps", ps);
-            result.Add("cv", cv);
+            result.Add("cv", ps);
         }
 
         return result;

@@ -4,21 +4,17 @@ using System.Text.RegularExpressions;
 
 namespace Ac.Ratings.Services.Converters;
 
-public class AccelerationConverter : JsonConverter<string?>
-{
-    public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
+public class AccelerationConverter : JsonConverter<string?> {
+    public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         var value = reader.GetString();
         return TransformValue(value);
     }
 
-    public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options)
-    {
+    public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options) {
         writer.WriteStringValue(value);
     }
 
-    public string? TransformValue(string? value)
-    {
+    public string? TransformValue(string? value) {
         if (string.IsNullOrWhiteSpace(value))
             return null;
 
@@ -26,10 +22,8 @@ public class AccelerationConverter : JsonConverter<string?>
         return ConvertAccelerationString(accelerationValue);
     }
 
-    private string ConvertAccelerationString(string acceleration)
-    {
-        if (string.IsNullOrWhiteSpace(acceleration) || !acceleration.Contains("s"))
-        {
+    private string ConvertAccelerationString(string acceleration) {
+        if (string.IsNullOrWhiteSpace(acceleration) || !acceleration.Contains("s")) {
             return "-";
         }
 
@@ -42,20 +36,17 @@ public class AccelerationConverter : JsonConverter<string?>
             .Replace("-", "")
             .Trim();
 
-        if (string.IsNullOrWhiteSpace(acceleration) || acceleration == "s")
-        {
+        if (string.IsNullOrWhiteSpace(acceleration) || acceleration == "s") {
             return "-";
         }
 
         var match = Regex.Match(acceleration, @"(<*)(\d*\.?\d*)s");
 
-        if (match.Success)
-        {
+        if (match.Success) {
             string timeValue = match.Groups[2].Value;
             bool hasLessThanSymbol = match.Groups[1].Value.Contains("<");
 
-            if (double.TryParse(timeValue, out double time))
-            {
+            if (double.TryParse(timeValue, out double time)) {
                 string formattedTime = time.ToString("0.0");
                 return hasLessThanSymbol ? $"<{formattedTime}s" : $"{formattedTime}s";
             }

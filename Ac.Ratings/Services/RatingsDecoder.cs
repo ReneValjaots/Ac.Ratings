@@ -45,17 +45,15 @@ namespace Ac.Ratings.Services {
                 return bytes;
             }
 
-            using (var inputStream = new MemoryStream(bytes)) {
-                if (deflateMode) {
-                    inputStream.Seek(1, SeekOrigin.Begin); // Skip the flag byte
-                }
-
-                using (var gzip = new DeflateStream(inputStream, CompressionMode.Decompress))
-                    using (var memory = new MemoryStream()) {
-                        gzip.CopyTo(memory);
-                        return memory.ToArray();
-                    }
+            using var inputStream = new MemoryStream(bytes);
+            if (deflateMode) {
+                inputStream.Seek(1, SeekOrigin.Begin); // Skip the flag byte
             }
+
+            using var gzip = new DeflateStream(inputStream, CompressionMode.Decompress);
+            using var memory = new MemoryStream();
+            gzip.CopyTo(memory);
+            return memory.ToArray();
         }
 
         private void ProcessDecompressedData(byte[] decompressedData) {

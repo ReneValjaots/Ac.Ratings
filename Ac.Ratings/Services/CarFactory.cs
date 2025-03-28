@@ -26,7 +26,7 @@ namespace Ac.Ratings.Services {
             var engineDataDictionary = _engineDbService.GetAllEngineData();
 
             foreach (var folder in carFolders) {
-                if (!engineDataDictionary.ContainsKey(folder)) {
+                if (folder != null && !engineDataDictionary.ContainsKey(folder)) {
                     var defaultEngine = new CarEngine {
                         FolderName = folder,
                         Displacement = 0,
@@ -41,7 +41,7 @@ namespace Ac.Ratings.Services {
             foreach (var folder in carFolders) {
                 var car = ProcessCarFolder(folder);
                 if (car != null) {
-                    if (engineDataDictionary.TryGetValue(car.FolderName, out var engineData)) {
+                    if (car.FolderName != null && engineDataDictionary.TryGetValue(car.FolderName, out var engineData)) {
                         car.Engine = engineData;
                     }
                     cars.Add(car);

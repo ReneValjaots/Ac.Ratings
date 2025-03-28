@@ -110,6 +110,7 @@ namespace Ac.Ratings.ViewModel {
             set => SetField(ref _drivetrainFilter, value);
         }
 
+        // Used for binding in view
         public IEnumerable<string> GearboxOptions => new[] { "Any", "Manual", "Automatic" };
         public IEnumerable<string> DrivetrainOptions => new[] { "Any", "RWD", "FWD", "AWD" };
 
@@ -121,6 +122,7 @@ namespace Ac.Ratings.ViewModel {
                 _cars.Select(c => c.Author)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .Distinct()
+                    .OrderBy(a => a)
                     .Select(a => new AuthorItem { Name = a }));
         }
 
@@ -129,6 +131,7 @@ namespace Ac.Ratings.ViewModel {
                 _cars.Select(c => c.Class)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .Distinct()
+                    .OrderBy(c => c)
                     .Select(c => new ClassItem { Name = c }));
         }
 
