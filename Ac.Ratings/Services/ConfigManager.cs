@@ -50,39 +50,25 @@ namespace Ac.Ratings.Services {
             EnsureFileExists(AppearanceConfigFilePath, "{}");
 
             OriginalRatingsPath = LoadOriginalRatingsPath();
-            AcRootFolder = LoadAcRootFolder();
-
-            if (string.IsNullOrEmpty(AcRootFolder)) {
-                AcRootFolder = AskUserForAcRootFolder();
-                if (string.IsNullOrEmpty(AcRootFolder)) {
-                    Environment.Exit(0);
-                }
-
-                SaveConfigValue("AcRootFolder", AcRootFolder);
-            }
-
-            if (LoadConfigValue("AcRootFolder") == null && string.IsNullOrEmpty(AcRootFolder)) {
-                SaveConfigValue("AcRootFolder", AcRootFolder);
-            }
+            AcRootFolder = LoadConfigValue("AcRootFolder");
         }
 
-        private static string? LoadAcRootFolder() {
-            var rootFolder = LoadConfigValue("AcRootFolder");
-
-            if (string.IsNullOrEmpty(rootFolder) || !Directory.Exists(rootFolder)) {
-                return null;
+        public static bool EnsureAcRootFolderConfigured(Func<string?> promptUserForPathAction) {
+            if (!string.IsNullOrEmpty(AcRootFolder) && Directory.Exists(AcRootFolder)) {
+                return true;
             }
 
-            return rootFolder;
-        }
+            string? userProvidedPath = promptUserForPathAction?.Invoke();
 
-        private static string? AskUserForAcRootFolder() {
-            var acRootFolderWindow = new AcRootFolderWindow();
-            if (acRootFolderWindow.ShowDialog() == true) {
-                return acRootFolderWindow.SelectedPath;
+            if (!string.IsNullOrEmpty(userProvidedPath) && Directory.Exists(userProvidedPath)) {
+                AcRootFolder = userProvidedPath;
+                SaveConfigValue("AcRootFolder", AcRootFolder);
+                return true;
             }
-
-            return null;
+            else {
+                AcRootFolder = null; 
+                return false;
+            }
         }
 
         private static string? LoadConfigValue(string key) {

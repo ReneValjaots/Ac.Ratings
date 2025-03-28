@@ -22,10 +22,32 @@ namespace Ac.Ratings {
 
 
         protected override void OnStartup(StartupEventArgs e) {
+            base.OnStartup(e);
+            
+            _ = ConfigManager.ResourceFolder;
+
+            Func<string?> promptAction = () => {
+                var acRootFolderWindow = new AcRootFolderWindow();
+                if (acRootFolderWindow.ShowDialog() == true) {
+                    return acRootFolderWindow.SelectedPath;
+                }
+
+                return null; // User cancelled
+            };
+
+            bool isAcRootConfigured = ConfigManager.EnsureAcRootFolderConfigured(promptAction);
+
+            if (!isAcRootConfigured) {
+                MessageBox.Show("Assetto Corsa root folder is required but was not configured correctly. The application will now exit.", "Configuration Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                Environment.Exit(1); 
+                return; 
+            }
+
             ApplyAppearanceSettings();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
-            base.OnStartup(e);
+   
         }
 
 
