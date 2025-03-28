@@ -1,4 +1,5 @@
-﻿using Ac.Ratings.Core;
+﻿using System.Windows;
+using Ac.Ratings.Core;
 using Ac.Ratings.Theme.ModernUI.Controls;
 using Ac.Ratings.ViewModel;
 
@@ -6,7 +7,7 @@ namespace Ac.Ratings {
     /// <summary>
     /// Interaction logic for AcRootFolderWindow.xaml
     /// </summary>
-    public partial class AcRootFolderWindow : ModernWindowBase {
+    public partial class AcRootFolderWindow : Window {
         public AcRootFolderViewModel ViewModel { get; }
         public string SelectedPath => ViewModel.SelectedPath;
 

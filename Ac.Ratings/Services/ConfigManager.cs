@@ -25,41 +25,31 @@ namespace Ac.Ratings.Services {
         };
 
         static ConfigManager() {
-            ResourceFolder = LoadConfigValue("ResourceFolder")
-                             ?? Path.Combine(AppContext.BaseDirectory, "Resources");
+            ResourceFolder = Path.Combine(AppContext.BaseDirectory, "Resources");
+            DataFolder = Path.Combine(AppContext.BaseDirectory, "Data");
 
-            DataFolder = LoadConfigValue("DataFolder")
-                             ?? Path.Combine(AppContext.BaseDirectory, "Data");
-
-            EnsureResourceFolderStructure();
-            EnsureDataFolderExists();
+            EnsureDirectoryExists(ResourceFolder);
+            EnsureDirectoryExists(DataFolder);
+            EnsureDirectoryExists(Path.Combine(ResourceFolder, "config"));
+            EnsureDirectoryExists(Path.Combine(ResourceFolder, "cars"));
+            EnsureDirectoryExists(Path.Combine(ResourceFolder, "data"));
+            EnsureDirectoryExists(Path.Combine(ResourceFolder, "backup"));
+            EnsureDirectoryExists(Path.Combine(ResourceFolder, "unpackData"));
 
             ConfigFilePath = Path.Combine(ResourceFolder, "config", "config.json");
             AppearanceConfigFilePath = Path.Combine(ResourceFolder, "config", "appearance.json");
-
             CarsRootFolder = Path.Combine(ResourceFolder, "cars");
             ErrorLogFilepath = Path.Combine(ResourceFolder, "data", "ErrorLog.txt");
             BackupFolder = Path.Combine(ResourceFolder, "backup");
-            LastUpdatedFilepath = Path.Combine(ResourceFolder, "backup", "LastUpdate.txt");
+            LastUpdatedFilepath = Path.Combine(BackupFolder, "LastUpdate.txt");
             UnpackFolderPath = Path.Combine(ResourceFolder, "unpackData");
             ModifiedRatingsPath = Path.Combine(UnpackFolderPath, "Ratings.txt");
 
+            EnsureFileExists(ErrorLogFilepath);
+            EnsureFileExists(ConfigFilePath, "{}"); // Ensure config file exists with default empty JSON
+            EnsureFileExists(AppearanceConfigFilePath, "{}");
+
             OriginalRatingsPath = LoadOriginalRatingsPath();
-            EnsureConfigFileExists();
-            EnsureAppearanceConfigFileExists();
-
-            if (LoadConfigValue("ResourceFolder") == null) {
-                SaveConfigValue("ResourceFolder", ResourceFolder);
-            }
-
-            if (LoadConfigValue("DataFolder") == null) {
-                SaveConfigValue("DataFolder", DataFolder);
-            }
-
-            if (LoadConfigValue("OriginalRatingsDatafilePath") == null && OriginalRatingsPath != null) {
-                SaveConfigValue("OriginalRatingsDatafilePath", OriginalRatingsPath);
-            }
-
             AcRootFolder = LoadAcRootFolder();
 
             if (string.IsNullOrEmpty(AcRootFolder)) {
@@ -73,42 +63,6 @@ namespace Ac.Ratings.Services {
 
             if (LoadConfigValue("AcRootFolder") == null && string.IsNullOrEmpty(AcRootFolder)) {
                 SaveConfigValue("AcRootFolder", AcRootFolder);
-            }
-        }
-
-        private static void EnsureDataFolderExists() {
-            if (!Directory.Exists(DataFolder)) {
-                Directory.CreateDirectory(DataFolder);
-            }
-        }
-
-        private static void EnsureResourceFolderStructure() {
-            if (!Directory.Exists(ResourceFolder)) {
-                Directory.CreateDirectory(ResourceFolder);
-            }
-
-            var subfolders = new[] {
-                Path.Combine(ResourceFolder, "config"),
-                Path.Combine(ResourceFolder, "cars"),
-                Path.Combine(ResourceFolder, "data"),
-                Path.Combine(ResourceFolder, "backup"),
-                Path.Combine(ResourceFolder, "unpackData")
-            };
-
-            foreach (var folder in subfolders) {
-                if (!Directory.Exists(folder)) {
-                    Directory.CreateDirectory(folder);
-                }
-            }
-
-            var files = new[] {
-                Path.Combine(ResourceFolder, "data", "ErrorLog.txt")
-            };
-
-            foreach (var file in files) {
-                if (!File.Exists(file)) {
-                    File.Create(file).Close();
-                }
             }
         }
 
@@ -132,8 +86,29 @@ namespace Ac.Ratings.Services {
         }
 
         private static string? LoadConfigValue(string key) {
-            if (File.Exists(ConfigFilePath)) {
-                var config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(ConfigFilePath));
+            return LoadValue(ConfigFilePath, key);
+        }
+
+        private static void SaveValue(string filepath, string key, string? value) {
+            if (value == null) {
+                Console.WriteLine($"Warning: Attempted to save null value for key '{key}' in '{filepath}'. Operation skipped.");
+                return;
+            }
+            Dictionary<string, string> config;
+            if (File.Exists(filepath)) {
+                config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(filepath)) ?? new Dictionary<string, string>();
+            }
+            else {
+                config = new Dictionary<string, string>();
+            }
+
+            config[key] = value;
+            File.WriteAllText(filepath, JsonSerializer.Serialize(config, JsonOptions));
+        }
+
+        private static string? LoadValue(string filepath, string key) {
+            if (File.Exists(filepath)) {
+                var config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(filepath));
                 return config?.GetValueOrDefault(key);
             }
 
@@ -141,74 +116,40 @@ namespace Ac.Ratings.Services {
         }
 
         private static void SaveConfigValue(string key, string value) {
-            Dictionary<string, string> config;
-
-            if (File.Exists(ConfigFilePath)) {
-                config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(ConfigFilePath)) ?? new Dictionary<string, string>();
-            }
-            else {
-                config = new Dictionary<string, string>();
-            }
-
-            config[key] = value;
-            File.WriteAllText(ConfigFilePath, JsonSerializer.Serialize(config, JsonOptions));
+            SaveValue(ConfigFilePath, key, value);
         }
 
         public static string? LoadAppearanceConfigValue(string key) {
-            if (File.Exists(AppearanceConfigFilePath)) {
-                var config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(AppearanceConfigFilePath));
-                return config?.GetValueOrDefault(key);
-            }
-
-            return null;
+            return LoadValue(AppearanceConfigFilePath, key);
         }
 
         public static void SaveAppearanceConfigValue(string key, string value) {
-            Dictionary<string, string> config;
-
-            if (File.Exists(AppearanceConfigFilePath)) {
-                config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(AppearanceConfigFilePath)) ?? new Dictionary<string, string>();
-            }
-            else {
-                config = new Dictionary<string, string>();
-            }
-
-            config[key] = value;
-            File.WriteAllText(AppearanceConfigFilePath, JsonSerializer.Serialize(config, JsonOptions));
+            SaveValue(AppearanceConfigFilePath, key, value);
         }
 
         private static string? LoadOriginalRatingsPath() {
-            if (LoadConfigValue("OriginalRatingsDatafilePath") != null) {
-                return LoadConfigValue("OriginalRatingsDatafilePath");
-            }
-
             string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AcTools Content Manager", "Progress");
             string ratingsPath = Path.Combine(appDataPath, "Ratings.data");
 
             return File.Exists(ratingsPath) ? ratingsPath : null;
         }
 
-        private static void EnsureConfigFileExists() {
-            var directoryPath = Path.GetDirectoryName(ConfigFilePath);
-            if (!Directory.Exists(directoryPath)) {
-                Directory.CreateDirectory(directoryPath!);
-            }
-
-            if (!File.Exists(ConfigFilePath)) {
-                var defaultConfig = new Dictionary<string, string>();
-                File.WriteAllText(ConfigFilePath, JsonSerializer.Serialize(defaultConfig, JsonOptions));
+        private static void EnsureDirectoryExists(string path) {
+            if (!Directory.Exists(path)) {
+                Directory.CreateDirectory(path);
             }
         }
 
-        private static void EnsureAppearanceConfigFileExists() {
-            var directoryPath = Path.GetDirectoryName(AppearanceConfigFilePath);
-            if (!Directory.Exists(directoryPath)) {
-                Directory.CreateDirectory(directoryPath!);
-            }
+        private static void EnsureFileExists(string path, string defaultContent = "") {
+            if (!File.Exists(path)) {
+                EnsureDirectoryExists(Path.GetDirectoryName(path)!);
 
-            if (!File.Exists(AppearanceConfigFilePath)) {
-                var defaultConfig = new Dictionary<string, string>();
-                File.WriteAllText(AppearanceConfigFilePath, JsonSerializer.Serialize(defaultConfig, JsonOptions));
+                try {
+                    File.WriteAllText(path, defaultContent);
+                }
+                catch (IOException ex) {
+                    Console.WriteLine($"Failed to create file {path}: {ex.Message}");
+                }
             }
         }
     }
