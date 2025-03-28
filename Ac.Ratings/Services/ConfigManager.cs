@@ -12,7 +12,6 @@ namespace Ac.Ratings.Services {
         public static string CarsRootFolder { get; private set; }
         public static string ErrorLogFilepath { get; private set; }
         public static string BackupFolder { get; private set; }
-        public static string LastUpdatedFilepath {  get; private set; }
         public static string UnpackFolderPath { get; private set; }
         public static string ModifiedRatingsPath { get; private set; }
         public static string? OriginalRatingsPath { get; private set; }
@@ -41,7 +40,6 @@ namespace Ac.Ratings.Services {
             CarsRootFolder = Path.Combine(ResourceFolder, "cars");
             ErrorLogFilepath = Path.Combine(ResourceFolder, "data", "ErrorLog.txt");
             BackupFolder = Path.Combine(ResourceFolder, "backup");
-            LastUpdatedFilepath = Path.Combine(BackupFolder, "LastUpdate.txt");
             UnpackFolderPath = Path.Combine(ResourceFolder, "unpackData");
             ModifiedRatingsPath = Path.Combine(UnpackFolderPath, "Ratings.txt");
 

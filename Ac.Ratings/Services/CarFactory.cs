@@ -17,37 +17,29 @@ namespace Ac.Ratings.Services {
             _engineDbService = new EngineDatabaseService();
         }
 
-        public List<Car> InitializeCars(bool forceUpdate = false) {
+        public List<Car> InitializeCars() {
             var cars = new List<Car>();
             var carFolders = Directory.GetDirectories(_acRootFolder).Select(Path.GetFileName).ToList();
 
             EnsureCarFoldersExist(carFolders);
 
-            DateTime lastUpdate = GetLastUpdateTime();
-            bool shouldUpdate = forceUpdate || (DateTime.UtcNow - lastUpdate).TotalDays > 7;
-
             var engineDataDictionary = _engineDbService.GetAllEngineData();
 
             foreach (var folder in carFolders) {
                 if (!engineDataDictionary.ContainsKey(folder)) {
-                    _engineDbService.InsertEngineData(new CarEngine {
-                        FolderName = folder,
-                        Displacement = 0,
-                        Layout = null,
-                        CylinderCount = 0
-                    });
-                    // Add the default entry to the dictionary so it’s available immediately
-                    engineDataDictionary[folder] = new CarEngine {
+                    var defaultEngine = new CarEngine {
                         FolderName = folder,
                         Displacement = 0,
                         Layout = null,
                         CylinderCount = 0
                     };
+                    _engineDbService.InsertEngineData(defaultEngine);
+                    engineDataDictionary[folder] = defaultEngine;
                 }
             }
 
             foreach (var folder in carFolders) {
-                var car = ProcessCarFolder(folder, shouldUpdate);
+                var car = ProcessCarFolder(folder);
                 if (car != null) {
                     if (engineDataDictionary.TryGetValue(car.FolderName, out var engineData)) {
                         car.Engine = engineData;
@@ -56,21 +48,18 @@ namespace Ac.Ratings.Services {
                 }
             }
 
-            File.WriteAllText(ConfigManager.LastUpdatedFilepath, DateTime.UtcNow.ToString("o"));
             return cars.OrderBy(c => c.Name).ToList();
         }
 
         private void EnsureCarFoldersExist(IEnumerable<string?> carFolders) {
             foreach (var folder in carFolders.Where(f => f != null)) {
-                // Assert folder is non-null since it's filtered before
                 var newFolder = Path.Combine(_carsRootFolder, folder!);
                 Directory.CreateDirectory(newFolder);
                 Directory.CreateDirectory(Path.Combine(newFolder, "RatingsApp"));
-                Directory.CreateDirectory(Path.Combine(ConfigManager.BackupFolder, "cm", folder!));
             }
         }
 
-        private Car? ProcessCarFolder(string? carFolder, bool shouldUpdate) {
+        private Car? ProcessCarFolder(string? carFolder) {
             if (string.IsNullOrEmpty(carFolder)) return null;
 
             try {
@@ -78,10 +67,6 @@ namespace Ac.Ratings.Services {
                 var ratingsPath = Path.Combine(_carsRootFolder, carFolder, "RatingsApp");
                 var uiJsonPath = Path.Combine(ratingsPath, "ui.json");
                 var uiCarJsonPath = Path.Combine(originalPath, "ui", "ui_car.json");
-
-                if (shouldUpdate && File.Exists(uiCarJsonPath)) {
-                    BackupUiCar(carFolder, uiCarJsonPath);
-                }
 
                 var car = LoadOrCreateCar(uiJsonPath, uiCarJsonPath);
                 car.FolderPath = originalPath;
@@ -99,11 +84,6 @@ namespace Ac.Ratings.Services {
                 ErrorLogger.LogError("CarProcessing", ex);
                 return null;
             }
-        }
-
-        private void BackupUiCar(string carFolder, string uiCarJsonPath) {
-            var backupPath = Path.Combine(ConfigManager.BackupFolder, "cm", carFolder, "ui_car.json");
-            File.Copy(uiCarJsonPath, backupPath, true);
         }
 
         private Car LoadOrCreateCar(string uiJsonPath, string uiCarJsonPath) {
@@ -217,15 +197,6 @@ namespace Ac.Ratings.Services {
             }
 
             return carData;
-        }
-
-        private DateTime GetLastUpdateTime() {
-            if (File.Exists(ConfigManager.LastUpdatedFilepath) &&
-                DateTime.TryParse(File.ReadAllText(ConfigManager.LastUpdatedFilepath), out DateTime lastUpdate)) {
-                return lastUpdate;
-            }
-
-            return DateTime.MinValue;
         }
 
         private static string ExtractIniValue(string line) {
