@@ -10,7 +10,7 @@ namespace Ac.Ratings {
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
-        private readonly ServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public App() {
             IServiceCollection services = new ServiceCollection();
@@ -81,12 +81,12 @@ namespace Ac.Ratings {
 
     public static class ServiceCollectionExtensions {
         public static void ConfigureServices(this IServiceCollection services) {
-            services.AddSingleton<MainWindow>(provider => new MainWindow {
-                DataContext = provider.GetRequiredService<MainViewModel>()
-            });
+            services.AddSingleton<ICarDataService, CarDataService>();
 
             services.AddSingleton<MainViewModel>();
             services.AddTransient<SettingsViewModel>();
+
+            services.AddSingleton<MainWindow>();
 
             services.AddSingleton<Func<Type, Core.ViewModel>>(serviceProvider => viewModelType =>
                 (Core.ViewModel)serviceProvider.GetRequiredService(viewModelType));

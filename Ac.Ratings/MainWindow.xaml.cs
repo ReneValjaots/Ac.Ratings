@@ -10,10 +10,10 @@ namespace Ac.Ratings {
     public partial class MainWindow : ModernWindowBase {
         public MainViewModel _viewModel;
 
-        public MainWindow() {
+        public MainWindow(MainViewModel viewModel) {
             InitializeComponent();
             try {
-                _viewModel = new MainViewModel();
+                _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
                 DataContext = _viewModel;
             }
             catch (Exception ex) {

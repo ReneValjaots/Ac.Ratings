@@ -11,6 +11,7 @@ using Ac.Ratings.Theme.ModernUI.Controls;
 
 namespace Ac.Ratings.ViewModel {
     public class MainViewModel : Core.ViewModel {
+        private readonly ICarDataService _carDataService;
         private ObservableCollection<Car> _carDb;
         private Car _selectedCar;
         private string _engineStats;
@@ -176,8 +177,10 @@ namespace Ac.Ratings.ViewModel {
         public RelayCommand ApplyFiltersCommand { get; }
         public RelayCommand ResetViewFiltersCommand { get; }
 
-        public MainViewModel() {
-            CarDb = new ObservableCollection<Car>(CarDataService.LoadCarDatabase());
+        public MainViewModel(ICarDataService carDataService) {
+            _carDataService = carDataService ?? throw new ArgumentNullException(nameof(carDataService));
+
+            CarDb = new ObservableCollection<Car>(_carDataService.LoadCarDatabase());
 
             _availableAuthors = GetAuthors();
             _availableClasses = GetClasses();
