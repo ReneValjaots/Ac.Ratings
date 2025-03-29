@@ -9,7 +9,7 @@ namespace Ac.Ratings.Theme.Components {
         public Filter() {
             InitializeComponent();
             var mainWindow = Application.Current.MainWindow as MainWindow;
-            DataContext = mainWindow?._viewModel?._filterViewModel;
+            DataContext = mainWindow?._viewModel;
         }
     }
 }
