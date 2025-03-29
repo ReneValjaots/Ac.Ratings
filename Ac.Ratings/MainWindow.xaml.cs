@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Ac.Ratings.Services.MainView;
+using Ac.Ratings.Services;
 using Ac.Ratings.Theme.ModernUI.Controls;
 using Ac.Ratings.ViewModel;
 

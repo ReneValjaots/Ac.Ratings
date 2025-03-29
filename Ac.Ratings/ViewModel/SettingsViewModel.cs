@@ -5,7 +5,6 @@ using System.Windows;
 using Ac.Ratings.Core;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
-using Ac.Ratings.Services.MainView;
 
 namespace Ac.Ratings.ViewModel {
     public class SettingsViewModel : Core.ViewModel {

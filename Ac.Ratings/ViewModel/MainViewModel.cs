@@ -6,7 +6,7 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using Ac.Ratings.Core;
 using Ac.Ratings.Model;
-using Ac.Ratings.Services.MainView;
+using Ac.Ratings.Services;
 using Ac.Ratings.Theme.ModernUI.Controls;
 
 namespace Ac.Ratings.ViewModel {
@@ -271,13 +271,13 @@ namespace Ac.Ratings.ViewModel {
 
         private void ClearRatings() {
             if (SelectedCar != null) {
-                CarRatingService.ResetRatingValues(SelectedCar);
+                SelectedCar.Ratings.ResetRatingValues();
             }
         }
 
         private void ClearExtraFeatures() {
             if (SelectedCar != null) {
-                CarRatingService.ResetExtraFeatureValues(SelectedCar);
+                SelectedCar.Ratings.ResetExtraFeatureValues();
             }
         }
 

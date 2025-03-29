@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Ac.Ratings.Model;
 
-namespace Ac.Ratings.Services.MainView {
+namespace Ac.Ratings.Services {
     public class CarDisplayService {
         private static readonly List<string> _gearboxTags = ["manual", "automatic", "semiautomatic", "sequential"];
         private static readonly List<string> _drivetrainTags = ["rwd", "awd", "fwd"];

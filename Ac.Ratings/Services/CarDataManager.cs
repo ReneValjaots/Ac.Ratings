@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using Ac.Ratings.Model;
 
-namespace Ac.Ratings.Services.MainView {
+namespace Ac.Ratings.Services {
     public static class CarDataManager {
         private static HashSet<Car> _modifiedCars = new();
 
@@ -63,7 +63,7 @@ namespace Ac.Ratings.Services.MainView {
                 CreateBackupOfCarDb(cars);
 
                 foreach (var car in cars) {
-                    CarRatingService.ResetRatingValues(car);
+                    car?.Ratings?.ResetRatingValues();
                     SaveCarToFile(car);
                 }
             }
@@ -77,7 +77,7 @@ namespace Ac.Ratings.Services.MainView {
                 CreateBackupOfCarDb(cars);
 
                 foreach (var car in cars) {
-                    CarRatingService.ResetExtraFeatureValues(car);
+                    car?.Ratings?.ResetExtraFeatureValues();
                     SaveCarToFile(car);
                 }
             }
