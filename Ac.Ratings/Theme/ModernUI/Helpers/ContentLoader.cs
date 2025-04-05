@@ -3,11 +3,11 @@
 namespace Ac.Ratings.Theme.ModernUI.Helpers;
 
 public class ContentLoader : IContentLoader {
-    private readonly string _namespacePrefix = "Ac.Ratings.Theme.Components";
+    private readonly string _namespacePrefix = "Ac.Ratings.View.Pages";
     private readonly Func<string, string> _uriParser;
 
     public ContentLoader() {
-        _uriParser = uri => uri.TrimStart('/').Replace("Theme/Components/", "").Replace(".xaml", "");
+        _uriParser = uri => uri.TrimStart('/').Replace("View/Pages/", "").Replace(".xaml", "");
     }
 
     public Task<object?> LoadContentAsync(Uri uri, CancellationToken cancellationToken) {

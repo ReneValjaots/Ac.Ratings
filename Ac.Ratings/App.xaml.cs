@@ -2,6 +2,7 @@
 using Ac.Ratings.Theme.ModernUI.Helpers;
 using System.Windows;
 using System.Windows.Media;
+using Ac.Ratings.View;
 using Ac.Ratings.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -56,11 +57,11 @@ namespace Ac.Ratings {
                     "dark" => AppearanceManager.DarkThemeSource,
                     "black" => AppearanceManager.BlackThemeSource,
                     "light" => AppearanceManager.LightThemeSource,
-                    _ => AppearanceManager.BlackThemeSource
+                    _ => AppearanceManager.DarkThemeSource
                 };
             }
             else {
-                AppearanceManager.Current.ThemeSource = AppearanceManager.BlackThemeSource;
+                AppearanceManager.Current.ThemeSource = AppearanceManager.DarkThemeSource;
             }
 
             var savedColor = ConfigManager.LoadAppearanceConfigValue("AccentColor");

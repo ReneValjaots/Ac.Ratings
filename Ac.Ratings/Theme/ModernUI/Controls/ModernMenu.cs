@@ -22,7 +22,9 @@ namespace Ac.Ratings.Theme.ModernUI.Controls {
 
         public static readonly DependencyProperty VisibleLinkGroupsProperty = VisibleLinkGroupsPropertyKey.DependencyProperty;
 
-        public event EventHandler<SourceEventArgs> SelectedSourceChanged;
+        public delegate void SourceChangedEventHandler(object sender, Uri source);
+
+        public event SourceChangedEventHandler SelectedSourceChanged;
 
         private Dictionary<string, ReadOnlyLinkGroupCollection> groupMap = new Dictionary<string, ReadOnlyLinkGroupCollection>(); // stores LinkGroupCollections by GroupKey
         private bool isSelecting;
@@ -116,7 +118,7 @@ namespace Ac.Ratings.Theme.ModernUI.Controls {
             // raise SelectedSourceChanged event
             var handler = SelectedSourceChanged;
             if (handler != null) {
-                handler(this, new SourceEventArgs(newValue));
+                handler(this, newValue);
             }
         }
 

@@ -1,0 +1,23 @@
+﻿<controls:ModernWindowBase
+    x:Class="Ac.Ratings.View.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:Ac.Ratings.Theme.ModernUI.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Ratings App"
+    Width="1900"
+    Height="1000"
+    Closing="Window_Closing"
+    ContentSource="/View/Pages/Home.xaml"
+    Icon="/Assets/Images/rating.ico"
+    IsTitleVisible="True"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <controls:ModernWindowBase.MenuLinkGroups>
+        <helpers:LinkGroup DisplayName="Home" Source="/View/Pages/Home.xaml" IsNavigable="True" />
+        <helpers:LinkGroup DisplayName="Filter Cars" Source="/View/Pages/Filter.xaml" IsNavigable="True" />
+        <helpers:LinkGroup DisplayName="Settings" Source="/View/Pages/Settings.xaml" IsNavigable="True" />
+    </controls:ModernWindowBase.MenuLinkGroups>
+</controls:ModernWindowBase>

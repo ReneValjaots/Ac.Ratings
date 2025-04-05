@@ -8,6 +8,7 @@ using Ac.Ratings.Core;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
 using Ac.Ratings.Theme.ModernUI.Controls;
+using Ac.Ratings.View;
 
 namespace Ac.Ratings.ViewModel {
     public class MainViewModel : Core.ViewModel {
@@ -249,7 +250,7 @@ namespace Ac.Ratings.ViewModel {
 
             if (Application.Current.MainWindow is MainWindow mainWindow) {
                 if (mainWindow.Template?.FindName("ContentFrame", mainWindow) is ModernFrame frame) {
-                    frame.Source = new Uri("/Theme/Components/Home.xaml", UriKind.Relative);
+                    frame.Source = new Uri("View/Pages/Home.xaml", UriKind.Relative);
                 }
             }
         }

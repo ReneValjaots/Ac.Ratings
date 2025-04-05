@@ -1,0 +1,27 @@
+﻿<UserControl
+    x:Class="Ac.Ratings.View.Pages.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Ac.Ratings.Theme.ModernUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:Ac.Ratings.Theme.ModernUI.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <controls:ModernTab
+            ContentLoader="{StaticResource CustomContentLoader}"
+            DataContext="{Binding}"
+            Layout="List"
+            SelectedSource="General.xaml">
+            <controls:ModernTab.Links>
+                <helpers:Link DisplayName="General" Source="/View/Pages/General.xaml" />
+                <helpers:Link DisplayName="Power Format" Source="/View/Pages/PowerFormat.xaml" />
+                <helpers:Link DisplayName="Root Folder" Source="/View/Pages/RootFolder.xaml" />
+                <helpers:Link DisplayName="Restore Ratings" Source="/View/Pages/RestoreRatings.xaml" />
+                <helpers:Link DisplayName="Appearance" Source="/View/Pages/Appearance.xaml" />
+            </controls:ModernTab.Links>
+        </controls:ModernTab>
+    </Grid>
+</UserControl>
