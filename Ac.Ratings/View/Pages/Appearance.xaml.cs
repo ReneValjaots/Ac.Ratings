@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using Ac.Ratings.ViewModel;
 
 namespace Ac.Ratings.View.Pages
@@ -11,7 +12,7 @@ namespace Ac.Ratings.View.Pages
         public Appearance()
         {
             InitializeComponent();
-            DataContext = new AppearanceViewModel();
+            DataContext = ((App)Application.Current).AppearanceViewModel;
         }
     }
 }

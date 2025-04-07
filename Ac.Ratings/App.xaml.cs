@@ -2,6 +2,7 @@
 using Ac.Ratings.Theme.ModernUI.Helpers;
 using System.Windows;
 using System.Windows.Media;
+using Ac.Ratings.Core;
 using Ac.Ratings.View;
 using Ac.Ratings.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,9 @@ namespace Ac.Ratings {
     /// </summary>
     public partial class App : Application {
         private readonly IServiceProvider _serviceProvider;
+        public SettingsViewModel SettingsViewModel => _serviceProvider.GetRequiredService<SettingsViewModel>();
+        public AppearanceViewModel AppearanceViewModel => _serviceProvider.GetRequiredService<AppearanceViewModel>();
+
 
         public App() {
             IServiceCollection services = new ServiceCollection();
@@ -83,9 +87,14 @@ namespace Ac.Ratings {
     public static class ServiceCollectionExtensions {
         public static void ConfigureServices(this IServiceCollection services) {
             services.AddSingleton<ICarDataService, CarDataService>();
+            services.AddSingleton<IDialogService>(sp => {
+                var mainWindow = sp.GetRequiredService<MainWindow>();
+                return new ModernDialogService(mainWindow);
+            });
 
             services.AddSingleton<MainViewModel>();
             services.AddTransient<SettingsViewModel>();
+            services.AddTransient<AppearanceViewModel>();
 
             services.AddSingleton<MainWindow>();
 

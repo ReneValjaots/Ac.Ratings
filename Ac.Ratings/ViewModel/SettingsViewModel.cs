@@ -1,9 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using System.Windows;
 using Ac.Ratings.Core;
-using Ac.Ratings.Model;
 using Ac.Ratings.Services;
 
 namespace Ac.Ratings.ViewModel {
@@ -11,7 +9,7 @@ namespace Ac.Ratings.ViewModel {
         private readonly IDialogService _dialogService;
         private string _selectedPrimaryUnit;
         private string _selectedSecondaryUnit;
-        private ObservableCollection<Car> _carDb;
+        private readonly ICarDataService _carDataService;
 
         public RelayCommand ResetRatingsCommand { get; }
         public RelayCommand ResetExtraFeaturesCommand { get; }
@@ -21,8 +19,9 @@ namespace Ac.Ratings.ViewModel {
         public RelayCommand TransferRatingsCommand { get; }
 
 
-        public SettingsViewModel(IDialogService dialogService) {
+        public SettingsViewModel(IDialogService dialogService, ICarDataService carDataService) {
             _dialogService = dialogService;
+            _carDataService = carDataService ?? throw new ArgumentNullException(nameof(carDataService));
 
             ResetRatingsCommand = new RelayCommand(ResetAllRatings);
             ResetExtraFeaturesCommand = new RelayCommand(ResetAllExtraFeatures);
@@ -41,10 +40,6 @@ namespace Ac.Ratings.ViewModel {
         public string SelectedSecondaryUnit {
             get => _selectedSecondaryUnit;
             set => SetField(ref _selectedSecondaryUnit, value);
-        }
-
-        public void SetCarDb(ObservableCollection<Car> carDb) {
-            _carDb = carDb;
         }
 
         public void LoadSettings(string configPath) {
@@ -113,13 +108,8 @@ namespace Ac.Ratings.ViewModel {
         }
 
         private void ResetAllRatings() {
-            if (_carDb == null) {
-                _dialogService.ShowMessage("Car database is not initialized.", "Error", MessageBoxButton.OK);
-                return;
-            }
-
             if (_dialogService.ShowConfirmation("Are you sure you want to reset all ratings? This action cannot be undone.", "Confirm Reset")) {
-                CarDataManager.ResetAllRatingsInDatabase(_carDb);
+                _carDataService.ResetAllRatings();
                 _dialogService.ShowMessage("All ratings have been reset successfully.", "Success", MessageBoxButton.OK);
             }
             else {
@@ -128,13 +118,8 @@ namespace Ac.Ratings.ViewModel {
         }
 
         private void ResetAllExtraFeatures() {
-            if (_carDb == null) {
-                _dialogService.ShowMessage("Car database is not initialized.", "Error", MessageBoxButton.OK);
-                return;
-            }
-
             if (_dialogService.ShowConfirmation("Are you sure you want to reset all extra features? This action cannot be undone.", "Confirm Reset")) {
-                CarDataManager.ResetAllExtraFeaturesInDatabase(_carDb);
+                _carDataService.ResetAllExtraFeatures();
                 _dialogService.ShowMessage("All extra features have been reset successfully.", "Success", MessageBoxButton.OK);
             }
             else {
@@ -149,20 +134,9 @@ namespace Ac.Ratings.ViewModel {
                 return;
             }
 
-            if (_carDb == null) {
-                _dialogService.ShowMessage("Car database is not initialized.", "Error", MessageBoxButton.OK);
-                return;
-            }
-
             try {
-                var restoredCarDb = CarDataManager.RestoreCarDbFromBackup(backupFilePath);
-                if (restoredCarDb != null) {
-                    _carDb.Clear();
-                    foreach (var car in restoredCarDb) {
-                        _carDb.Add(car);
-                        CarDataManager.SaveCarToFile(car);
-                    }
-
+                var restoredCar = _carDataService.RestoreCarDbFromBackup(backupFilePath);
+                if (restoredCar != null) {
                     _dialogService.ShowMessage("Car database restored successfully.", "Success", MessageBoxButton.OK);
                 }
             }

@@ -13,7 +13,6 @@ using Ac.Ratings.View;
 namespace Ac.Ratings.ViewModel {
     public class MainViewModel : Core.ViewModel {
         private readonly ICarDataService _carDataService;
-        private ObservableCollection<Car> _carDb;
         private Car _selectedCar;
         private string _engineStats;
         private string _drivetrainStats;
@@ -38,10 +37,7 @@ namespace Ac.Ratings.ViewModel {
         private string _gearboxFilter;
         private string _drivetrainFilter;
 
-        public ObservableCollection<Car> CarDb {
-            get => _carDb;
-            set => SetField(ref _carDb, value);
-        }
+        public ObservableCollection<Car> CarDb => _carDataService.CarDb;
 
         public Car SelectedCar {
             get => _selectedCar;
@@ -181,8 +177,6 @@ namespace Ac.Ratings.ViewModel {
         public MainViewModel(ICarDataService carDataService) {
             _carDataService = carDataService ?? throw new ArgumentNullException(nameof(carDataService));
 
-            CarDb = new ObservableCollection<Car>(_carDataService.LoadCarDatabase());
-
             _availableAuthors = GetAuthors();
             _availableClasses = GetClasses();
             _selectedAuthors = new ObservableCollection<string>();
@@ -257,7 +251,7 @@ namespace Ac.Ratings.ViewModel {
 
         private ObservableCollection<SelectableItem> GetAuthors() {
             return new ObservableCollection<SelectableItem>(
-                _carDb.Select(c => c.Author)
+                CarDb.Select(c => c.Author)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .Distinct()
                     .OrderBy(a => a)
@@ -266,7 +260,7 @@ namespace Ac.Ratings.ViewModel {
 
         private ObservableCollection<SelectableItem> GetClasses() {
             return new ObservableCollection<SelectableItem>(
-                _carDb.Select(c => c.Class)
+                CarDb.Select(c => c.Class)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .Distinct()
                     .OrderBy(c => c)
