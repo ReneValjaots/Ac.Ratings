@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace Ac.Ratings.ViewModel {
     public class AcRootFolderViewModel : Core.ViewModel {
-        private readonly IDialogService _dialogService;
+        private IDialogService _dialogService;
         private string _rootFolderPath = string.Empty;
 
         public string RootFolderPath {
@@ -17,9 +17,12 @@ namespace Ac.Ratings.ViewModel {
 
         public RelayCommand OkCommand { get; }
 
-        public AcRootFolderViewModel(IDialogService dialogService) {
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        public AcRootFolderViewModel() {
             OkCommand = new RelayCommand(ExecuteOk);
+        }
+
+        public void SetDialogService(IDialogService dialogService) {
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         private void ExecuteOk() {

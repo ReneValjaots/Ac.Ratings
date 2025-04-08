@@ -29,8 +29,11 @@ namespace Ac.Ratings {
             
             _ = ConfigManager.ResourceFolder;
 
+            var acRootFolderWindowFactory = _serviceProvider.GetRequiredService<Func<AcRootFolderWindow>>();
+
             Func<string?> promptAction = () => {
-                var acRootFolderWindow = new AcRootFolderWindow();
+                var acRootFolderWindow = acRootFolderWindowFactory();
+
                 if (acRootFolderWindow.ShowDialog() == true) {
                     return acRootFolderWindow.SelectedPath;
                 }
@@ -87,6 +90,7 @@ namespace Ac.Ratings {
     public static class ServiceCollectionExtensions {
         public static void ConfigureServices(this IServiceCollection services) {
             services.AddSingleton<ICarDataService, CarDataService>();
+
             services.AddSingleton<IDialogService>(sp => {
                 var mainWindow = sp.GetRequiredService<MainWindow>();
                 return new ModernDialogService(mainWindow);
@@ -95,11 +99,20 @@ namespace Ac.Ratings {
             services.AddSingleton<MainViewModel>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<AppearanceViewModel>();
+            services.AddTransient<AcRootFolderViewModel>();
 
             services.AddSingleton<MainWindow>();
 
             services.AddSingleton<Func<Type, Core.ViewModel>>(serviceProvider => viewModelType =>
                 (Core.ViewModel)serviceProvider.GetRequiredService(viewModelType));
+
+            services.AddTransient<Func<AcRootFolderWindow>>(sp => () => {
+                var viewModel = sp.GetRequiredService<AcRootFolderViewModel>();
+                var window = new AcRootFolderWindow(viewModel);
+                var dialogService = new ModernDialogService(window);
+                viewModel.SetDialogService(dialogService);
+                return window;
+            });
         }
     }
 }

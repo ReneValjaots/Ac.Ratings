@@ -10,10 +10,9 @@ namespace Ac.Ratings.View {
         public AcRootFolderViewModel ViewModel { get; }
         public string SelectedPath => ViewModel.SelectedPath;
 
-        public AcRootFolderWindow() {
+        public AcRootFolderWindow(AcRootFolderViewModel viewModel) {
             InitializeComponent();
-            var dialogService = new ModernDialogService(this);
-            ViewModel = new AcRootFolderViewModel(dialogService);
+            ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             DataContext = ViewModel;
         }
 
