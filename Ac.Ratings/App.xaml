@@ -13,6 +13,8 @@
                 <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernDialog.xaml" />
                 <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernMenu.xaml" />
                 <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernTab.xaml" />
+                <ResourceDictionary Source="/Theme/ModernUI/Assets/ModernFrame.xaml" />
+                <ResourceDictionary Source="/Theme/ModernUI/Assets/TransitioningContentControl.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <helpers:ContentLoader x:Key="CustomContentLoader" />
         </ResourceDictionary>
