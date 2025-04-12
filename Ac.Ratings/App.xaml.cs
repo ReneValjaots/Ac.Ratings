@@ -91,6 +91,7 @@ namespace Ac.Ratings {
     public static class ServiceCollectionExtensions {
         public static void ConfigureServices(this IServiceCollection services) {
             services.AddSingleton<ICarDataService, CarDataService>();
+            services.AddSingleton<ICarDisplayService, CarDisplayService>();
 
             services.AddSingleton<IDialogService>(sp => {
                 var mainWindow = sp.GetRequiredService<MainWindow>();

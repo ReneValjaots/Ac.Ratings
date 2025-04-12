@@ -1,12 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using Ac.Ratings.Model;
+using Ac.Ratings.Services.Interfaces;
 
 namespace Ac.Ratings.Services {
-    public class CarDisplayService {
+    public class CarDisplayService : ICarDisplayService {
         private static readonly List<string> _gearboxTags = ["manual", "automatic", "semiautomatic", "sequential"];
         private static readonly List<string> _drivetrainTags = ["rwd", "awd", "fwd"];
 
-        public static string ShowCarEngineStats(Car selectedCar) {
+        public string ShowCarEngineStats(Car selectedCar) {
             return FormatEngineStats(selectedCar.Engine, selectedCar);
         }
 
@@ -48,7 +49,7 @@ namespace Ac.Ratings.Services {
             return output.Trim();
         }
 
-        public static string ShowCarDriveTrain(Car selectedCar) {
+        public string ShowCarDriveTrain(Car selectedCar) {
             var tags = selectedCar.Tags;
             var data = selectedCar.Data.TractionType;
 
@@ -66,7 +67,7 @@ namespace Ac.Ratings.Services {
             return drivetrainFromSpecificTag?.ToUpper() ?? drivetrainFromRegularTags?.ToUpper() ?? string.Empty;
         }
 
-        public static string ShowCarGearbox(Car selectedCar) {
+        public string ShowCarGearbox(Car selectedCar) {
             var gearsCount = selectedCar.Data.GearsCount;
             var isManual = selectedCar.Data.SupportsShifter;
             var tags = selectedCar.Tags;

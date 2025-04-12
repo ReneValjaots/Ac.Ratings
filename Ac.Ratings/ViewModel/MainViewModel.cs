@@ -15,6 +15,7 @@ using Ac.Ratings.View;
 namespace Ac.Ratings.ViewModel {
     public class MainViewModel : Core.ViewModel {
         private readonly ICarDataService _carDataService;
+        private readonly ICarDisplayService _carDisplayService;
         private readonly EngineDatabaseService _engineDatabaseService;
         private Car _selectedCar;
         private string _engineStats;
@@ -186,8 +187,9 @@ namespace Ac.Ratings.ViewModel {
         public RelayCommand OpenEnginePopupCommand { get; }
         public RelayCommand SaveEngineDataCommand { get; }
 
-        public MainViewModel(ICarDataService carDataService) {
+        public MainViewModel(ICarDataService carDataService, ICarDisplayService carDisplayService) {
             _carDataService = carDataService ?? throw new ArgumentNullException(nameof(carDataService));
+            _carDisplayService = carDisplayService ?? throw new ArgumentNullException(nameof(carDisplayService));
             _engineDatabaseService = new EngineDatabaseService();
 
             _availableAuthors = GetAuthors();
@@ -328,9 +330,9 @@ namespace Ac.Ratings.ViewModel {
 
         private void UpdateCarDisplayData() {
             if (SelectedCar != null) {
-                EngineStats = CarDisplayService.ShowCarEngineStats(SelectedCar);
-                DrivetrainStats = CarDisplayService.ShowCarDriveTrain(SelectedCar);
-                GearboxStats = CarDisplayService.ShowCarGearbox(SelectedCar);
+                EngineStats = _carDisplayService.ShowCarEngineStats(SelectedCar);
+                DrivetrainStats = _carDisplayService.ShowCarDriveTrain(SelectedCar);
+                GearboxStats = _carDisplayService.ShowCarGearbox(SelectedCar);
                 LoadSkinPreviews();
             }
             else {
