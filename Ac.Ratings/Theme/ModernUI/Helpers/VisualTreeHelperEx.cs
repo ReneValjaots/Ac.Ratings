@@ -21,55 +21,5 @@ namespace Ac.Ratings.Theme.ModernUI.Helpers {
 
             return (VisualTreeHelper.GetChild(dependencyObject, 0) as FrameworkElement);
         }
-
-        public static IEnumerable<DependencyObject> Ancestors(this DependencyObject dependencyObject) {
-            var parent = dependencyObject;
-            while (true) {
-                parent = GetParent(parent);
-                if (parent != null) {
-                    yield return parent;
-                }
-                else {
-                    break;
-                }
-            }
-        }
-
-        public static IEnumerable<DependencyObject> AncestorsAndSelf(this DependencyObject dependencyObject) {
-            if (dependencyObject == null) {
-                throw new ArgumentNullException("dependencyObject");
-            }
-
-            var parent = dependencyObject;
-            while (true) {
-                if (parent != null) {
-                    yield return parent;
-                }
-                else {
-                    break;
-                }
-
-                parent = GetParent(parent);
-            }
-        }
-
-        public static DependencyObject GetParent(this DependencyObject dependencyObject) {
-            if (dependencyObject == null) {
-                throw new ArgumentNullException("dependencyObject");
-            }
-
-            var ce = dependencyObject as ContentElement;
-            if (ce != null) {
-                var parent = ContentOperations.GetParent(ce);
-                if (parent != null) {
-                    return parent;
-                }
-
-                var fce = ce as FrameworkContentElement;
-                return fce != null ? fce.Parent : null;
-            }
-
-            return VisualTreeHelper.GetParent(dependencyObject);
-        }
     }
 }

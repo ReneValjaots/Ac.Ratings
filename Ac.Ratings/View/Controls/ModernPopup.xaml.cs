@@ -3,7 +3,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Ac.Ratings.Theme.ModernUI.Controls {
+namespace Ac.Ratings.View.Controls {
     /// <summary>
     /// Interaction logic for ModernPopup.xaml
     /// </summary>

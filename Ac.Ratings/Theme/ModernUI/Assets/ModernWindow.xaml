@@ -232,10 +232,20 @@
                                     <!--  Menu and back button area  -->
                                     <Grid Grid.Row="1">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="21" />
+                                            <ColumnDefinition Width="42" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
+
+                                        <!-- back button -->
+                                        <controls:ModernButton Margin="8,8,0,0" HorizontalAlignment="Left"
+                                                               VerticalAlignment="Top"
+                                                               EllipseDiameter="24" IconWidth="12" IconHeight="12"
+                                                               IconData="F1 M 33,22L 33,26L 19.75,26L 27,33L 20.5,33L 11,24L 20.5,15L 27,15L 19.75,22L 33,22 Z"
+                                                               Command="NavigationCommands.BrowseBack"
+                                                               CommandTarget="{Binding ElementName=ContentFrame}"
+                                                               ToolTip="Back"
+                                                               WindowChrome.IsHitTestVisibleInChrome="True" />
 
                                         <!--  Main menu  -->
                                         <controls:ModernMenu
