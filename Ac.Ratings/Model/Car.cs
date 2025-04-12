@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Ac.Ratings.Core;
-using Ac.Ratings.Services;
 
 namespace Ac.Ratings.Model {
     public class Car : ObservableObject {
@@ -26,19 +24,12 @@ namespace Ac.Ratings.Model {
 
         [JsonPropertyName("ratings")] public CarRatings Ratings {
             get => _ratings;
-            set {
-                if (SetField(ref _ratings, value)) {
-                    _ratings.PropertyChanged += Ratings_PropertyChanged;
-                }
-            }
+            set => SetField(ref _ratings, value);
+
         }
         [JsonPropertyName("data")] public CarData Data { get; set; } = new();
         [JsonPropertyName("folderPath")] public string? FolderPath { get; set; }
         [JsonPropertyName("folderName")] public string? FolderName { get; set; }
-
-        private void Ratings_PropertyChanged(object? sender, PropertyChangedEventArgs e) {
-            CarDataManager.MarkCarAsModified(this);
-        }
 
         public void LoadDisplayProperties() {
             if (string.IsNullOrEmpty(FolderPath)) return;

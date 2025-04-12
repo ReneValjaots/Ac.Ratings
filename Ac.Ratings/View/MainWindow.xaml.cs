@@ -8,7 +8,7 @@ namespace Ac.Ratings.View {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : ModernWindowBase {
-        public MainViewModel _viewModel;
+        private readonly MainViewModel _viewModel;
 
         public MainWindow(MainViewModel viewModel) {
             InitializeComponent();

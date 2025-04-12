@@ -47,8 +47,16 @@ namespace Ac.Ratings.ViewModel {
         public Car SelectedCar {
             get => _selectedCar;
             set {
+                if (_selectedCar?.Ratings != null) {
+                    _selectedCar.Ratings.PropertyChanged -= SelectedCarRatings_PropertyChanged;
+                }
+
                 if (SetField(ref _selectedCar, value)) {
                     UpdateCarDisplayData();
+
+                    if (_selectedCar?.Ratings != null) {
+                        _selectedCar.Ratings.PropertyChanged += SelectedCarRatings_PropertyChanged;
+                    }
                 }
             }
         }
@@ -215,6 +223,11 @@ namespace Ac.Ratings.ViewModel {
             }
         }
 
+        private void SelectedCarRatings_PropertyChanged(object? sender, PropertyChangedEventArgs e) {
+            if (_selectedCar != null) {
+                CarDataManager.MarkCarAsModified(_selectedCar);
+            }
+        }
 
         private bool FilterCar(object obj) {
             if (obj is not Car car) return false;

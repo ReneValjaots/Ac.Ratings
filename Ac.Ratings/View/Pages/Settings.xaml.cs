@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Ac.Ratings.Core;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Ac.Ratings.View.Pages {
     /// <summary>

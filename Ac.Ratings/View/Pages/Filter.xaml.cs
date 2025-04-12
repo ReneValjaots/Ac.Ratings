@@ -8,8 +8,6 @@ namespace Ac.Ratings.View.Pages {
     public partial class Filter : UserControl {
         public Filter() {
             InitializeComponent();
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            DataContext = mainWindow?._viewModel;
         }
     }
 }

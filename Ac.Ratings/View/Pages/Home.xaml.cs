@@ -10,7 +10,6 @@ namespace Ac.Ratings.View.Pages {
     public partial class Home : UserControl {
         public Home() {
             InitializeComponent();
-            DataContext = (Application.Current.MainWindow as MainWindow)?._viewModel;
         }
 
         private static readonly Regex _regex = new Regex("[^0-9]+");
