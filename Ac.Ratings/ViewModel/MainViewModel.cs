@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using Ac.Ratings.Core;
+using Ac.Ratings.Data;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
 using Ac.Ratings.Theme.ModernUI.Controls;
@@ -13,6 +14,7 @@ using Ac.Ratings.View;
 namespace Ac.Ratings.ViewModel {
     public class MainViewModel : Core.ViewModel {
         private readonly ICarDataService _carDataService;
+        private readonly EngineDatabaseService _engineDatabaseService;
         private Car _selectedCar;
         private string _engineStats;
         private string _drivetrainStats;
@@ -20,6 +22,7 @@ namespace Ac.Ratings.ViewModel {
         private string _searchText = string.Empty;
         private BitmapImage _carImageSource;
         private ObservableCollection<SkinPreview> _skinPreviews;
+        private bool _isPopupOpen;
 
         private ObservableCollection<SelectableItem> _availableAuthors;
         private ObservableCollection<SelectableItem> _availableClasses;
@@ -159,10 +162,16 @@ namespace Ac.Ratings.ViewModel {
             set => SetField(ref _drivetrainFilter, value);
         }
 
+        public bool IsPopupOpen {
+            get => _isPopupOpen;
+            set => SetField(ref _isPopupOpen, value);
+        }
+
 
         // Used for binding in view
         public IEnumerable<string> GearboxOptions => new[] { "Any", "Manual", "Automatic" };
         public IEnumerable<string> DrivetrainOptions => new[] { "Any", "RWD", "FWD", "AWD" };
+        public IEnumerable<string> EngineLayouts => new[] { "I", "V", "B", "R", "F" };
 
 
         public ICollectionView CarView { get; private set; }
@@ -173,9 +182,12 @@ namespace Ac.Ratings.ViewModel {
 
         public RelayCommand ApplyFiltersCommand { get; }
         public RelayCommand ResetViewFiltersCommand { get; }
+        public RelayCommand OpenEnginePopupCommand { get; }
+        public RelayCommand SaveEngineDataCommand { get; }
 
         public MainViewModel(ICarDataService carDataService) {
             _carDataService = carDataService ?? throw new ArgumentNullException(nameof(carDataService));
+            _engineDatabaseService = new EngineDatabaseService();
 
             _availableAuthors = GetAuthors();
             _availableClasses = GetClasses();
@@ -191,6 +203,8 @@ namespace Ac.Ratings.ViewModel {
             ResetFiltersCommand = new RelayCommand(ResetFilters);
             ApplyFiltersCommand = new RelayCommand(ApplyFilters);
             ResetViewFiltersCommand = new RelayCommand(ResetViewFilters);
+            OpenEnginePopupCommand = new RelayCommand(OpenEnginePopup);
+            SaveEngineDataCommand = new RelayCommand(SaveEngineData);
 
             _skinPreviews = new ObservableCollection<SkinPreview>();
             if (CarDb.Count > 0) {
@@ -378,6 +392,22 @@ namespace Ac.Ratings.ViewModel {
                 image.Freeze();
                 CarImageSource = image;
             }
+        }
+
+        private void OpenEnginePopup() {
+            IsPopupOpen = true;
+        }
+
+        private void SaveEngineData() {
+            if (SelectedCar != null && SelectedCar.Engine != null) {
+                var selectedCar = SelectedCar;
+                var selectedEngine = selectedCar.Engine;
+                if (selectedEngine.Displacement != 0 && selectedEngine.CylinderCount != 0 && selectedEngine.Layout != null) {
+                    _engineDatabaseService.InsertEngineData(selectedEngine);
+                }
+            }
+
+            IsPopupOpen = false;
         }
 
         public class SkinPreview {

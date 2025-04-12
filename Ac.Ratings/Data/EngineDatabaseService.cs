@@ -32,7 +32,7 @@ namespace Ac.Ratings.Data {
             using var connection = new SqliteConnection($"Data source={_dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = @"INSERT OR IGNORE INTO CarEngines (FolderName, Displacement, Layout, CylinderCount) VALUES (@FolderName, @Displacement, @Layout, @CylinderCount)";
+            command.CommandText = @"INSERT OR REPLACE INTO CarEngines (FolderName, Displacement, Layout, CylinderCount) VALUES (@FolderName, @Displacement, @Layout, @CylinderCount)";
             command.Parameters.AddWithValue("@FolderName", engine.FolderName);
             command.Parameters.AddWithValue("@Displacement", engine.Displacement);
             command.Parameters.AddWithValue("@Layout", (object?)engine.Layout ?? DBNull.Value);
