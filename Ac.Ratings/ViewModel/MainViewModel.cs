@@ -8,6 +8,7 @@ using Ac.Ratings.Core;
 using Ac.Ratings.Data;
 using Ac.Ratings.Model;
 using Ac.Ratings.Services;
+using Ac.Ratings.Services.Interfaces;
 using Ac.Ratings.Theme.ModernUI.Controls;
 using Ac.Ratings.View;
 
@@ -399,15 +400,20 @@ namespace Ac.Ratings.ViewModel {
         }
 
         private void SaveEngineData() {
+            bool engineDataChanged = false;
             if (SelectedCar != null && SelectedCar.Engine != null) {
-                var selectedCar = SelectedCar;
-                var selectedEngine = selectedCar.Engine;
-                if (selectedEngine.Displacement != 0 && selectedEngine.CylinderCount != 0 && selectedEngine.Layout != null) {
+                var selectedEngine = SelectedCar.Engine;
+                if (selectedEngine.Displacement != 0 && selectedEngine.CylinderCount != 0 && !string.IsNullOrEmpty(selectedEngine.Layout)) {
                     _engineDatabaseService.InsertEngineData(selectedEngine);
+                    engineDataChanged = true;
                 }
             }
 
             IsPopupOpen = false;
+
+            if (engineDataChanged) {
+                UpdateCarDisplayData();
+            }
         }
 
         public class SkinPreview {

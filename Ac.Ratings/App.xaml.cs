@@ -6,6 +6,7 @@ using Ac.Ratings.Core;
 using Ac.Ratings.View;
 using Ac.Ratings.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
+using Ac.Ratings.Services.Interfaces;
 
 namespace Ac.Ratings {
     /// <summary>

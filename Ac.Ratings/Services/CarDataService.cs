@@ -1,4 +1,5 @@
 ﻿using Ac.Ratings.Model;
+using Ac.Ratings.Services.Interfaces;
 using System.Collections.ObjectModel;
 
 namespace Ac.Ratings.Services {
@@ -39,14 +40,5 @@ namespace Ac.Ratings.Services {
 
             return null;
         }
-   
-    }
-
-    public interface ICarDataService {
-        List<Car> LoadCarDatabase();
-        ObservableCollection<Car> CarDb { get; }
-        void ResetAllRatings();
-        void ResetAllExtraFeatures();
-        Car RestoreCarDbFromBackup(string backupFilePath);
     }
 }
