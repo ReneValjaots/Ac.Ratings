@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 
 namespace Ac.Ratings.Services {
     public class CarDataService : ICarDataService{
+        private readonly ICarDataManager _carDataManager;
         public ObservableCollection<Car> CarDb { get; }
 
-        public CarDataService() {
+        public CarDataService(ICarDataManager carDataManager) {
+            _carDataManager = carDataManager ?? throw new ArgumentNullException(nameof(carDataManager));
             CarDb = new ObservableCollection<Car>(LoadCarDatabase());
         }
 
@@ -19,20 +21,20 @@ namespace Ac.Ratings.Services {
         }
 
         public void ResetAllRatings() {
-            CarDataManager.ResetAllRatingsInDatabase(CarDb);
+            _carDataManager.ResetAllRatingsInDatabase(CarDb);
         }
 
         public void ResetAllExtraFeatures() {
-            CarDataManager.ResetAllExtraFeaturesInDatabase(CarDb);
+            _carDataManager.ResetAllExtraFeaturesInDatabase(CarDb);
         }
 
         public Car RestoreCarDbFromBackup(string backupFilePath) {
-            var restoredCarDb = CarDataManager.RestoreCarDbFromBackup(backupFilePath);
+            var restoredCarDb = _carDataManager.RestoreCarDbFromBackup(backupFilePath);
             if (restoredCarDb != null) {
                 CarDb.Clear();
                 foreach (var car in restoredCarDb) {
                     CarDb.Add(car);
-                    CarDataManager.SaveCarToFile(car);
+                    _carDataManager.SaveCarToFile(car);
                 }
 
                 return CarDb.FirstOrDefault();

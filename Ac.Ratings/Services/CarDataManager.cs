@@ -2,16 +2,17 @@
 using System.IO;
 using System.Text.Json;
 using Ac.Ratings.Model;
+using Ac.Ratings.Services.Interfaces;
 
 namespace Ac.Ratings.Services {
-    public static class CarDataManager {
+    public class CarDataManager : ICarDataManager {
         private static HashSet<Car> _modifiedCars = new();
 
-        public static void MarkCarAsModified(Car car) {
+        public void MarkCarAsModified(Car car) {
             _modifiedCars.Add(car);
         }
 
-        public static void SaveModifiedCars() {
+        public void SaveModifiedCars() {
             foreach (var car in _modifiedCars) {
                 SaveCarToFile(car);
             }
@@ -19,7 +20,7 @@ namespace Ac.Ratings.Services {
             _modifiedCars.Clear();
         }
 
-        public static void SaveCarToFile(Car car) {
+        public void SaveCarToFile(Car car) {
             if (string.IsNullOrEmpty(ConfigManager.CarsRootFolder)) {
                 throw new ArgumentException("Cars root folder path is null or empty.");
             }
@@ -34,7 +35,7 @@ namespace Ac.Ratings.Services {
             File.WriteAllText(carJsonFilePath, jsonContent);
         }
 
-        public static void CreateBackupOfCarDb(ObservableCollection<Car> cars) {
+        public void CreateBackupOfCarDb(ObservableCollection<Car> cars) {
             string backupFolder = Path.Combine(ConfigManager.BackupFolder, "backups");
 
             if (!Directory.Exists(backupFolder)) {
@@ -58,7 +59,7 @@ namespace Ac.Ratings.Services {
             }
         }
 
-        public static void ResetAllRatingsInDatabase(ObservableCollection<Car> cars) {
+        public void ResetAllRatingsInDatabase(ObservableCollection<Car> cars) {
             try {
                 CreateBackupOfCarDb(cars);
 
@@ -72,7 +73,7 @@ namespace Ac.Ratings.Services {
             }
         }
 
-        public static void ResetAllExtraFeaturesInDatabase(ObservableCollection<Car> cars) {
+        public void ResetAllExtraFeaturesInDatabase(ObservableCollection<Car> cars) {
             try {
                 CreateBackupOfCarDb(cars);
 
@@ -86,7 +87,7 @@ namespace Ac.Ratings.Services {
             }
         }
 
-        public static List<Car> RestoreCarDbFromBackup(string backupFilePath) {
+        public List<Car> RestoreCarDbFromBackup(string backupFilePath) {
             if (!File.Exists(backupFilePath)) {
                 throw new FileNotFoundException("Selected backup file not found.");
             }

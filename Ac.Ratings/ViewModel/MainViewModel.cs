@@ -16,6 +16,7 @@ namespace Ac.Ratings.ViewModel {
     public class MainViewModel : Core.ViewModel {
         private readonly ICarDataService _carDataService;
         private readonly ICarDisplayService _carDisplayService;
+        private readonly ICarDataManager _carDataManager;
         private readonly EngineDatabaseService _engineDatabaseService;
         private Car _selectedCar;
         private string _engineStats;
@@ -195,9 +196,10 @@ namespace Ac.Ratings.ViewModel {
         public RelayCommand OpenEnginePopupCommand { get; }
         public RelayCommand SaveEngineDataCommand { get; }
 
-        public MainViewModel(ICarDataService carDataService, ICarDisplayService carDisplayService) {
+        public MainViewModel(ICarDataService carDataService, ICarDisplayService carDisplayService, ICarDataManager carDataManager) {
             _carDataService = carDataService ?? throw new ArgumentNullException(nameof(carDataService));
             _carDisplayService = carDisplayService ?? throw new ArgumentNullException(nameof(carDisplayService));
+            _carDataManager = carDataManager ?? throw new ArgumentNullException(nameof(carDataManager));
             _engineDatabaseService = new EngineDatabaseService();
 
             _availableAuthors = GetAuthors();
@@ -225,7 +227,7 @@ namespace Ac.Ratings.ViewModel {
 
         private void SelectedCarRatings_PropertyChanged(object? sender, PropertyChangedEventArgs e) {
             if (_selectedCar != null) {
-                CarDataManager.MarkCarAsModified(_selectedCar);
+                _carDataManager.MarkCarAsModified(_selectedCar);
             }
         }
 

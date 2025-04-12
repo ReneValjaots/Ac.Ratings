@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Ac.Ratings.Services;
+using Ac.Ratings.Services.Interfaces;
 using Ac.Ratings.Theme.ModernUI.Controls;
 using Ac.Ratings.ViewModel;
 
@@ -9,11 +10,13 @@ namespace Ac.Ratings.View {
     /// </summary>
     public partial class MainWindow : ModernWindowBase {
         private readonly MainViewModel _viewModel;
+        private readonly ICarDataManager _carDataManager;
 
-        public MainWindow(MainViewModel viewModel) {
+        public MainWindow(MainViewModel viewModel, ICarDataManager carDataManager) {
             InitializeComponent();
             try {
                 _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+                _carDataManager = carDataManager ?? throw new ArgumentNullException(nameof(carDataManager));
                 DataContext = _viewModel;
             }
             catch (Exception ex) {
@@ -23,7 +26,7 @@ namespace Ac.Ratings.View {
 
         private void CreateBackupOfCarDb() {
             try {
-                CarDataManager.CreateBackupOfCarDb(_viewModel.CarDb);
+                _carDataManager.CreateBackupOfCarDb(_viewModel.CarDb);
             }
             catch (Exception ex) {
                 MessageBox.Show($"Error creating backup: {ex.Message}", "Backup Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -31,7 +34,7 @@ namespace Ac.Ratings.View {
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-            CarDataManager.SaveModifiedCars();
+            _carDataManager.SaveModifiedCars();
             CreateBackupOfCarDb(); /*--Comment out only while testing other features*/
         }
     }
