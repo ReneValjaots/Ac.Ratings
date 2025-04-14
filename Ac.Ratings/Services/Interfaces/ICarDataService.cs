@@ -4,8 +4,10 @@ using Ac.Ratings.Model;
 namespace Ac.Ratings.Services.Interfaces;
 
 public interface ICarDataService {
-    List<Car> LoadCarDatabase();
     ObservableCollection<Car> CarDb { get; }
+    void MarkCarAsModified(Car car);
+    void SaveModifiedCars();
+    void CreateBackupOfCarDb();
     void ResetAllRatings();
     void ResetAllExtraFeatures();
     Car RestoreCarDbFromBackup(string backupFilePath);

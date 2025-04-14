@@ -19,7 +19,6 @@ namespace Ac.Ratings.ViewModel {
         public RelayCommand ResetRootFolderCommand { get; }
         public RelayCommand TransferRatingsCommand { get; }
 
-
         public SettingsViewModel(IDialogService dialogService, ICarDataService carDataService) {
             _dialogService = dialogService;
             _carDataService = carDataService ?? throw new ArgumentNullException(nameof(carDataService));
