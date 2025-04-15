@@ -7,6 +7,7 @@ using System.Text.Json;
 namespace Ac.Ratings.Services {
     public class CarDataService : ICarDataService {
         private readonly List<Car> _modifiedCars = new();
+        private const int _maxBackupCount = 10;
         public ObservableCollection<Car> CarDb { get; }
 
         public CarDataService() {
@@ -22,7 +23,9 @@ namespace Ac.Ratings.Services {
         }
 
         public void MarkCarAsModified(Car car) {
-            _modifiedCars.Add(car);
+            if (!_modifiedCars.Contains(car)) {
+                _modifiedCars.Add(car);
+            }
         }
 
         public void SaveModifiedCars() {
@@ -50,10 +53,8 @@ namespace Ac.Ratings.Services {
 
         public void CreateBackupOfCarDb() {
             string backupFolder = Path.Combine(ConfigManager.BackupFolder, "backups");
+            Directory.CreateDirectory(backupFolder);
 
-            if (!Directory.Exists(backupFolder)) {
-                Directory.CreateDirectory(backupFolder);
-            }
 
             string backupFileName = $"CarDb_backup_{DateTime.Now:dd_MM_yyyy_HH_mm_ss}.json";
             string backupFilePath = Path.Combine(backupFolder, backupFileName);
@@ -65,8 +66,8 @@ namespace Ac.Ratings.Services {
                 .OrderByDescending(File.GetCreationTime)
                 .ToList();
 
-            if (backupFiles.Count > 10) {
-                foreach (var oldBackup in backupFiles.Skip(10)) {
+            if (backupFiles.Count > _maxBackupCount) {
+                foreach (var oldBackup in backupFiles.Skip(_maxBackupCount)) {
                     File.Delete(oldBackup);
                 }
             }
@@ -100,7 +101,7 @@ namespace Ac.Ratings.Services {
             }
         }
 
-        public Car RestoreCarDbFromBackup(string backupFilePath) {
+        public void RestoreCarDbFromBackup(string backupFilePath) {
             if (!File.Exists(backupFilePath)) {
                 throw new FileNotFoundException("Selected backup file not found.");
             }
@@ -113,11 +114,10 @@ namespace Ac.Ratings.Services {
                     CarDb.Add(car);
                     SaveCarToFile(car);
                 }
-
-                return CarDb.FirstOrDefault();
             }
-
-            throw new InvalidOperationException("Failed to deserialize the backup file.");
+            else {
+                throw new InvalidOperationException("Failed to deserialize the backup file.");
+            }
         }
     }
 }

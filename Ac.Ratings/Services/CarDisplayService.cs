@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Ac.Ratings.Model;
+﻿using Ac.Ratings.Model;
 using Ac.Ratings.Services.Interfaces;
 
 namespace Ac.Ratings.Services {
@@ -13,17 +12,7 @@ namespace Ac.Ratings.Services {
 
         private static string FormatEngineStats(CarEngine? engine, Car car) {
             if (engine == null || string.IsNullOrEmpty(engine.Layout) || engine.Displacement == 0) {
-                var tagData = GetCarEngineDataFromTags(car);
-                if (string.IsNullOrEmpty(tagData)) return string.Empty;
-
-                var result = string.Empty;
-                var parts = tagData.Split('&');
-
-                if (parts.Length > 0) result = GetDisplacementFromTags(result, parts[0]);
-                result = AppendInductionSystemToEngineStats(result, car);
-                if (parts.Length > 1) result = GetLayoutFromTags(result, parts[1]);
-
-                return result.Trim();
+                return string.Empty;
             }
 
             var displacementLiters = engine.Displacement > 0 ? (engine.Displacement / 1000.0).ToString("F1") : null;
@@ -81,40 +70,6 @@ namespace Ac.Ratings.Services {
                 true => $"{gearsCount}-speed manual transmission",
                 false => $"{gearsCount}-speed automatic transmission",
             };
-        }
-
-        private static string? GetCarEngineDataFromTags(Car selectedCar) {
-            var tags = selectedCar.Tags;
-            var engineTag = tags?.FirstOrDefault(x => x.Contains("#!"))?.Replace(" ", "").Remove(0, 2);
-            return engineTag;
-        }
-
-        private static string GetLayoutFromTags(string result, string data) {
-            if (data.StartsWith("I", StringComparison.OrdinalIgnoreCase))
-                result += "inline-" + Regex.Match(data, @"\d+").Value + " engine";
-
-            if (data.StartsWith("V", StringComparison.OrdinalIgnoreCase))
-                result += data.ToUpper() + " engine";
-
-            if (data.StartsWith("F", StringComparison.OrdinalIgnoreCase))
-                result += "flat-" + Regex.Match(data, @"\d+").Value + " engine";
-
-            if (data.StartsWith("B", StringComparison.OrdinalIgnoreCase))
-                result += "boxer-" + Regex.Match(data, @"\d+").Value + " engine";
-
-            if (data.StartsWith("R", StringComparison.OrdinalIgnoreCase))
-                result += "rotary engine";
-
-            return result;
-        }
-
-        private static string GetDisplacementFromTags(string result, string data) {
-            if (char.IsDigit(data[0])) {
-                var displacementValue = data.Replace("L", "", StringComparison.OrdinalIgnoreCase);
-                result += $"{displacementValue}l ";
-            }
-
-            return result;
         }
 
         private static string AppendInductionSystemToEngineStats(string result, Car car) {

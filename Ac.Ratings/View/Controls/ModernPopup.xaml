@@ -33,8 +33,7 @@
                 <ContentPresenter
                     Content="{Binding Content}"
                     TextBlock.FontStyle="Normal"
-                    TextBlock.FontWeight="Normal"
-                    TextOptions.TextFormattingMode="{DynamicResource FormattingMode}" />
+                    TextBlock.FontWeight="Normal"/>
             </AdornerDecorator>
         </Border>
         <Border BorderBrush="{DynamicResource WindowBorderActive}" BorderThickness="1" />

@@ -135,8 +135,8 @@ namespace Ac.Ratings.ViewModel {
             }
 
             try {
-                var restoredCar = _carDataService.RestoreCarDbFromBackup(backupFilePath);
-                if (restoredCar != null) {
+                _carDataService.RestoreCarDbFromBackup(backupFilePath);
+                if (_carDataService.CarDb.Any()) {
                     _dialogService.ShowMessage("Car database restored successfully.", "Success", MessageBoxButton.OK);
                 }
             }

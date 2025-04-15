@@ -10,5 +10,5 @@ public interface ICarDataService {
     void CreateBackupOfCarDb();
     void ResetAllRatings();
     void ResetAllExtraFeatures();
-    Car RestoreCarDbFromBackup(string backupFilePath);
+    void RestoreCarDbFromBackup(string backupFilePath);
 }
