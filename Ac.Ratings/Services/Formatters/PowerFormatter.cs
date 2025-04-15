@@ -3,9 +3,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Ac.Ratings.Services.Converters;
+namespace Ac.Ratings.Services.Formatters;
 
-public class PowerConverter : JsonConverter<string?> {
+public class PowerFormatter : JsonConverter<string?> {
     public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         var value = reader.GetString();
         return TransformValue(value);

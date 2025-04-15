@@ -2,9 +2,9 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Ac.Ratings.Services.Converters;
+namespace Ac.Ratings.Services.Formatters;
 
-public class TorqueConverter : JsonConverter<string?> {
+public class WeightFormatter : JsonConverter<string?> {
     public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         var value = reader.GetString();
         return TransformValue(value);
@@ -18,17 +18,20 @@ public class TorqueConverter : JsonConverter<string?> {
         if (string.IsNullOrWhiteSpace(value))
             return null;
 
-        var torqueValue = value.Replace(" ", "").ToLower();
-        return ConvertTorqueString(torqueValue);
+        var weightValue = value.Replace(" ", "").ToLower();
+        return ConvertWeightString(weightValue);
     }
 
-    private string ConvertTorqueString(string torque) {
-        torque = Regex.Replace(torque, "[^0-9nm+]", "");
-        var match = Regex.Match(torque, @"(\d+)(\+?)nm");
+    private string ConvertWeightString(string weight) {
+        if (string.IsNullOrWhiteSpace(weight)) {
+            return "-";
+        }
+
+        weight = Regex.Replace(weight, "[^0-9kg]", "");
+        var match = Regex.Match(weight, @"(\d+)kg");
         if (match.Success) {
             string value = match.Groups[1].Value;
-            string hasPlusSymbol = match.Groups[2].Value;
-            return $"{value}{hasPlusSymbol} Nm";
+            return $"{value} kg";
         }
 
         return "-";

@@ -2,9 +2,9 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Ac.Ratings.Services.Converters;
+namespace Ac.Ratings.Services.Formatters;
 
-public class TopSpeedConverter : JsonConverter<string?> {
+public class TopSpeedFormatter : JsonConverter<string?> {
     public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         var value = reader.GetString();
         return TransformValue(value);

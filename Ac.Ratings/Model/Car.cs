@@ -39,10 +39,6 @@ namespace Ac.Ratings.Model {
 
             try {
                 var jsonContent = File.ReadAllText(uiCarPath);
-                var jsonData = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonContent);
-
-                if (jsonData == null) return;
-
                 using var doc = JsonDocument.Parse(jsonContent);
                 var root = doc.RootElement;
 
@@ -61,8 +57,8 @@ namespace Ac.Ratings.Model {
 
         private static string? NormalizeName(string? name) {
             if (string.IsNullOrEmpty(name)) return name;
-            if (name.All(char.IsUpper)) return name; // Leave all-uppercase names (e.g., "BMW") as-is
             name = name.Trim();
+            if (name.All(char.IsUpper)) return name; // Leave all-uppercase names (e.g., "BMW") as-is
             return char.ToUpper(name[0]) + name[1..];
         }
 

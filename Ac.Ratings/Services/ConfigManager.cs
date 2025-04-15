@@ -43,7 +43,7 @@ namespace Ac.Ratings.Services {
             UnpackFolderPath = Path.Combine(ResourceFolder, "unpackData");
             ModifiedRatingsPath = Path.Combine(UnpackFolderPath, "Ratings.txt");
 
-            EnsureFileExists(ErrorLogFilepath);
+            ResetErrorLogFile(ErrorLogFilepath);
             EnsureFileExists(ConfigFilePath, "{}"); // Ensure config file exists with default empty JSON
             EnsureFileExists(AppearanceConfigFilePath, "{}");
 
@@ -134,6 +134,16 @@ namespace Ac.Ratings.Services {
                 catch (IOException ex) {
                     Console.WriteLine($"Failed to create file {path}: {ex.Message}");
                 }
+            }
+        }
+
+        private static void ResetErrorLogFile(string path) {
+            try {
+                EnsureDirectoryExists(Path.GetDirectoryName(path)!);
+                File.WriteAllText(path, string.Empty);
+            }
+            catch (IOException ex) {
+                Console.WriteLine($"Failed to reset error log file {path}: {ex.Message}");
             }
         }
     }

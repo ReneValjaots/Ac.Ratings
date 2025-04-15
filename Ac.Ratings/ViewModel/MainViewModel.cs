@@ -7,7 +7,6 @@ using System.Windows.Media.Imaging;
 using Ac.Ratings.Core;
 using Ac.Ratings.Data;
 using Ac.Ratings.Model;
-using Ac.Ratings.Services;
 using Ac.Ratings.Services.Interfaces;
 using Ac.Ratings.Theme.ModernUI.Controls;
 using Ac.Ratings.View;
