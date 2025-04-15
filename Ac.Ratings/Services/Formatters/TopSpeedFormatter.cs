@@ -1,20 +1,9 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Ac.Ratings.Services.Formatters;
 
-public class TopSpeedFormatter : JsonConverter<string?> {
-    public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-        var value = reader.GetString();
-        return TransformValue(value);
-    }
-
-    public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options) {
-        writer.WriteStringValue(value);
-    }
-
-    public string? TransformValue(string? value) {
+public class TopSpeedFormatter : BaseValueFormatter {
+    public override string? TransformValue(string? value) {
         if (string.IsNullOrWhiteSpace(value))
             return null;
 

@@ -53,9 +53,7 @@ namespace Ac.Ratings.Services {
 
         private void EnsureCarFoldersExist(IEnumerable<string?> carFolders) {
             foreach (var folder in carFolders.Where(f => f != null)) {
-                var newFolder = Path.Combine(_carsRootFolder, folder!);
-                Directory.CreateDirectory(newFolder);
-                Directory.CreateDirectory(Path.Combine(newFolder, "RatingsApp"));
+                Directory.CreateDirectory(Path.Combine(_carsRootFolder, folder!, "RatingsApp"));
             }
         }
 
@@ -104,12 +102,10 @@ namespace Ac.Ratings.Services {
             var iniData = GetCarDataFromIniFiles(originalPath);
             var acdData = ProcessAcdFile(originalPath);
 
-            foreach (var data in new[] { iniData, acdData }.Where(d => d != null)) {
-                car.Data.TractionType ??= data.TractionType;
-                car.Data.GearsCount = car.Data.GearsCount == 0 ? data.GearsCount : car.Data.GearsCount;
-                car.Data.TurboCount = car.Data.TurboCount == 0 ? data.TurboCount : car.Data.TurboCount;
-                car.Data.SupportsShifter = car.Data.SupportsShifter || data.SupportsShifter;
-            }
+            car.Data.TractionType = acdData.TractionType ?? iniData.TractionType ?? car.Data.TractionType;
+            car.Data.GearsCount = acdData.GearsCount != 0 ? acdData.GearsCount : iniData.GearsCount != 0 ? iniData.GearsCount : car.Data.GearsCount;
+            car.Data.TurboCount = acdData.TurboCount != 0 ? acdData.TurboCount : iniData.TurboCount != 0 ? iniData.TurboCount : car.Data.TurboCount;
+            car.Data.SupportsShifter = acdData.SupportsShifter || iniData.SupportsShifter || car.Data.SupportsShifter;
 
             if (string.IsNullOrEmpty(car.Data.TractionType) || car.Data.GearsCount == 0) {
                 ErrorLogger.LogError("MissingData", new Exception($"Critical data missing for car: {originalPath}"));
@@ -138,24 +134,10 @@ namespace Ac.Ratings.Services {
             if (drivetrainEntry != null) {
                 var content = Encoding.UTF8.GetString(drivetrainEntry.Data);
                 var lines = content.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-                string? currentSection = null;
-                foreach (var line in lines) {
-                    if (line.StartsWith('[')) {
-                        currentSection = line.Trim();
-                        continue;
-                    }
-
-                    if (currentSection == "[TRACTION]" && line.Contains("TYPE=")) {
-                        carData.TractionType = ExtractIniValue(line);
-                    }
-                    else if (currentSection == "[GEARS]" && line.Contains("COUNT=")) {
-                        carData.GearsCount = int.Parse(ExtractIniValue(line));
-                    }
-                    else if (currentSection == "[GEARBOX]" && line.Contains("SUPPORTS_SHIFTER=")) {
-                        carData.SupportsShifter = ExtractIniValue(line) == "1";
-                    }
-                }
+                var drivetrainData = ParseIniLines(lines);
+                carData.TractionType = drivetrainData.TractionType;
+                carData.GearsCount = drivetrainData.GearsCount;
+                carData.SupportsShifter = drivetrainData.SupportsShifter;
             }
 
             if (engineEntry != null) {
@@ -174,26 +156,38 @@ namespace Ac.Ratings.Services {
 
             if (File.Exists(drivetrainFilePath)) {
                 var lines = File.ReadAllLines(drivetrainFilePath);
-                string? currentSection = null;
-                foreach (var line in lines) {
-                    if (line.StartsWith("[")) {
-                        currentSection = line.Trim();
-                    }
-                    else if (currentSection == "[TRACTION]" && line.Contains("TYPE=")) {
-                        carData.TractionType = ExtractIniValue(line);
-                    }
-                    else if (currentSection == "[GEARS]" && line.Contains("COUNT=")) {
-                        carData.GearsCount = int.Parse(ExtractIniValue(line));
-                    }
-                    else if (currentSection == "[GEARBOX]" && line.Contains("SUPPORTS_SHIFTER=")) {
-                        carData.SupportsShifter = ExtractIniValue(line) == "1";
-                    }
-                }
+                var drivetrainData = ParseIniLines(lines);
+                carData.TractionType = drivetrainData.TractionType;
+                carData.GearsCount = drivetrainData.GearsCount;
+                carData.SupportsShifter = drivetrainData.SupportsShifter;
             }
 
             if (File.Exists(engineFilePath)) {
                 var lines = File.ReadAllLines(engineFilePath);
                 carData.TurboCount = lines.Count(line => line.StartsWith("[TURBO_"));
+            }
+
+            return carData;
+        }
+
+        private CarData ParseIniLines(string[] lines) {
+            var carData = new CarData();
+            string? currentSection = null;
+            foreach (var line in lines) {
+                if (line.StartsWith("[")) {
+                    currentSection = line.Trim();
+                    continue;
+                }
+
+                if (currentSection == "[TRACTION]" && line.Contains("TYPE=")) {
+                    carData.TractionType = ExtractIniValue(line);
+                }
+                else if (currentSection == "[GEARS]" && line.Contains("COUNT=")) {
+                    carData.GearsCount = int.Parse(ExtractIniValue(line));
+                }
+                else if (currentSection == "[GEARBOX]" && line.Contains("SUPPORTS_SHIFTER=")) {
+                    carData.SupportsShifter = ExtractIniValue(line) == "1";
+                }
             }
 
             return carData;
