@@ -8,9 +8,11 @@ using Ac.Ratings.Services.Interfaces;
 namespace Ac.Ratings.ViewModel {
     public class SettingsViewModel : Core.ViewModel {
         private readonly IDialogService _dialogService;
+        private readonly ICarDataService _carDataService;
+        private RebaseRoundingMode _selectedRoundingMode;
         private string _selectedPrimaryUnit;
         private string _selectedSecondaryUnit;
-        private readonly ICarDataService _carDataService;
+        private int _selectedRatingScale;
 
         public RelayCommand ResetRatingsCommand { get; }
         public RelayCommand ResetExtraFeaturesCommand { get; }
@@ -31,7 +33,10 @@ namespace Ac.Ratings.ViewModel {
             TransferRatingsCommand = new RelayCommand(TransferRatings);
 
             LoadSettings(ConfigManager.ConfigFilePath);
+            SelectedRatingScale = ConfigManager.RatingScaleMaximum;
+            SelectedRoundingMode = ConfigManager.RebaseRounding;
         }
+
         public string SelectedPrimaryUnit {
             get => _selectedPrimaryUnit;
             set => SetField(ref _selectedPrimaryUnit, value);
@@ -42,6 +47,19 @@ namespace Ac.Ratings.ViewModel {
             set => SetField(ref _selectedSecondaryUnit, value);
         }
 
+        public int SelectedRatingScale {
+            get => _selectedRatingScale;
+            set => SetField(ref _selectedRatingScale, value);
+        }
+
+        public RebaseRoundingMode SelectedRoundingMode {
+            get => _selectedRoundingMode;
+            set => SetField(ref _selectedRoundingMode, value);
+        }
+
+        public IEnumerable<int> AvailableRatingScales => new List<int> { 5, 10 };
+        public IEnumerable<RebaseRoundingMode> RoundingModes => Enum.GetValues<RebaseRoundingMode>();
+
         public void LoadSettings(string configPath) {
             if (File.Exists(configPath)) {
                 var json = File.ReadAllText(configPath);
@@ -49,11 +67,15 @@ namespace Ac.Ratings.ViewModel {
                 if (config != null) {
                     SelectedPrimaryUnit = config.GetValueOrDefault("PrimaryPowerUnit", "kw").ToLower();
                     SelectedSecondaryUnit = config.GetValueOrDefault("SecondaryPowerUnit", "hp").ToLower();
+                    SelectedRatingScale = ConfigManager.RatingScaleMaximum;
+                    SelectedRoundingMode = ConfigManager.RebaseRounding;
                 }
             }
             else {
                 SelectedPrimaryUnit = "kw";
                 SelectedSecondaryUnit = "hp";
+                SelectedRatingScale = 10;
+                SelectedRoundingMode = RebaseRoundingMode.RoundDown;
             }
         }
 
@@ -74,8 +96,13 @@ namespace Ac.Ratings.ViewModel {
 
             config["PrimaryPowerUnit"] = SelectedPrimaryUnit.ToLower();
             config["SecondaryPowerUnit"] = SelectedSecondaryUnit.ToLower();
+            config["RatingScaleMaximum"] = SelectedRatingScale.ToString();
+            config["RebaseRoundingMode"] = SelectedRoundingMode.ToString();
 
             File.WriteAllText(configPath, JsonSerializer.Serialize(config, ConfigManager.JsonOptions));
+
+            ConfigManager.SaveRatingScaleMaximum(SelectedRatingScale);
+            ConfigManager.SaveRebaseRoundingMode(SelectedRoundingMode);
         }
 
         private void TransferRatings() {
@@ -93,8 +120,24 @@ namespace Ac.Ratings.ViewModel {
 
         private void SaveSettings() {
             try {
+                int previousScale = ConfigManager.RatingScaleMaximum;
                 SaveSettings(ConfigManager.ConfigFilePath);
-                _dialogService.ShowMessage("Settings saved successfully.", "Success", MessageBoxButton.OK);
+                int newScale = ConfigManager.RatingScaleMaximum;
+
+                if (previousScale != newScale) {
+                    try {
+                        _carDataService.RecalculateAllRatingsScale(previousScale, newScale, SelectedRoundingMode);
+                        _dialogService.ShowMessage($"Settings saved and ratings recalculated successfully. The application will now close to finalize the changes.", "Success", MessageBoxButton.OK);
+                        Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+                    }
+                    catch (Exception ex) {
+                        ErrorLogger.LogError("RecalculationTrigger", ex);
+                        _dialogService.ShowMessage($"Settings saved, but an error occurred during rating recalculation: {ex.Message}\nCheck logs for details.", "Recalculation Error", MessageBoxButton.OK);
+                    }
+                }
+                else {
+                    _dialogService.ShowMessage("Settings saved successfully.", "Success", MessageBoxButton.OK);
+                }
             }
             catch (FileNotFoundException ex) {
                 _dialogService.ShowMessage($"Config file not found: {ex.Message}", "Error", MessageBoxButton.OK);

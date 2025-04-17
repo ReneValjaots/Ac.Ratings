@@ -11,4 +11,5 @@ public interface ICarDataService {
     void ResetAllRatings();
     void ResetAllExtraFeatures();
     void RestoreCarDbFromBackup(string backupFilePath);
+    void RecalculateAllRatingsScale(int oldScale, int newScale, RebaseRoundingMode roundingMode);
 }

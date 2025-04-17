@@ -26,9 +26,9 @@
         <Slider
             Grid.Column="1"
             Width="{Binding SliderWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
-            IsSnapToTickEnabled="True"
             IsMoveToPointEnabled="True"
-            Maximum="10"
+            IsSnapToTickEnabled="True"
+            Maximum="{Binding MaximumValue, RelativeSource={RelativeSource AncestorType=UserControl}}"
             Minimum="0"
             Style="{Binding SliderStyle, RelativeSource={RelativeSource AncestorType=UserControl}}"
             TickFrequency="1"

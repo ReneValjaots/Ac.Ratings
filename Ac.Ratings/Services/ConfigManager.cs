@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Ac.Ratings.Services.Interfaces;
+using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,6 +17,9 @@ namespace Ac.Ratings.Services {
         public static string ModifiedRatingsPath { get; private set; }
         public static string? OriginalRatingsPath { get; private set; }
         public static string? AcRootFolder { get; private set; }
+
+        public static int RatingScaleMaximum {  get; private set; }
+        public static RebaseRoundingMode RebaseRounding { get; private set; }
 
         public static readonly JsonSerializerOptions JsonOptions = new() {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -49,6 +53,9 @@ namespace Ac.Ratings.Services {
 
             OriginalRatingsPath = LoadOriginalRatingsPath();
             AcRootFolder = LoadConfigValue("AcRootFolder");
+
+            RatingScaleMaximum = LoadRatingScaleMaximum();
+            RebaseRounding = LoadRebaseRoundingMode();
         }
 
         public static bool EnsureAcRootFolderConfigured(Func<string?> promptUserForPathAction) {
@@ -67,6 +74,21 @@ namespace Ac.Ratings.Services {
                 AcRootFolder = null; 
                 return false;
             }
+        }
+
+        public static void SaveRatingScaleMaximum(int value) {
+            if (value != 5 && value != 10) {
+                Console.WriteLine($"Warning: Invalid Rating Scale Maximum: {value}. Must be 5 or 10. This value will not be saved.");
+                return;
+            }
+            SaveConfigValue("RatingScaleMaximum", value.ToString());
+            RatingScaleMaximum = value;
+        }
+
+
+        public static void SaveRebaseRoundingMode(RebaseRoundingMode mode) {
+            SaveConfigValue("RebaseRoundingMode", mode.ToString());
+            RebaseRounding = mode;
         }
 
         private static string? LoadConfigValue(string key) {
@@ -145,6 +167,25 @@ namespace Ac.Ratings.Services {
             catch (IOException ex) {
                 Console.WriteLine($"Failed to reset error log file {path}: {ex.Message}");
             }
+        }
+
+        private static int LoadRatingScaleMaximum() {
+            var valueStr = LoadConfigValue("RatingScaleMaximum");
+            if (int.TryParse(valueStr, out int value) && value is 5 or 10) {
+                return value;
+            }
+
+            return 10;
+        }
+
+        private static RebaseRoundingMode LoadRebaseRoundingMode() {
+            var valueStr = LoadConfigValue("RebaseRoundingMode");
+            if (Enum.TryParse<RebaseRoundingMode>(valueStr, true, out var mode))
+            {
+                return mode;
+            }
+
+            return RebaseRoundingMode.RoundDown;
         }
     }
 }

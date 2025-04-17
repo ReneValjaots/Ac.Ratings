@@ -18,6 +18,7 @@
             <controls:ModernTab.Links>
                 <helpers:Link DisplayName="General" Source="/View/Pages/General.xaml" />
                 <helpers:Link DisplayName="Power Format" Source="/View/Pages/PowerFormat.xaml" />
+                <helpers:Link DisplayName="Rating Scale" Source="/View/Pages/RatingScale.xaml" />
                 <helpers:Link DisplayName="Root Folder" Source="/View/Pages/RootFolder.xaml" />
                 <helpers:Link DisplayName="Restore Ratings" Source="/View/Pages/RestoreRatings.xaml" />
                 <helpers:Link DisplayName="Appearance" Source="/View/Pages/Appearance.xaml" />

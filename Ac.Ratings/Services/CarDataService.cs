@@ -119,5 +119,49 @@ namespace Ac.Ratings.Services {
                 throw new InvalidOperationException("Failed to deserialize the backup file.");
             }
         }
+
+        public void RecalculateAllRatingsScale(int oldScale, int newScale, RebaseRoundingMode roundingMode) {
+            if (oldScale == newScale || oldScale == 0) {
+                return;
+            }
+
+            CreateBackupOfCarDb();
+
+            foreach (var car in CarDb) {
+                if (car?.Ratings == null) continue;
+
+                try {
+                    car.Ratings.CornerHandling = RecalculateSingleRating(car.Ratings.CornerHandling, oldScale, newScale, roundingMode);
+                    car.Ratings.Brakes = RecalculateSingleRating(car.Ratings.Brakes, oldScale, newScale, roundingMode);
+                    car.Ratings.Realism = RecalculateSingleRating(car.Ratings.Realism, oldScale, newScale, roundingMode);
+                    car.Ratings.Sound = RecalculateSingleRating(car.Ratings.Sound, oldScale, newScale, roundingMode);
+                    car.Ratings.ExteriorQuality = RecalculateSingleRating(car.Ratings.ExteriorQuality, oldScale, newScale, roundingMode);
+                    car.Ratings.InteriorQuality = RecalculateSingleRating(car.Ratings.InteriorQuality, oldScale, newScale, roundingMode);
+                    car.Ratings.ForceFeedbackQuality = RecalculateSingleRating(car.Ratings.ForceFeedbackQuality, oldScale, newScale, roundingMode);
+                    car.Ratings.FunFactor = RecalculateSingleRating(car.Ratings.FunFactor, oldScale, newScale, roundingMode);
+                    SaveCarToFile(car);
+                }
+                catch (Exception ex) {
+                    ErrorLogger.LogError("RecalculateRatingScale", new Exception($"Failed to recalculate ratings for car {car.Name ?? car.FolderName ?? "UNKNOWN"}: {ex.Message}", ex));
+                }
+            }
+
+            _modifiedCars.Clear();
+        }
+
+        private static double RecalculateSingleRating(double currentRating, int oldScale, int newScale, RebaseRoundingMode roundingMode) {
+            if (oldScale <= 0) return 0;
+            if (currentRating <= 0) return 0;
+
+            currentRating = Math.Min(currentRating, oldScale);
+
+            double normalizedRating = currentRating / oldScale;
+            double newRatingRaw = normalizedRating * newScale;
+
+            var finalRating = roundingMode == RebaseRoundingMode.RoundUp ? Math.Ceiling(newRatingRaw) : Math.Floor(newRatingRaw);
+
+            // Ensure the rating doesn't exceed the new maximum (due to rounding up) or go below 0
+            return Math.Clamp(finalRating, 0, newScale);
+        }
     }
 }

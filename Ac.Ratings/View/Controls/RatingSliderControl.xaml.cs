@@ -22,6 +22,10 @@ namespace Ac.Ratings.View.Controls {
             DependencyProperty.Register(nameof(SliderWidth), typeof(double), typeof(RatingSliderControl),
                 new PropertyMetadata(150.0)); // Default value of 150
 
+        public static readonly DependencyProperty MaximumValueProperty =
+            DependencyProperty.Register(nameof(MaximumValue), typeof(double), typeof(RatingSliderControl),
+                new PropertyMetadata(10.0));
+
         public string LabelText {
             get => (string)GetValue(LabelTextProperty);
             set => SetValue(LabelTextProperty, value);
@@ -40,6 +44,11 @@ namespace Ac.Ratings.View.Controls {
         public double SliderWidth {
             get => (double)GetValue(SliderWidthProperty);
             set => SetValue(SliderWidthProperty, value);
+        }
+
+        public double MaximumValue {
+            get => (double)GetValue(MaximumValueProperty);
+            set => SetValue(MaximumValueProperty, value);
         }
 
         public RatingSliderControl() {
