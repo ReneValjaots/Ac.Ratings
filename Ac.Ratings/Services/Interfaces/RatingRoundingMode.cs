@@ -2,7 +2,7 @@
 
 namespace Ac.Ratings.Services.Interfaces;
 
-public enum RebaseRoundingMode {
+public enum RatingRoundingMode {
     [Description("Round down")]
     RoundDown,
     [Description("Round up")]

@@ -9,7 +9,7 @@ namespace Ac.Ratings.ViewModel {
     public class SettingsViewModel : Core.ViewModel {
         private readonly IDialogService _dialogService;
         private readonly ICarDataService _carDataService;
-        private RebaseRoundingMode _selectedRoundingMode;
+        private RatingRoundingMode _selectedRoundingMode;
         private string _selectedPrimaryUnit;
         private string _selectedSecondaryUnit;
         private int _selectedRatingScale;
@@ -34,7 +34,7 @@ namespace Ac.Ratings.ViewModel {
 
             LoadSettings(ConfigManager.ConfigFilePath);
             SelectedRatingScale = ConfigManager.RatingScaleMaximum;
-            SelectedRoundingMode = ConfigManager.RebaseRounding;
+            SelectedRoundingMode = ConfigManager.RatingRounding;
         }
 
         public string SelectedPrimaryUnit {
@@ -52,13 +52,13 @@ namespace Ac.Ratings.ViewModel {
             set => SetField(ref _selectedRatingScale, value);
         }
 
-        public RebaseRoundingMode SelectedRoundingMode {
+        public RatingRoundingMode SelectedRoundingMode {
             get => _selectedRoundingMode;
             set => SetField(ref _selectedRoundingMode, value);
         }
 
         public IEnumerable<int> AvailableRatingScales => new List<int> { 5, 10 };
-        public IEnumerable<RebaseRoundingMode> RoundingModes => Enum.GetValues<RebaseRoundingMode>();
+        public IEnumerable<RatingRoundingMode> RoundingModes => Enum.GetValues<RatingRoundingMode>();
 
         public void LoadSettings(string configPath) {
             if (File.Exists(configPath)) {
@@ -68,14 +68,14 @@ namespace Ac.Ratings.ViewModel {
                     SelectedPrimaryUnit = config.GetValueOrDefault("PrimaryPowerUnit", "kw").ToLower();
                     SelectedSecondaryUnit = config.GetValueOrDefault("SecondaryPowerUnit", "hp").ToLower();
                     SelectedRatingScale = ConfigManager.RatingScaleMaximum;
-                    SelectedRoundingMode = ConfigManager.RebaseRounding;
+                    SelectedRoundingMode = ConfigManager.RatingRounding;
                 }
             }
             else {
                 SelectedPrimaryUnit = "kw";
                 SelectedSecondaryUnit = "hp";
                 SelectedRatingScale = 10;
-                SelectedRoundingMode = RebaseRoundingMode.RoundDown;
+                SelectedRoundingMode = RatingRoundingMode.RoundDown;
             }
         }
 
@@ -97,7 +97,7 @@ namespace Ac.Ratings.ViewModel {
             config["PrimaryPowerUnit"] = SelectedPrimaryUnit.ToLower();
             config["SecondaryPowerUnit"] = SelectedSecondaryUnit.ToLower();
             config["RatingScaleMaximum"] = SelectedRatingScale.ToString();
-            config["RebaseRoundingMode"] = SelectedRoundingMode.ToString();
+            config["RatingRoundingMode"] = SelectedRoundingMode.ToString();
 
             File.WriteAllText(configPath, JsonSerializer.Serialize(config, ConfigManager.JsonOptions));
 

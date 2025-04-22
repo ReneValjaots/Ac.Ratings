@@ -19,7 +19,7 @@ namespace Ac.Ratings.Services {
         public static string? AcRootFolder { get; private set; }
 
         public static int RatingScaleMaximum {  get; private set; }
-        public static RebaseRoundingMode RebaseRounding { get; private set; }
+        public static RatingRoundingMode RatingRounding { get; private set; }
 
         public static readonly JsonSerializerOptions JsonOptions = new() {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -55,7 +55,7 @@ namespace Ac.Ratings.Services {
             AcRootFolder = LoadConfigValue("AcRootFolder");
 
             RatingScaleMaximum = LoadRatingScaleMaximum();
-            RebaseRounding = LoadRebaseRoundingMode();
+            RatingRounding = LoadRebaseRoundingMode();
         }
 
         public static bool EnsureAcRootFolderConfigured(Func<string?> promptUserForPathAction) {
@@ -86,9 +86,9 @@ namespace Ac.Ratings.Services {
         }
 
 
-        public static void SaveRebaseRoundingMode(RebaseRoundingMode mode) {
-            SaveConfigValue("RebaseRoundingMode", mode.ToString());
-            RebaseRounding = mode;
+        public static void SaveRebaseRoundingMode(RatingRoundingMode mode) {
+            SaveConfigValue("RatingRoundingMode", mode.ToString());
+            RatingRounding = mode;
         }
 
         private static string? LoadConfigValue(string key) {
@@ -178,14 +178,14 @@ namespace Ac.Ratings.Services {
             return 10;
         }
 
-        private static RebaseRoundingMode LoadRebaseRoundingMode() {
-            var valueStr = LoadConfigValue("RebaseRoundingMode");
-            if (Enum.TryParse<RebaseRoundingMode>(valueStr, true, out var mode))
+        private static RatingRoundingMode LoadRebaseRoundingMode() {
+            var valueStr = LoadConfigValue("RatingRoundingMode");
+            if (Enum.TryParse<RatingRoundingMode>(valueStr, true, out var mode))
             {
                 return mode;
             }
 
-            return RebaseRoundingMode.RoundDown;
+            return RatingRoundingMode.RoundDown;
         }
     }
 }

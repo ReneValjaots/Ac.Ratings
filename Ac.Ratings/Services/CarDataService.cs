@@ -120,7 +120,7 @@ namespace Ac.Ratings.Services {
             }
         }
 
-        public void RecalculateAllRatingsScale(int oldScale, int newScale, RebaseRoundingMode roundingMode) {
+        public void RecalculateAllRatingsScale(int oldScale, int newScale, RatingRoundingMode roundingMode) {
             if (oldScale == newScale || oldScale == 0) {
                 return;
             }
@@ -149,7 +149,7 @@ namespace Ac.Ratings.Services {
             _modifiedCars.Clear();
         }
 
-        private static double RecalculateSingleRating(double currentRating, int oldScale, int newScale, RebaseRoundingMode roundingMode) {
+        private static double RecalculateSingleRating(double currentRating, int oldScale, int newScale, RatingRoundingMode roundingMode) {
             if (oldScale <= 0) return 0;
             if (currentRating <= 0) return 0;
 
@@ -158,7 +158,7 @@ namespace Ac.Ratings.Services {
             double normalizedRating = currentRating / oldScale;
             double newRatingRaw = normalizedRating * newScale;
 
-            var finalRating = roundingMode == RebaseRoundingMode.RoundUp ? Math.Ceiling(newRatingRaw) : Math.Floor(newRatingRaw);
+            var finalRating = roundingMode == RatingRoundingMode.RoundUp ? Math.Ceiling(newRatingRaw) : Math.Floor(newRatingRaw);
 
             // Ensure the rating doesn't exceed the new maximum (due to rounding up) or go below 0
             return Math.Clamp(finalRating, 0, newScale);
