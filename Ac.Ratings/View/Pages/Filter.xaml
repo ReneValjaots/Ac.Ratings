@@ -140,7 +140,7 @@
             Orientation="Horizontal">
             <Button
                 Margin="0,0,10,0"
-                Command="{Binding ResetFiltersCommand}"
+                Command="{Binding ResetViewFiltersCommand}"
                 Content="Reset" />
             <Button Command="{Binding ApplyFiltersCommand}" Content="Apply" />
         </StackPanel>

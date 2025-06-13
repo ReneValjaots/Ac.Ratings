@@ -258,6 +258,7 @@ namespace Ac.Ratings.ViewModel {
         }
 
         private void ApplyFilters() {
+            SearchText = string.Empty;
             SelectedAuthors.Clear();
             foreach (var author in AvailableAuthors.Where(a => a.IsSelected)) {
                 SelectedAuthors.Add(author.Name);
@@ -273,7 +274,7 @@ namespace Ac.Ratings.ViewModel {
 
             if (Application.Current.MainWindow is MainWindow mainWindow) {
                 if (mainWindow.Template?.FindName("ContentFrame", mainWindow) is ModernFrame frame) {
-                    frame.Source = new Uri("View/Pages/Home.xaml", UriKind.Relative);
+                    frame.Source = new Uri("/View/Pages/Home.xaml", UriKind.Relative);
                 }
             }
         }
@@ -334,6 +335,16 @@ namespace Ac.Ratings.ViewModel {
         private void ResetFilters() {
             SearchText = string.Empty;
             ResetViewFilters();
+
+
+            if (Application.Current.MainWindow is MainWindow mainWindow) {
+                if (mainWindow.Template?.FindName("ContentFrame", mainWindow) is ModernFrame frame) {
+                    var homeUri = new Uri("/View/Pages/Home.xaml", UriKind.Relative);
+                    if (frame.Source != homeUri) {
+                        frame.Source = homeUri;
+                    }
+                }
+            }
         }
 
         public void SelectFirstFilteredCar() {
