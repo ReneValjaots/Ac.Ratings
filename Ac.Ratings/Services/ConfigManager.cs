@@ -121,7 +121,7 @@ namespace Ac.Ratings.Services {
             return null;
         }
 
-        private static void SaveConfigValue(string key, string value) {
+        public static void SaveConfigValue(string key, string value) {
             SaveValue(ConfigFilePath, key, value);
         }
 

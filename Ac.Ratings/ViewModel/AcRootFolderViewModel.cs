@@ -1,4 +1,5 @@
 ﻿using Ac.Ratings.Core;
+using Ac.Ratings.Services;
 using System.IO;
 using System.Windows;
 
@@ -43,16 +44,22 @@ namespace Ac.Ratings.ViewModel {
 
                 SelectedPath = carsPath;
                 IsPathValid = true;
+
+                ConfigManager.SaveConfigValue("AcRootFolder", SelectedPath);
+
                 _dialogService.ShowMessage(
-                    "Root folder selected successfully!",
+                    "Root folder selected successfully! The application will now restart to apply the changes.",
                     "Success",
                     MessageBoxButton.OK);
+
+                var exePath = Environment.ProcessPath;
+                System.Diagnostics.Process.Start(exePath);
+                Environment.Exit(0);
             }
             else {
                 _dialogService.ShowMessage("The provided path does not exist. Please enter a valid path.", "Invalid Path", MessageBoxButton.OK);
             }
         }
-
 
         public void HandleClosing(System.ComponentModel.CancelEventArgs e) {
             if (!IsPathValid) {
