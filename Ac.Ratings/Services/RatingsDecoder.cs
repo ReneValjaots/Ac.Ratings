@@ -14,6 +14,7 @@ namespace Ac.Ratings.Services {
 
         public void InitializeRatingsDataFile() {
             try {
+                _ratingDb.Clear();
                 string? originalRatingsPath = ConfigManager.OriginalRatingsPath;
                 if (originalRatingsPath == null) {
                     Console.WriteLine("Original ratings file not found.");
@@ -76,6 +77,12 @@ namespace Ac.Ratings.Services {
                 return;
             }
 
+            int currentRatingScale = ConfigManager.RatingScaleMaximum;
+            if (currentRatingScale != 5 && currentRatingScale != 10) {
+                currentRatingScale = 10; // Fallback to default to avoid division errors .
+            }
+
+
             foreach (var directory in Directory.GetDirectories(carsRootFolder)) {
                 string uiPath = Path.Combine(directory, "RatingsApp", "ui.json");
 
@@ -90,7 +97,12 @@ namespace Ac.Ratings.Services {
                     if (car == null || car.Ratings.AverageRating == 0) continue;
                     var folderName = car.FolderName ?? Path.GetFileName(directory);
                     var averageRating = car.Ratings.AverageRating;
-                    var formattedRating = Math.Round(averageRating / 2 * 2) / 2;
+                    var scaledRating = averageRating;
+                    if (currentRatingScale == 10) {
+                        scaledRating = averageRating / 2.0;
+                    }
+
+                    var formattedRating = Math.Round(scaledRating * 2) / 2;
                     _ratingDb[folderName] = formattedRating;
                 }
                 catch (Exception ex) {
@@ -140,6 +152,17 @@ namespace Ac.Ratings.Services {
 
         public void ExportDataFile() {
             try {
+                string localTxtPath = ConfigManager.ModifiedRatingsPath;
+                string localDataPath = Path.Combine(ConfigManager.UnpackFolderPath, "Ratings.data");
+
+                if (File.Exists(localTxtPath)) {
+                    File.Delete(localTxtPath);
+                }
+
+                if (File.Exists(localDataPath)) {
+                    File.Delete(localDataPath);
+                }
+
                 byte[] compressedData = CompressData();
 
                 string localPath = Path.Combine(ConfigManager.UnpackFolderPath, "Ratings.data");
