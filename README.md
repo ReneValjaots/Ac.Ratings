@@ -50,10 +50,10 @@ The release includes a pre-filled `engines.db` file with engine specs for all of
 
 ## Screenshots
 
-![darkmode_home](https://github.com/user-attachments/assets/1e15a3fc-5e61-425c-ad3b-5931bc484de4)
+![blackmode_home](https://github.com/user-attachments/assets/ad964909-a73f-44d0-8e85-7de38a9cd48a)
 
-![blackmode_home](https://github.com/user-attachments/assets/882a552b-dfbb-4b05-9147-a7008d3b45c4)
+![darkmode_home](https://github.com/user-attachments/assets/765d8e8e-6d4d-4661-bdeb-98c4b7b7c1a2)
 
-![lightmode_home](https://github.com/user-attachments/assets/da341bd1-b7fb-4ee1-ae1c-9ff3dd2e47af)
+![lightmode_home](https://github.com/user-attachments/assets/46e68ac5-fe95-4829-b2b2-dad5f2f1c219)
 
 ![darkmode_filter](https://github.com/user-attachments/assets/077f11b7-0915-47df-8728-c39c606b27ca)
