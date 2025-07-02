@@ -21,7 +21,7 @@ The app lets you quickly rate each car, mark extra features, and see key specs s
 
 ## Installation
 
-1. Download the `Ratings Manager.zip` file from a release.
+1. Download the `ratings_manager.zip` file from a release.
 2. Extract the Ratings Manager folder to a location of your choice.
 3. Run `Ratings Manager.exe` from the extracted folder.
 > [!TIP]
