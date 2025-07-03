@@ -48,6 +48,14 @@ The release includes a pre-filled `engines.db` file with engine specs for all of
 3. When prompted, choose to replace the existing empty file.
 4. Restart the application. The engine information for all Kunos cars will now be displayed.
 
+## Optional: In-Game LUA App
+
+If you want to rate cars directly in-game, you can install the optional [Ratings Manager Lua app](https://github.com/ReneValjaots/Ac.Ratings.Lua) for Assetto Corsa. To install: 
+
+1. Download `ratings_manager_lua.zip` from the latest release.
+2. Extract the zip file.
+3. Copy the included `apps` folder into your Assetto Corsa root directory.
+
 ## Screenshots
 
 ![blackmode_home](https://github.com/user-attachments/assets/ad964909-a73f-44d0-8e85-7de38a9cd48a)
